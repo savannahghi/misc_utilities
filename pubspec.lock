@@ -446,10 +446,10 @@ packages:
   sil_themes:
     dependency: "direct main"
     description:
-      path: sil_themes
-      ref: "0.0.162"
-      resolved-ref: "3f6377b04ce70f7dbb43ec99b098cb5d4176a2e5"
-      url: "https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/sil_dart_utils.git"
+      path: "."
+      ref: "0.0.1"
+      resolved-ref: "2036d1c47929658b13cb4cfc2403ee677ab23be6"
+      url: "https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_themes.git"
     source: git
     version: "0.0.1"
   sky_engine:
