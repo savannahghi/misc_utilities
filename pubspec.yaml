@@ -24,6 +24,8 @@ dependencies:
   file_picker: ^2.1.4
   flutter_svg: ^0.19.1
   dotted_border: ^1.0.5
+  camera_camera: ^1.0.34+1
+  flutter_image_compress: ^0.7.0
   material_design_icons_flutter: 4.0.5045
   sil_themes:
    git:

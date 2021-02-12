@@ -1,14 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:camera_camera/camera_camera.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'dart:io';
-import 'package:path/path.dart' show join;
-import 'package:path_provider/path_provider.dart';
 import 'package:sil_themes/constants.dart';
 import 'package:sil_themes/spaces.dart';
 import 'package:sil_themes/text_themes.dart';
@@ -54,17 +54,7 @@ class BWFileManager extends StatefulWidget {
 
 class _BWFileManagerState extends State<BWFileManager> {
   File file;
-
-  CameraController controller;
-  Future<void> _initializeControllerFuture;
-  List<CameraDescription> cameras;
-
   bool uploading = false;
-
-  /// get a list of available cameras (mainly its the back and front cameras)
-  void getCameras() async {
-    cameras = await availableCameras();
-  }
 
   @override
   void initState() {
@@ -73,13 +63,6 @@ class _BWFileManagerState extends State<BWFileManager> {
 
   @override
   void didChangeDependencies() async {
-    await getCameras();
-
-    /// get the first camera which happens to be the back camera with [ResolutionPreset] set as [medium]
-    controller = CameraController(cameras[0], ResolutionPreset.medium);
-
-    /// Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = controller.initialize();
     super.didChangeDependencies();
   }
 
@@ -87,12 +70,6 @@ class _BWFileManagerState extends State<BWFileManager> {
     setState(() {
       uploading = !uploading;
     });
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
   }
 
   /// get the file metadata that is to be consumed by the api
@@ -147,35 +124,48 @@ class _BWFileManagerState extends State<BWFileManager> {
     }
   }
 
+  static Future<File> openCamera({@required BuildContext context}) async {
+    return await Navigator.push(context,
+        MaterialPageRoute<File>(builder: (BuildContext context) => Camera()));
+  }
+
+  static Future<File> compressAndGetFile(File file) async {
+    final String filePath = file.absolute.path;
+
+    // Create output file path
+    final int lastIndex = filePath.lastIndexOf(RegExp(r'.jp'));
+    final String splitted = filePath.substring(0, lastIndex);
+    final String outPath = '${splitted}_out${filePath.substring(lastIndex)}';
+    File result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      outPath,
+      quality: 40,
+    );
+    return result;
+  }
+
   /// take photo with camera
   Future<void> takePhoto() async {
-    /// shows a dialogue that pushes a [MaterialPageRoute] with [fullscreenDialog] set as true
-    String result = await showCameraDialog(
-      context,
-      controller,
-      _initializeControllerFuture,
-      widget.silLoader,
-    );
-    if (result == null) {
+    /// shows a dialogue that pushes a [MaterialPageRoute]
+    File pickedFile = await openCamera(context: context);
+    File compressedFile = await compressAndGetFile(pickedFile);
+    final File image = File(compressedFile.path);
+
+    File selectedFile = image;
+    toggleUpload();
+
+    /// uploads the file and returns an [uploadID
+    String uploadId = await widget.getUploadId(
+        fileData: getFileData(selectedFile), context: context);
+    toggleUpload();
+    if (uploadId == 'err') {
+      widget.showAlertSnackBar(context, UserFeedBackTexts.uploadFileFail);
       return;
     }
-    if (result != 'cancelled') {
-      File selectedFile = File(result);
-      toggleUpload();
-
-      /// uploads the file and returns an [uploadID
-      String uploadId = await widget.getUploadId(
-          fileData: getFileData(selectedFile), context: context);
-      toggleUpload();
-      if (uploadId == 'err') {
-        widget.showAlertSnackBar(context, UserFeedBackTexts.uploadFileFail);
-        return;
-      }
-      setState(() {
-        file = selectedFile;
-        widget.onChanged(uploadId);
-      });
-    }
+    setState(() {
+      file = selectedFile;
+      widget.onChanged(uploadId);
+    });
   }
 
   @override
@@ -307,160 +297,4 @@ class _BWFileManagerState extends State<BWFileManager> {
       ),
     );
   }
-}
-
-/// shows a screen to take a picture
-/// pushes a [MaterialPageRoute] with [fullscreenDialog] set as true
-/// displays a preview of the image
-Future<String> showCameraDialog(
-  BuildContext context,
-  CameraController controller,
-  Future<void> initializeControllerFuture,
-  Widget silLoader,
-) async {
-  return await Navigator.of(context).push(MaterialPageRoute<String>(
-    builder: (BuildContext context) {
-      return Scaffold(
-        body: FutureBuilder<void>(
-          future: initializeControllerFuture,
-          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              final Size size = MediaQuery.of(context).size;
-              // If the Future is complete, display the preview.
-              return Container(
-                width: size.width,
-                height: size.height,
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      bottom: 0,
-                      right: 0,
-                      child: CameraPreview(controller),
-                    ),
-                    Positioned(
-                      left: 20,
-                      bottom: 20,
-                      right: 20,
-                      child: Container(
-                        padding: const EdgeInsets.all(4.0),
-                        constraints: BoxConstraints(
-                          maxWidth: 500,
-                        ),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                            border: Border.all(color: Colors.white)),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                            color: Colors.white,
-                          ),
-                          width: double.infinity,
-                          padding: EdgeInsets.all(15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Material(
-                                child: IconButton(
-                                  onPressed: () {
-                                    //
-                                  },
-                                  icon: Icon(MdiIcons.cameraSwitchOutline),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  // Take the Picture in a try / catch block. If anything goes wrong,
-                                  // catch the error.
-                                  try {
-                                    // Ensure that the camera is initialized.
-                                    await initializeControllerFuture;
-
-                                    // Construct the path where the image should be saved using the
-                                    // pattern package.
-                                    final String path = join(
-                                      // Store the picture in the temp directory.
-                                      // Find the temp directory using the `path_provider` plugin.
-                                      (await getTemporaryDirectory()).path,
-                                      '${DateTime.now()}.png',
-                                    );
-
-                                    // Attempt to take a picture and log where it's been saved.
-                                    await controller.takePicture(path);
-
-                                    // If the picture was taken, display it on a new screen.
-                                    Navigator.pop(context, path);
-                                  } catch (e) {
-                                    // If an error occurs, log the error to the console.
-                                    print(e);
-                                  }
-                                },
-                                child: Container(
-                                  width: 45,
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                              ),
-                              Material(
-                                child: IconButton(
-                                  onPressed: () {
-                                    Navigator.pop(context, 'cancelled');
-                                  },
-                                  icon: Icon(MdiIcons.closeCircle),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: 20,
-                      top: 0,
-                      right: 20,
-                      child: SafeArea(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: Container(
-                            width: double.infinity,
-                            constraints: BoxConstraints(
-                              maxWidth: 500,
-                            ),
-                            padding: EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.4),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
-                            ),
-                            child: Center(
-                              child: Text(
-                                UserFeedBackTexts.steadyDevice,
-                                style: TextThemes.boldSize14Text(Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              // Otherwise, display a loading indicator.
-              return Center(
-                child: silLoader,
-              );
-            }
-          },
-        ),
-      );
-    },
-    fullscreenDialog: true,
-  ));
 }
