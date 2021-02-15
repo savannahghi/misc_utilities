@@ -9,6 +9,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:camera_camera/camera_camera.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:sil_misc/typedefs/typedefs.dart';
 import 'package:sil_themes/constants.dart';
 import 'package:sil_themes/spaces.dart';
 import 'package:sil_themes/text_themes.dart';
@@ -97,7 +98,9 @@ class _BWFileManagerState extends State<BWFileManager> {
       );
     } catch (e) {
       widget.showAlertSnackBar(
-          context, UserFeedBackTexts.selectFileError, Colors.red);
+          context: context,
+          message: UserFeedBackTexts.selectFileError,
+          type: SnackBarType.danger);
     }
     if (result != null) {
       /// checks that [result.files] has one file and returns that file
@@ -110,7 +113,9 @@ class _BWFileManagerState extends State<BWFileManager> {
       toggleUpload();
       if (uploadId == 'err') {
         widget.showAlertSnackBar(
-            context, UserFeedBackTexts.uploadFileFail, Colors.red);
+            context: context,
+            message: UserFeedBackTexts.uploadFileFail,
+            type: SnackBarType.danger);
         return;
       }
       setState(() {
@@ -120,7 +125,9 @@ class _BWFileManagerState extends State<BWFileManager> {
     } else {
       // User canceled the picker
       widget.showAlertSnackBar(
-          context, UserFeedBackTexts.noFileSelected, Colors.black);
+          context: context,
+          message: UserFeedBackTexts.noFileSelected,
+          type: SnackBarType.info);
     }
   }
 
@@ -159,7 +166,10 @@ class _BWFileManagerState extends State<BWFileManager> {
         fileData: getFileData(selectedFile), context: context);
     toggleUpload();
     if (uploadId == 'err') {
-      widget.showAlertSnackBar(context, UserFeedBackTexts.uploadFileFail);
+      widget.showAlertSnackBar(
+          context: context,
+          message: UserFeedBackTexts.uploadFileFail,
+          type: SnackBarType.danger);
       return;
     }
     setState(() {
