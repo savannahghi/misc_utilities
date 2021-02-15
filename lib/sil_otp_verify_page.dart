@@ -174,7 +174,7 @@ class SILVerifyOTPPage extends StatelessWidget {
 
   final SendOtpFunc sendOtpFunc;
 
-  final ShowAlertSnackBarFunc showAlertSnackBarFunc;
+  final Function showAlertSnackBarFunc;
 
   final int retryTimeout;
 
@@ -212,14 +212,15 @@ class SILVerifyOTPPage extends StatelessWidget {
       if (otpCode != 'Error') {
         if (this.showAlertSnackBarFunc != null) {
           this.showAlertSnackBarFunc(
-              context,
-              'A six digit code has been sent to ${step == 1 ? " your Whatsapp" : this.phone}',
-              Colors.black);
+              context: context,
+              message:
+                  'A six digit code has been sent to ${step == 1 ? " your Whatsapp" : this.phone}',
+              type: SnackBarType.info);
         }
         this.manager.update(showResend: false, otp: otpCode, resending: false);
       } else {
         if (this.showAlertSnackBarFunc != null) {
-          this.showAlertSnackBarFunc(context);
+          this.showAlertSnackBarFunc(context: context);
         }
       }
     };
@@ -239,14 +240,14 @@ class SILVerifyOTPPage extends StatelessWidget {
       if (otpCode != 'Error') {
         if (this.showAlertSnackBarFunc != null) {
           this.showAlertSnackBarFunc(
-              context,
-              'A verification code has been sent to ${this.email}',
-              Colors.black);
+              context: context,
+              message: 'A verification code has been sent to ${this.email}',
+              type: SnackBarType.info);
         }
         this.manager.update(showResend: false, otp: otpCode, resending: false);
       } else {
         if (this.showAlertSnackBarFunc != null) {
-          this.showAlertSnackBarFunc(context);
+          this.showAlertSnackBarFunc(context: context);
         }
       }
     };
@@ -312,7 +313,7 @@ class SILVerifyOTPPage extends StatelessWidget {
                     }
                   }
                   if (this.showAlertSnackBarFunc != null) {
-                    this.showAlertSnackBarFunc(context);
+                    this.showAlertSnackBarFunc(context: context);
                   }
                   return;
                 }

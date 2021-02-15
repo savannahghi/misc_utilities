@@ -27,10 +27,13 @@ typedef SendOTP = Future<String> Function(
     String email,
     bool sendToEmailOnly});
 
-/// [ShowAlertSnackBarFunc] a function that will be called to show a show for success or fail
-typedef ShowAlertSnackBarFunc = Function(BuildContext ctx,
-    [String msg, Color color]);
-
 /// [VerifySuccessCallback] signature of the function called on the successful otp verification
 typedef VerifySuccessCallback = Future<bool> Function(
     {String email, String phone, String otp});
+
+enum SnackBarType {
+  success,
+  danger,
+  warning,
+  info,
+}
