@@ -134,18 +134,6 @@ class SILMisc {
     return 'Till ' + DateFormat('MMM dd, yyyy').format(DateTime.parse(validTo));
   }
 
-  /// checks whether the device in which the app is running,
-  /// supports sign in with apple
-  static Future<bool> supportsAppleSignIn(String systemVersion) async {
-    if (Platform.isIOS) {
-      if (supportedIosVersions.contains(systemVersion.split('.')[0])) {
-        return true;
-      }
-      return false;
-    }
-    return false;
-  }
-
   /// validates an email against a regex
   static bool validateEmail(String email) {
     return emailValidator.hasMatch(email);
@@ -220,56 +208,6 @@ class SILMisc {
   // removes underscores from a sentence
   static String removeUnderscores(String sentence) {
     return titleCase(sentence.toString().replaceAll('_', ' ').toLowerCase());
-  }
-
-  /// returns a human readable format of the date string
-  /// passed to it
-  ///
-  /// INPUT - a date string such as `2020-11-19T10:15:21Z`
-  ///
-  /// OUTPUT - a human readable format such as `Yesterday at 10:12pm`
-  static String getHumanReadableTimestamp(String date) {
-    /// parse the string first before processing
-    final DateTime parsedDate = DateTime.parse(date);
-
-    /// convert this date to a localformat i.e change the timezone
-    /// to the one in the device
-    DateTime localDateTime = parsedDate.toLocal();
-
-    DateTime now = DateTime.now();
-    DateTime justNow = DateTime.now().subtract(Duration(minutes: 1));
-
-    // return 'Just Now' if the difference is less than 1 minute
-    if (!localDateTime.difference(justNow).isNegative) {
-      return 'Just now';
-    }
-
-    // return '20 minutes ago' if
-    // the difference is greater than 1 minute
-    String roughTimeString = DateFormat('jm').format(localDateTime);
-    if (localDateTime.day == now.day &&
-        localDateTime.month == now.month &&
-        localDateTime.year == now.year) {
-      return roughTimeString;
-    }
-
-    // return 'yesterday' if the difference is less than 1 day
-    DateTime yesterday = now.subtract(Duration(days: 1));
-    if (localDateTime.day == yesterday.day &&
-        localDateTime.month == yesterday.month &&
-        localDateTime.year == yesterday.year) {
-      return 'Yesterday, ' + roughTimeString;
-    }
-
-    // return the week day if the difference is more than 1 day
-    // and less than 4 days
-    if (now.difference(localDateTime).inDays < 4) {
-      String weekday = DateFormat('EEEE').format(localDateTime);
-      return '$weekday, $roughTimeString';
-    }
-
-    // return the actual date and time if it is more than 4 days
-    return DateFormat('MMMd, yyyy').format(parsedDate).toString();
   }
 
   static void bottomSheet(

@@ -191,5 +191,74 @@ void main() {
       final String expectedNumber = '+2551234567';
       expect(formatedNumber, expectedNumber);
     });
+
+    test('should test background gradient', () {
+      final LinearGradient backgroundGradient = SILMisc.backgroundGradient(
+        primaryColor: 0xFF7949AF,
+        primaryLinearGradientColor: 0xFF7949AF,
+      );
+      expect(backgroundGradient, isA<LinearGradient>());
+      expect(backgroundGradient.begin, Alignment.topLeft);
+      expect(backgroundGradient.end, Alignment.bottomRight);
+    });
+
+    test('should test SILException', () {
+      expect(
+          () => throw SILException(
+              cause: 'no_user_account_found', message: 'No user'),
+          throwsException);
+    });
+
+    group('validatePhoneNumber', () {
+      test('should return valid phone numbers', () {
+        String kenyanNumber = '+254123456789';
+        String usNumber = '+12025550163';
+
+        expect(SILMisc.validatePhoneNumber(kenyanNumber), true);
+        expect(SILMisc.validatePhoneNumber(usNumber), true);
+      });
+
+      test('should return invalid phone number', () {
+        String testPhone = '+2123456789';
+
+        expect(SILMisc.validatePhoneNumber(testPhone), false);
+      });
+    });
+
+    group('RefreshTokenManger', () {
+      test('should updateExpireTime', () {
+        String time = '2021-02-01 10:15:21Z';
+        RefreshTokenManger().updateExpireTime(time);
+        RefreshTokenManger().updateExpireTime(time).reset();
+        expect(RefreshTokenManger().updateExpireTime(time).listen.value, null);
+      });
+
+      test('should reset 6 minutes to the expiry time', () {
+        String approachingCurrentTime =
+            DateTime.now().add(Duration(minutes: 6)).toString();
+
+        RefreshTokenManger().checkExpireValidity(approachingCurrentTime);
+        expect(RefreshTokenManger().checkExpireValidity(approachingCurrentTime),
+            true);
+
+        //Set expiry time
+        RefreshTokenManger().updateExpireTime(approachingCurrentTime);
+        //Reset expiry time
+        RefreshTokenManger().updateExpireTime(approachingCurrentTime).reset();
+
+        expect(RefreshTokenManger().listen.value, null);
+      });
+
+      test('should reset 15 minutes to the expiry time', () {
+        String expiryTime =
+            DateTime.now().add(Duration(minutes: 15)).toString();
+
+        //Reset expiry time
+        RefreshTokenManger().updateExpireTime(expiryTime).reset();
+
+        expect(RefreshTokenManger().updateExpireTime(expiryTime).listen.value,
+            null);
+      });
+    });
   });
 }
