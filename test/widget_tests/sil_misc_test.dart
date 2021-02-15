@@ -57,168 +57,215 @@ void main() {
 
       expect(isSnackBarActionTapped, true);
     });
-  });
 
-  group('bottomsheet', () {
-    testWidgets('should render correctly without action',
-        (WidgetTester tester) async {
-      const Key launchBottomSheetKey = Key('button_key');
+    testWidgets('should show error snackbar', (WidgetTester tester) async {
+      const Key snackbarKey = Key('show_error_snackbar');
       await tester.pumpWidget(MaterialApp(
-        home: Builder(builder: (BuildContext context) {
-          return FlatButton(
-            key: launchBottomSheetKey,
-            child: Text('text button'),
-            onPressed: () {
-              SILMisc.bottomSheet(
-                  action: null,
-                  backgroundColor: Theme.of(context).backgroundColor,
-                  context: context,
-                  message: 'Show bottom sheet',
-                  primaryColor: Theme.of(context).primaryColor,
-                  textColor: Colors.black);
-            },
-          );
-        }),
+        home: Scaffold(
+          body: Center(
+            child: Builder(builder: (BuildContext context) {
+              return RaisedButton(
+                key: snackbarKey,
+                onPressed: () {
+                  SILMisc.showErr(context, 'An error occured');
+                },
+              );
+            }),
+          ),
+        ),
       ));
-
+      expect(find.byKey(snackbarKey), findsOneWidget);
+      await tester.tap(find.byKey(snackbarKey));
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(launchBottomSheetKey));
-      await tester.pumpAndSettle();
-
-      Finder bottomSheetContainer = await find.byKey(containerKey);
-      expect(bottomSheetContainer, findsOneWidget);
-
-      Finder bottomSheetColumn = await find.byKey(columnKey);
-      expect(bottomSheetColumn, findsOneWidget);
+      expect(find.text('An error occured'), findsOneWidget);
     });
 
-    testWidgets('should render correctly with action',
-        (WidgetTester tester) async {
-      bool isActionTapped = false;
+    group('bottomsheet', () {
+      testWidgets('should render correctly without action',
+          (WidgetTester tester) async {
+        const Key launchBottomSheetKey = Key('button_key');
+        await tester.pumpWidget(MaterialApp(
+          home: Builder(builder: (BuildContext context) {
+            return FlatButton(
+              key: launchBottomSheetKey,
+              child: Text('text button'),
+              onPressed: () {
+                SILMisc.bottomSheet(
+                    action: null,
+                    backgroundColor: Theme.of(context).backgroundColor,
+                    context: context,
+                    message: 'Show bottom sheet',
+                    primaryColor: Theme.of(context).primaryColor,
+                    textColor: Colors.black);
+              },
+            );
+          }),
+        ));
 
-      const Key launchBottomSheetKey = Key('button_key');
-      await tester.pumpWidget(MaterialApp(
-        home: Builder(builder: (BuildContext context) {
-          return FlatButton(
-            key: launchBottomSheetKey,
-            child: Text('text button'),
-            onPressed: () {
-              SILMisc.bottomSheet(
-                  action: () {
-                    isActionTapped = true;
-                  },
-                  backgroundColor: Theme.of(context).backgroundColor,
-                  context: context,
-                  message: 'Show bottom sheet',
-                  primaryColor: Theme.of(context).primaryColor,
-                  textColor: Colors.black);
-            },
-          );
-        }),
-      ));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(launchBottomSheetKey));
+        await tester.pumpAndSettle();
 
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(launchBottomSheetKey));
-      await tester.pumpAndSettle();
+        Finder bottomSheetContainer = await find.byKey(containerKey);
+        expect(bottomSheetContainer, findsOneWidget);
 
-      Finder bottomSheetContainer = await find.byKey(containerKey);
-      expect(bottomSheetContainer, findsOneWidget);
+        Finder bottomSheetColumn = await find.byKey(columnKey);
+        expect(bottomSheetColumn, findsOneWidget);
+      });
 
-      Finder okButton = await find.byKey(okButtonKey);
-      expect(okButton, findsOneWidget);
+      testWidgets('should render correctly with action',
+          (WidgetTester tester) async {
+        bool isActionTapped = false;
 
-      await tester.tap(okButton);
-      await tester.pumpAndSettle();
+        const Key launchBottomSheetKey = Key('button_key');
+        await tester.pumpWidget(MaterialApp(
+          home: Builder(builder: (BuildContext context) {
+            return FlatButton(
+              key: launchBottomSheetKey,
+              child: Text('text button'),
+              onPressed: () {
+                SILMisc.bottomSheet(
+                    action: () {
+                      isActionTapped = true;
+                    },
+                    backgroundColor: Theme.of(context).backgroundColor,
+                    context: context,
+                    message: 'Show bottom sheet',
+                    primaryColor: Theme.of(context).primaryColor,
+                    textColor: Colors.black);
+              },
+            );
+          }),
+        ));
 
-      expect(isActionTapped, true);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(launchBottomSheetKey));
+        await tester.pumpAndSettle();
+
+        Finder bottomSheetContainer = await find.byKey(containerKey);
+        expect(bottomSheetContainer, findsOneWidget);
+
+        Finder okButton = await find.byKey(okButtonKey);
+        expect(okButton, findsOneWidget);
+
+        await tester.tap(okButton);
+        await tester.pumpAndSettle();
+
+        expect(isActionTapped, true);
+      });
     });
-  });
 
-  group('verifyOTPErrorBottomSheet', () {
-    testWidgets('should render correctly without action',
-        (WidgetTester tester) async {
-      const Key launchBottomSheetKey = Key('button_key');
-      await tester.pumpWidget(MaterialApp(
-        home: Builder(builder: (BuildContext context) {
-          return FlatButton(
-            key: launchBottomSheetKey,
-            child: Text('text button'),
-            onPressed: () {
-              SILMisc.verifyOTPErrorBottomSheet(
-                  actionEnterCode: null,
-                  context: context,
-                  message: 'Show bottom sheet',
-                  primaryColor: Theme.of(context).primaryColor,
-                  textColor: Colors.black);
-            },
-          );
-        }),
-      ));
+    group('verifyOTPErrorBottomSheet', () {
+      testWidgets('should render correctly without action',
+          (WidgetTester tester) async {
+        const Key launchBottomSheetKey = Key('button_key');
+        await tester.pumpWidget(MaterialApp(
+          home: Builder(builder: (BuildContext context) {
+            return FlatButton(
+              key: launchBottomSheetKey,
+              child: Text('text button'),
+              onPressed: () {
+                SILMisc.verifyOTPErrorBottomSheet(
+                    actionEnterCode: null,
+                    context: context,
+                    message: 'Show bottom sheet',
+                    primaryColor: Theme.of(context).primaryColor,
+                    textColor: Colors.black);
+              },
+            );
+          }),
+        ));
 
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(launchBottomSheetKey));
-      await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(launchBottomSheetKey));
+        await tester.pumpAndSettle();
 
-      Finder bottomSheetContainer = await find.byKey(containerKey);
-      expect(bottomSheetContainer, findsOneWidget);
+        Finder bottomSheetContainer = await find.byKey(containerKey);
+        expect(bottomSheetContainer, findsOneWidget);
 
-      Finder bottomSheetColumn = await find.byKey(columnKey);
-      expect(bottomSheetColumn, findsOneWidget);
+        Finder bottomSheetColumn = await find.byKey(columnKey);
+        expect(bottomSheetColumn, findsOneWidget);
+      });
+
+      testWidgets('should render correctly with action',
+          (WidgetTester tester) async {
+        bool isActionTapped = false;
+
+        const Key launchBottomSheetKey = Key('button_key');
+        await tester.pumpWidget(MaterialApp(
+          home: Builder(builder: (BuildContext context) {
+            return FlatButton(
+              key: launchBottomSheetKey,
+              child: Text('text button'),
+              onPressed: () {
+                SILMisc.verifyOTPErrorBottomSheet(
+                    actionEnterCode: () {
+                      isActionTapped = true;
+                    },
+                    context: context,
+                    message: 'Show bottom sheet',
+                    primaryColor: Theme.of(context).primaryColor,
+                    textColor: Colors.black);
+              },
+            );
+          }),
+        ));
+
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(launchBottomSheetKey));
+        await tester.pumpAndSettle();
+
+        Finder bottomSheetContainer = await find.byKey(containerKey);
+        expect(bottomSheetContainer, findsOneWidget);
+
+        Finder reenterCodeButton = await find.byKey(reenterCodeButtonKey);
+        expect(reenterCodeButton, findsOneWidget);
+
+        await tester.tap(reenterCodeButton);
+        await tester.pumpAndSettle();
+
+        expect(isActionTapped, true);
+      });
     });
 
-    testWidgets('should render correctly with action',
-        (WidgetTester tester) async {
-      bool isActionTapped = false;
+    group('SILEventBus', () {
+      testWidgets('should test SILEventBus', (WidgetTester tester) async {
+        final SILEventBus eventBus = SILEventBus();
+        final Map<String, dynamic> eventPayload = <String, dynamic>{
+          'test': 'test'
+        };
+        Stream<dynamic> stream = eventBus.streamController.stream;
+        eventBus.fire(TriggeredEvent('TEST_EVENT', eventPayload));
+        // ignore: unawaited_futures
+        expectLater(stream, emits('Here is an event'));
 
-      const Key launchBottomSheetKey = Key('button_key');
-      await tester.pumpWidget(MaterialApp(
-        home: Builder(builder: (BuildContext context) {
-          return FlatButton(
-            key: launchBottomSheetKey,
-            child: Text('text button'),
-            onPressed: () {
-              SILMisc.verifyOTPErrorBottomSheet(
-                  actionEnterCode: () {
-                    isActionTapped = true;
-                  },
-                  context: context,
-                  message: 'Show bottom sheet',
-                  primaryColor: Theme.of(context).primaryColor,
-                  textColor: Colors.black);
-            },
-          );
-        }),
-      ));
-
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(launchBottomSheetKey));
-      await tester.pumpAndSettle();
-
-      Finder bottomSheetContainer = await find.byKey(containerKey);
-      expect(bottomSheetContainer, findsOneWidget);
-
-      Finder reenterCodeButton = await find.byKey(reenterCodeButtonKey);
-      expect(reenterCodeButton, findsOneWidget);
-
-      await tester.tap(reenterCodeButton);
-      await tester.pumpAndSettle();
-
-      expect(isActionTapped, true);
+        eventBus.streamController.add('Here is an event');
+      });
     });
-  });
 
-  group('SILEventBus', () {
-    testWidgets('should test SILEventBus', (WidgetTester tester) async {
-      final SILEventBus eventBus = SILEventBus();
-      final Map<String, dynamic> eventPayload = <String, dynamic>{
-        'test': 'test'
-      };
-      Stream<dynamic> stream = eventBus.streamController.stream;
-      eventBus.fire(TriggeredEvent('TEST_EVENT', eventPayload));
-      // ignore: unawaited_futures
-      expectLater(stream, emits('Here is an event'));
+    group('customRoundedPinBoxDecoration', () {
+      testWidgets('should render correctly', (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(
+          home: Builder(builder: (BuildContext context) {
+            return Material(
+                child: Container(
+              key: Key('test'),
+              decoration: SILMisc.customRoundedPinBoxDecoration(
+                  Colors.black, Colors.black),
+            ));
+          }),
+        ));
 
-      eventBus.streamController.add('Here is an event');
+        await tester.pumpAndSettle();
+        expect(
+          tester.widget(find.byType(Container)),
+          isA<Container>().having(
+              (Container t) => t.decoration,
+              'decoration',
+              SILMisc.customRoundedPinBoxDecoration(
+                  Colors.black, Colors.black)),
+        );
+      });
     });
   });
 }
