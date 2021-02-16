@@ -29,6 +29,7 @@ typedef GetUploadId = Future<String> Function({
 /// [allowedExtensions] is an optional list of strings conatining file extensions
 /// [getUploadId] is a [Function] of type [GetUploadId] that uploads a file's
 /// data and returns an [uploadId]
+/// [snackBarTypes] is a list of the types of snackbars available
 
 class BWFileManager extends StatefulWidget {
   final FileOnchanged onChanged;
@@ -38,6 +39,7 @@ class BWFileManager extends StatefulWidget {
   final GetUploadId getUploadId;
   final Widget silLoader;
   final Function showAlertSnackBar;
+  final List<dynamic> snackBarTypes;
 
   const BWFileManager({
     Key key,
@@ -46,6 +48,7 @@ class BWFileManager extends StatefulWidget {
     @required this.getUploadId,
     @required this.silLoader,
     @required this.showAlertSnackBar,
+    @required this.snackBarTypes,
     this.allowedExtensions = const <String>['jpg', 'png'],
     this.invalidF = false,
   }) : super(key: key);
@@ -115,7 +118,7 @@ class _BWFileManagerState extends State<BWFileManager> {
         widget.showAlertSnackBar(
             context: context,
             message: UserFeedBackTexts.uploadFileFail,
-            type: SnackBarType.danger);
+            type: widget.snackBarTypes[0]);
         return;
       }
       setState(() {
@@ -127,7 +130,7 @@ class _BWFileManagerState extends State<BWFileManager> {
       widget.showAlertSnackBar(
           context: context,
           message: UserFeedBackTexts.noFileSelected,
-          type: SnackBarType.info);
+          type: widget.snackBarTypes[1]);
     }
   }
 
@@ -146,7 +149,7 @@ class _BWFileManagerState extends State<BWFileManager> {
     File result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       outPath,
-      quality: 40,
+      quality: 30,
     );
     return result;
   }
@@ -169,7 +172,7 @@ class _BWFileManagerState extends State<BWFileManager> {
       widget.showAlertSnackBar(
           context: context,
           message: UserFeedBackTexts.uploadFileFail,
-          type: SnackBarType.danger);
+          type: widget.snackBarTypes[0]);
       return;
     }
     setState(() {
