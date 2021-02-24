@@ -16,7 +16,7 @@ class PhoneNoConstants {
   static final String codeSent = 'Code was resent successfully to';
   static final String resendCancel = 'Resend cancelled';
   static final String viaText = 'via Text Message';
-  static final String viaWhatsapp = 'via WhatsApp';
+  static final String viaWhatsApp = 'via WhatsApp';
   static final String noAccount =
       'That phone number does not exist, please enter the number you registered with';
 }

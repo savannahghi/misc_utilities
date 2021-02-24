@@ -15,10 +15,10 @@ void main() {
     });
 
     test('test extract name initials', () {
-      expect('DD', SILMisc.extractNamesIntials(name: 'david dexter'));
-      expect('MV', SILMisc.extractNamesIntials(name: 'Michuki vincent'));
+      expect('DD', SILMisc.extractNamesInitials(name: 'david dexter'));
+      expect('MV', SILMisc.extractNamesInitials(name: 'Michuki vincent'));
       expect('dd',
-          isNot(SILMisc.extractNamesIntials(name: 'david dexter mwangi')));
+          isNot(SILMisc.extractNamesInitials(name: 'david dexter mwangi')));
     });
 
     test('convertStringToDate should return correct date', () {

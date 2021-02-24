@@ -50,12 +50,12 @@ class SILMisc {
     return DateFormat(format).format(date);
   }
 
-  /// [extractNamesIntials] extracts name initials from a name
+  /// [extractNamesInitials] extracts name initials from a name
   ///
   /// Usage:
   ///
   /// if you pass in a name like 'Abiud Orina', it returns 'AO'
-  static String extractNamesIntials({@required String name}) {
+  static String extractNamesInitials({@required String name}) {
     final List<String> parts = name.split(' ');
     if (parts.length >= 2) {
       String initials = ' ';
@@ -115,7 +115,7 @@ class SILMisc {
 
   /// gets the validity period of a cover
   ///
-  /// pass in a valid valiTo string and it returns
+  /// pass in a valid validTo string and it returns
   /// a validity period in human readable form
   static String getCoverValidityPeriod(String validTo) {
     Duration validityDuration =
@@ -162,14 +162,14 @@ class SILMisc {
   }
 
   /// returns the list of auth types by removing the last comma
-  static String parseAuthTypes(List<dynamic> auths) {
+  static String parseAuthTypes(List<dynamic> authenticationTypes) {
     String auth = '';
 
-    for (int i = 0; i < auths.length; i++) {
-      final String _auth = auths[i];
+    for (int i = 0; i < authenticationTypes.length; i++) {
+      final String _auth = authenticationTypes[i];
       //. check if its last or only item so as not to
       // append a comma
-      if ((i + 1) == auths.length) {
+      if ((i + 1) == authenticationTypes.length) {
         auth = auth + '$_auth ';
       } else {
         auth = auth + '$_auth & ';
@@ -495,7 +495,7 @@ class RefreshTokenManger {
     }
   }
 
-  /// [reset] is responsible for resetting the timeout clock and notifying the listner [listen]
+  /// [reset] is responsible for resetting the timeout clock and notifying the listener [listen]
   /// when fetch a new token
   void reset() {
     print(
@@ -517,7 +517,7 @@ class RefreshTokenManger {
           return;
         }
 
-        // refresh fiveteen (15) minutes before token expires
+        // refresh 15 minutes before token expires
         final DateTime _threshold = _parsed.subtract(Duration(minutes: 15));
         final Duration _duration = _threshold.difference(DateTime.now());
         if (_duration.inSeconds <= 0) {
@@ -551,7 +551,7 @@ class SILPerfMonitor {
     await trace.stop();
   }
 
-  // monitors sync function that at leat returns a void
+  // monitors sync function that at least returns a void
   static void monitorSyncFunc(Function action, String traceName) async {
     final Trace trace = FirebasePerformance.instance.newTrace(traceName);
     await trace.start();

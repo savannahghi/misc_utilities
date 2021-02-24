@@ -22,7 +22,7 @@ void main() {
     expect(PhoneNoConstants.codeSent, 'Code was resent successfully to');
     expect(PhoneNoConstants.resendCancel, 'Resend cancelled');
     expect(PhoneNoConstants.viaText, 'via Text Message');
-    expect(PhoneNoConstants.viaWhatsapp, 'via WhatsApp');
+    expect(PhoneNoConstants.viaWhatsApp, 'via WhatsApp');
     expect(PhoneNoConstants.noAccount,
         'That phone number does not exist, please enter the number you registered with');
   });

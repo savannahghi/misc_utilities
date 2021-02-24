@@ -9,7 +9,7 @@ typedef GenerateRetryOtpFunc = Future<String> Function({
 });
 
 /// SendOtpFunc is the function that will be called to send an otp. Should match the one defined
-/// in sil_graphl_utils
+/// in sil_graphql_utils
 typedef SendOtpFunc = Future<String> Function(
     {@required BuildContext context,
     @required String phoneNumber,
