@@ -12,14 +12,14 @@ class SILSmallAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.backButtonKey,
     this.tabBarKey,
     this.size,
-    this.evelavation,
+    this.elevation,
     this.backRouteNavigationFunction,
     this.formatTitle = true,
   }) : super(key: key);
 
   final Key backButtonKey;
   final String backRoute;
-  final double evelavation;
+  final double elevation;
   final double size;
   final Key tabBarKey;
   final List<String> tabTitles;
@@ -35,7 +35,7 @@ class SILSmallAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Theme.of(context).primaryColor,
       iconTheme: IconThemeData(color: Colors.white),
-      elevation: evelavation ?? 5,
+      elevation: elevation ?? 5,
       leading: IconButton(
         key: backButtonKey,
         icon: Icon(Icons.arrow_back),

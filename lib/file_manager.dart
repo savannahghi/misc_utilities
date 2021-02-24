@@ -9,12 +9,12 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:camera_camera/camera_camera.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:sil_misc/typedefs/typedefs.dart';
+import 'package:sil_misc/type_defs/type_defs.dart';
 import 'package:sil_themes/constants.dart';
 import 'package:sil_themes/spaces.dart';
 import 'package:sil_themes/text_themes.dart';
 
-typedef FileOnchanged = void Function(dynamic value);
+typedef OnFileChanged = void Function(dynamic value);
 
 typedef GetUploadId = Future<String> Function({
   @required Map<String, dynamic> fileData,
@@ -26,13 +26,13 @@ typedef GetUploadId = Future<String> Function({
 /// [onChanged] is more like the [TextField] onChanged, basically is a
 /// [Function] that takes a value which in this case is an [uploadId]
 /// [name] indicates the file type you want, ie `Military ID`
-/// [allowedExtensions] is an optional list of strings conatining file extensions
+/// [allowedExtensions] is an optional list of strings containing file extensions
 /// [getUploadId] is a [Function] of type [GetUploadId] that uploads a file's
 /// data and returns an [uploadId]
 /// [snackBarTypes] is a list of the types of snackbars available
 
 class BWFileManager extends StatefulWidget {
-  final FileOnchanged onChanged;
+  final OnFileChanged onChanged;
   final bool invalidF;
   final String name;
   final List<String> allowedExtensions;
@@ -144,8 +144,9 @@ class _BWFileManagerState extends State<BWFileManager> {
 
     // Create output file path
     final int lastIndex = filePath.lastIndexOf(RegExp(r'.jp'));
-    final String splitted = filePath.substring(0, lastIndex);
-    final String outPath = '${splitted}_out${filePath.substring(lastIndex)}';
+    final String splitFilePath = filePath?.substring(0, lastIndex);
+    final String outPath =
+        '${splitFilePath}_out${filePath.substring(lastIndex)}';
     File result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       outPath,

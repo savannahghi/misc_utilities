@@ -7,7 +7,7 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:sil_misc/sil_misc.dart';
-import 'package:sil_misc/typedefs/typedefs.dart';
+import 'package:sil_misc/type_defs/type_defs.dart';
 import 'package:sil_themes/colors.dart';
 import 'package:sil_themes/constants.dart';
 import 'package:sil_themes/spaces.dart';
@@ -17,7 +17,7 @@ import 'package:sil_themes/text_themes.dart';
 const int maxRetries = 3;
 
 /// The model the will used to monitor the state ot the page.
-/// Why use a model instead of using a state management libary
+/// Why use a model instead of using a state management library
 /// 1. Because i can (@dexter)
 /// 2. This library should be light-weight as possible
 /// 3. Easy to model and think through
@@ -57,7 +57,7 @@ class VerifyModel {
 }
 
 /// [StateManager] manages the state of [SILVerifyOTPPage]
-/// returns a singleton whose job is to provide intial state and mutate that state on call
+/// returns a singleton whose job is to provide initial state and mutate that state on call
 /// the [SILVerifyOTPPage] should change the UI to reflect changes in the state
 class StateManager {
   static final StateManager _singleton = StateManager._internal();
@@ -73,7 +73,7 @@ class StateManager {
   ValueStream<VerifyModel> get stream$ => _state.stream;
   VerifyModel get current => _state.value;
 
-  void intial({String phoneNumber, String email, String otp, dynamic client}) {
+  void initial({String phoneNumber, String email, String otp, dynamic client}) {
     _state.add(VerifyModel(
       phoneNumber: phoneNumber,
       email: email,
@@ -109,7 +109,7 @@ class StateManager {
   }
 }
 
-/// SILVerifyOTPPage a generics page that will be used for verification of otps.
+/// SILVerifyOTPPage a generics page that will be used for verification of OTPs.
 /// This should the the go to page to when defining an otp verification use case.
 /// The page is designed to serve a number of edge cases;
 /// 1. time when otp is not entered and show resend option
@@ -201,7 +201,7 @@ class SILVerifyOTPPage extends StatelessWidget {
       this.retryTimeout}) {
     this
         .manager
-        .intial(phoneNumber: phone, email: email, otp: otp, client: client);
+        .initial(phoneNumber: phone, email: email, otp: otp, client: client);
   }
 
   Function resendOtp(BuildContext context, String phone, dynamic client) {
@@ -214,7 +214,7 @@ class SILVerifyOTPPage extends StatelessWidget {
           this.showAlertSnackBarFunc(
               context: context,
               message:
-                  'A six digit code has been sent to ${step == 1 ? " your Whatsapp" : this.phone}',
+                  'A six digit code has been sent to ${step == 1 ? " your WhatsApp number" : this.phone}',
               type: SnackBarType.info);
         }
         this.manager.update(showResend: false, otp: otpCode, resending: false);
@@ -235,7 +235,7 @@ class SILVerifyOTPPage extends StatelessWidget {
           email: this.email,
           sendToEmailOnly: true,
           phoneNumber: null,
-          logTitle: 'signup: send OTP to email',
+          logTitle: 'sign up: send OTP to email',
           logDescription: 'send a verification to ');
       if (otpCode != 'Error') {
         if (this.showAlertSnackBarFunc != null) {
@@ -424,11 +424,11 @@ class PhoneCodeResend extends StatefulWidget {
 }
 
 class PhoneCodeResendState extends State<PhoneCodeResend> {
-  bool showBtns = false;
+  bool showResendButtons = false;
 
   void showButtons(int x) {
     setState(() {
-      showBtns = !showBtns;
+      showResendButtons = !showResendButtons;
     });
   }
 
@@ -439,14 +439,14 @@ class PhoneCodeResendState extends State<PhoneCodeResend> {
       runSpacing: 20,
       spacing: 10,
       children: <Widget>[
-        if (!showBtns)
+        if (!showResendButtons)
           ResendBtn(
             txt: 'Resend Code',
             callback: showButtons,
           ),
-        if (showBtns) ...<Widget>[
+        if (showResendButtons) ...<Widget>[
           ResendBtn(
-              txt: 'Resend via Whatsapp',
+              txt: 'Resend via WhatsApp',
               callback: widget.callbacks[0],
               fill: color),
           ResendBtn(
@@ -476,7 +476,7 @@ class ResendBtn extends StatelessWidget {
       children: <Widget>[
         RawMaterialButton(
           onPressed: () {
-            callback(txt == 'Resend via Whatsapp' ? 1 : 2);
+            callback(txt == 'Resend via WhatsApp' ? 1 : 2);
           },
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           shape: RoundedRectangleBorder(
