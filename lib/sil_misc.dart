@@ -187,7 +187,7 @@ class SILMisc {
         msg ?? UserFeedBackTexts.getErrorMessage(),
         style: Theme.of(ctx).textTheme.bodyText2.copyWith(color: Colors.white),
       ),
-      duration: Duration(seconds: kShortsnackBarDuration),
+      duration: Duration(seconds: kShortSnackBarDuration),
     ));
     return;
   }
