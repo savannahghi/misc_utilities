@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum DeviceScreenType { Mobile, Tablet, Desktop }
+
 /// Refer to https://gitlab.slade360emr.com/optimalhealth/healthcloud/-/merge_requests/355/diffs
 /// if you want to introduce medium screen in future
 
@@ -59,9 +61,8 @@ class ResponsiveWidget extends StatelessWidget {
   /// iPad(9.7"), the value of the longest side evaluates to `1224`. This makes the value of
   /// [isLargeScreen] to be `FALSE` even though the tablet is large enough show a large screen UI.
   /// Hence the change
-  ///
 
-  /// Large screen is any screen whose width is more than [largeScreenBreakPoint] pixels
+  ///  /// Large screen is any screen whose width is more than [largeScreenBreakPoint] pixels
   static bool isLargeScreen(BuildContext context) {
     return MediaQuery.of(context).size.width >= smallScreenBreakPoint;
   }
@@ -69,5 +70,34 @@ class ResponsiveWidget extends StatelessWidget {
   /// Small screen is any screen whose width is less than [smallScreenBreakPoint] pixels
   static bool isSmallScreen(BuildContext context) {
     return MediaQuery.of(context).size.width < smallScreenBreakPoint;
+  }
+
+  /// checks if a devices orientation is in landscape mode
+  static bool isLandscape({@required BuildContext context}) {
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /// returns the device type but first checks the device orientation before checking its width
+  DeviceScreenType getDeviceType(BuildContext context) {
+    MediaQueryData mediaQuery = MediaQuery.of(context);
+    Orientation deviceOrientation = mediaQuery.orientation;
+    double deviceWidth = 0;
+    if (deviceOrientation == Orientation.landscape) {
+      deviceWidth = mediaQuery.size.height;
+    } else {
+      deviceWidth = mediaQuery.size.width;
+    }
+
+    if (deviceWidth > 950) {
+      return DeviceScreenType.Desktop;
+    }
+    if (deviceWidth > 600) {
+      return DeviceScreenType.Tablet;
+    }
+    return DeviceScreenType.Mobile;
   }
 }
