@@ -82,7 +82,7 @@ class ResponsiveWidget extends StatelessWidget {
   }
 
   /// returns the device type but first checks the device orientation before checking its width
-  DeviceScreenType getDeviceType(BuildContext context) {
+  static DeviceScreenType getDeviceType(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
     Orientation deviceOrientation = mediaQuery.orientation;
     double deviceWidth = 0;
