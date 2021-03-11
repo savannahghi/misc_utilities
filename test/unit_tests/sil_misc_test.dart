@@ -2,13 +2,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sil_misc/sil_misc.dart';
 
+import 'package:rxdart/rxdart.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   group('SILMisc', () {
     test('convertDateToString should return correctly formatted date', () {
-      DateTime date = DateTime(2020, DateTime.january, 31);
-      String expected = '31-01-2020';
-      String formattedDate =
+      final DateTime date = DateTime(2020, DateTime.january, 31);
+      const String expected = '31-01-2020';
+      final String formattedDate =
           SILMisc.convertDateToString(date: date, format: 'dd-MM-yyyy');
 
       expect(formattedDate, expected);
@@ -22,10 +24,10 @@ void main() {
     });
 
     test('convertStringToDate should return correct date', () {
-      String stringDate = '03-02-2020';
-      DateTime expectedDate = DateTime(2020, DateTime.february, 3);
+      const String stringDate = '03-02-2020';
+      final DateTime expectedDate = DateTime(2020, DateTime.february, 3);
 
-      DateTime convertedDate = SILMisc.convertStringToDate(
+      final DateTime convertedDate = SILMisc.convertStringToDate(
         format: 'dd-MM-yyyy',
         dateTimeString: stringDate,
       );
@@ -35,11 +37,11 @@ void main() {
 
     test('should format currency as a integer', () {
       // setup
-      final int currency = 200;
-      final String expectedFormattedCurrency = '200';
+      const int currency = 200;
+      const String expectedFormattedCurrency = '200';
 
       // call the actual method
-      String actualFormattedCurrency = SILMisc.formatCurrency(currency);
+     final String actualFormattedCurrency = SILMisc.formatCurrency(currency);
 
       // verify functionality
       expect(actualFormattedCurrency, isNotNull);
@@ -49,11 +51,11 @@ void main() {
 
     test('should format currency as a double', () {
       // setup
-      final double currency = 200.55;
-      final String expectedFormattedCurrency = '201';
+      const double currency = 200.55;
+      const String expectedFormattedCurrency = '201';
 
       // call the actual method
-      String actualFormattedCurrency = SILMisc.formatCurrency(currency);
+      final String actualFormattedCurrency = SILMisc.formatCurrency(currency);
 
       // verify functionality
       expect(actualFormattedCurrency, isNotNull);
@@ -67,10 +69,10 @@ void main() {
     test('should format currency as a double', () {
       // setup
       final Widget currency = Container();
-      final String expectedFormattedCurrency = '0';
+      const String expectedFormattedCurrency = '0';
 
       // call the actual method
-      String actualFormattedCurrency = SILMisc.formatCurrency(currency);
+     final String actualFormattedCurrency = SILMisc.formatCurrency(currency);
 
       // verify functionality
       expect(actualFormattedCurrency, isNotNull);
@@ -82,9 +84,9 @@ void main() {
 
     test('should validate email', () {
       // setup
-      final String validEmail = 'a@a.com';
-      final String valiedDomainEmail = 'test@coverage.sil';
-      final String invalidEmail = 'wrongemail.comn';
+      const String validEmail = 'a@a.com';
+      const String valiedDomainEmail = 'test@coverage.sil';
+      const String invalidEmail = 'wrongemail.comn';
 
       // call the actual function with the input and verify functionality
       bool isValidEmail = SILMisc.validateEmail(validEmail);
@@ -101,14 +103,14 @@ void main() {
     });
 
     test('should get cover validity period', () {
-      final String validTo = '2021-08-01';
+      const String validTo = '2021-08-01';
       final String formattedValidTo = SILMisc.getCoverValidityPeriod(validTo);
       expect(formattedValidTo, isA<String>());
     });
 
     test('should get cover validity date', () {
-      final String validTo = '2021-08-01';
-      final String expectedValidity = 'Till Aug 01, 2021';
+      const String validTo = '2021-08-01';
+      const String expectedValidity = 'Till Aug 01, 2021';
       final String formattedValidTo = SILMisc.getValidityDate(validTo);
       expect(formattedValidTo, isA<String>());
       expect(formattedValidTo, expectedValidity);
@@ -116,7 +118,7 @@ void main() {
 
     test('should parse auth types', () {
       final List<String> authTypes = <String>['OTP', 'Fingerprint'];
-      final String expectedAuthTypes = 'OTP & Fingerprint ';
+      const String expectedAuthTypes = 'OTP & Fingerprint ';
       final String formattedAuthTypes = SILMisc.parseAuthTypes(authTypes);
       expect(formattedAuthTypes, isA<String>());
       expect(formattedAuthTypes, expectedAuthTypes);
@@ -142,10 +144,10 @@ void main() {
     });
 
     test('should return the correct greeting message', () {
-      final int morningHour = 11;
-      final int afternoonHour = 15;
-      final int eveningHour = 20;
-      final String firstName = 'coverage';
+      const int morningHour = 11;
+      const int afternoonHour = 15;
+      const int eveningHour = 20;
+      const String firstName = 'coverage';
 
       String greetingMessage =
           SILMisc.getGreetingMessage(firstName, currentHour: morningHour);
@@ -170,25 +172,25 @@ void main() {
     test('should test phone Number not starting with a + ', () {
       final String formatedNumber =
           SILMisc.formatPhoneNumber(countryCode: '254', phoneNumber: '1234567');
-      final String expectedNumber = '+2541234567';
+      const String expectedNumber = '+2541234567';
       expect(formatedNumber, expectedNumber);
     });
     test('should test if the phone number begins with +1', () {
       final String formatedNumber =
           SILMisc.formatPhoneNumber(countryCode: '+1', phoneNumber: '2345678');
-      final String expectedNumber = '+12345678';
+      const String expectedNumber = '+12345678';
       expect(formatedNumber, expectedNumber);
     });
     test('should test if a phone number begins with 0', () {
       final String formatedNumber = SILMisc.formatPhoneNumber(
           phoneNumber: '01234567', countryCode: '254');
-      final String expectedNumber = '+2541234567';
+      const String expectedNumber = '+2541234567';
       expect(formatedNumber, expectedNumber);
     });
     test('should test other phone number', () {
       final String formatedNumber = SILMisc.formatPhoneNumber(
           phoneNumber: '1234567', countryCode: '+255');
-      final String expectedNumber = '+2551234567';
+      const String expectedNumber = '+2551234567';
       expect(formatedNumber, expectedNumber);
     });
 
@@ -211,31 +213,32 @@ void main() {
 
     group('validatePhoneNumber', () {
       test('should return valid phone numbers', () {
-        String kenyanNumber = '+254123456789';
-        String usNumber = '+12025550163';
+       const String kenyanNumber = '+254123456789';
+       const String usNumber = '+12025550163';
 
         expect(SILMisc.validatePhoneNumber(kenyanNumber), true);
         expect(SILMisc.validatePhoneNumber(usNumber), true);
       });
 
       test('should return invalid phone number', () {
-        String testPhone = '+2123456789';
+       const String testPhone = '+2123456789';
 
         expect(SILMisc.validatePhoneNumber(testPhone), false);
       });
     });
 
     group('RefreshTokenManger', () {
+     final BehaviorSubject<dynamic> listen = BehaviorSubject<dynamic>();
       test('should updateExpireTime', () {
-        String time = '2021-02-01 10:15:21Z';
+       const String time = '2021-02-01 10:15:21Z';
         RefreshTokenManger().updateExpireTime(time);
         RefreshTokenManger().updateExpireTime(time).reset();
-        expect(RefreshTokenManger().updateExpireTime(time).listen.value, null);
+        expect(listen.valueWrapper, null);
       });
 
       test('should reset 6 minutes to the expiry time', () {
-        String approachingCurrentTime =
-            DateTime.now().add(Duration(minutes: 6)).toString();
+       final String approachingCurrentTime =
+            DateTime.now().add(const Duration(minutes: 6)).toString();
 
         RefreshTokenManger().checkExpireValidity(approachingCurrentTime);
         expect(RefreshTokenManger().checkExpireValidity(approachingCurrentTime),
@@ -246,18 +249,17 @@ void main() {
         //Reset expiry time
         RefreshTokenManger().updateExpireTime(approachingCurrentTime).reset();
 
-        expect(RefreshTokenManger().listen.value, null);
+        expect(listen.valueWrapper, null);
       });
 
       test('should reset 15 minutes to the expiry time', () {
-        String expiryTime =
-            DateTime.now().add(Duration(minutes: 15)).toString();
+       final String expiryTime =
+            DateTime.now().add(const Duration(minutes: 15)).toString();
 
         //Reset expiry time
         RefreshTokenManger().updateExpireTime(expiryTime).reset();
 
-        expect(RefreshTokenManger().updateExpireTime(expiryTime).listen.value,
-            null);
+        expect(listen.valueWrapper, null);
       });
     });
   });

@@ -19,7 +19,7 @@ class MockRouteGenerator {
 
       case MockRoutes.route1:
         return MaterialPageRoute<MaterialApp>(
-          builder: (_) => MaterialApp(
+          builder: (_) => const MaterialApp(
             home: Scaffold(
               appBar: SILSmallAppBar(title: MockRoutes.route1),
             ),
@@ -41,7 +41,7 @@ class MockRouteGenerator {
     }
 
     return MaterialPageRoute<MaterialApp>(
-      builder: (_) => MaterialApp(
+      builder: (_) =>const MaterialApp(
         home: Scaffold(
           appBar: SILSmallAppBar(title: 'Default route'),
         ),

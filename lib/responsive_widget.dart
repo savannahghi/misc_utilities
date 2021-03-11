@@ -7,6 +7,8 @@ enum DeviceScreenType { Mobile, Tablet, Desktop }
 
 /// Widget that draws depending on screen size as specified by the breakpoints.
 class ResponsiveWidget extends StatelessWidget {
+  const ResponsiveWidget(
+      {this.largeScreen, this.mediumScreen, this.smallScreen});
   /// Refer to https://developer.android.com/training/multiscreen/screensizes#TaskUseSWQuali
   static const int smallScreenBreakPoint = 900;
   static const int smallScreenHeight = 600;
@@ -16,17 +18,16 @@ class ResponsiveWidget extends StatelessWidget {
   /// The argument [largeScreen] must not be null.
   /// If medium screen is null then large screen will be drawn in place.
   /// if small screen is null then large screen will be drawn in place.
-  const ResponsiveWidget(
-      {this.largeScreen, this.mediumScreen, this.smallScreen});
+  
 
   /// Widget to be drawn on a large screen.
-  final Widget largeScreen;
+  final Widget? largeScreen;
 
   /// Widget to be drawn on a medium screen.
-  final Widget mediumScreen;
+  final Widget? mediumScreen;
 
   /// Widget to be drawn on a small screen.
-  final Widget smallScreen;
+  final Widget? smallScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +35,10 @@ class ResponsiveWidget extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         if (constraints.maxWidth >= smallScreenBreakPoint) {
-          return largeScreen;
+          return largeScreen!;
         } else {
           //if small screen implementation not available, then return large screen
-          return smallScreen ?? largeScreen;
+          return smallScreen ?? largeScreen!;
         }
       },
     );
@@ -73,7 +74,7 @@ class ResponsiveWidget extends StatelessWidget {
   }
 
   /// checks if a devices orientation is in landscape mode
-  static bool isLandscape({@required BuildContext context}) {
+  static bool isLandscape({required BuildContext context}) {
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return true;
     } else {
@@ -83,8 +84,8 @@ class ResponsiveWidget extends StatelessWidget {
 
   /// returns the device type but first checks the device orientation before checking its width
   static DeviceScreenType getDeviceType(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-    Orientation deviceOrientation = mediaQuery.orientation;
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final Orientation deviceOrientation = mediaQuery.orientation;
     double deviceWidth = 0;
     if (deviceOrientation == Orientation.landscape) {
       deviceWidth = mediaQuery.size.height;

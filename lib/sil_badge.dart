@@ -9,35 +9,37 @@ enum BadgeType {
 }
 
 class SILBadge extends StatelessWidget {
+   const SILBadge({
+    required this.text,
+    this.type = BadgeType.info,
+  });
   final String text;
   final BadgeType type;
 
-  SILBadge({
-    @required this.text,
-    this.type = BadgeType.info,
-  });
+ 
 
   @override
   Widget build(BuildContext context) {
     return type == BadgeType.danger
         //error badge
         ? Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: Text(text,
-                style: TextThemes.heavySize10Text(Color(0xFFE41518))),
+            padding:const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: Color(0xFFE41518).withOpacity(0.2),
+              color:const Color(0xFFE41518).withOpacity(0.2),
               borderRadius: BorderRadius.circular(25),
-            ))
+            ),
+            child: Text(text,
+                style: TextThemes.heavySize10Text(const Color(0xFFE41518))),
+          )
         //info badge
         : Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: Text(text,
-                style: TextThemes.heavySize10Text(Color(0xFFFFFFFF))),
+            padding:const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
               gradient: getAppGradient(context),
               borderRadius: BorderRadius.circular(25),
             ),
+            child: Text(text,
+                style: TextThemes.heavySize10Text(const Color(0xFFFFFFFF))),
           );
   }
 }

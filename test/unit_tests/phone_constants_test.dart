@@ -4,7 +4,7 @@ import 'package:sil_misc/utils/phone_constants.dart';
 void main() {
 //Us phone test
 
-  String testPhone = '+2547123456789';
+  const String testPhone = '+2547123456789';
   test('PhoneNoConstants', () {
     expect(PhoneNoConstants.allowPhoneComm,
         'Please allow use of your phone number');

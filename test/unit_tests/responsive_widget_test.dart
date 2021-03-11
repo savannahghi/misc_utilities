@@ -7,8 +7,8 @@ import '../test_utils/test_utils.dart';
 
 void main() {
   group('ResponsiveWidget tests', () {
-    final Text smallScreen = Text('small screen');
-    final Text largeScreen = Text('large screen');
+    const Text smallScreen = Text('small screen');
+    const Text largeScreen = Text('large screen');
 
     testWidgets('draws smallScreen when screen is small',
         (WidgetTester tester) async {
@@ -61,13 +61,13 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(builder: (BuildContext context) {
-            bool isSmallScreen = ResponsiveWidget.isSmallScreen(context);
-            bool isLargeScreen = ResponsiveWidget.isLargeScreen(context);
+            final bool isSmallScreen = ResponsiveWidget.isSmallScreen(context);
+            final bool isLargeScreen = ResponsiveWidget.isLargeScreen(context);
 
             expect(isSmallScreen, isFalse);
             expect(isLargeScreen, isTrue);
 
-            return Placeholder();
+            return const Placeholder();
           }),
         ),
       );
@@ -87,13 +87,13 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(builder: (BuildContext context) {
-            bool isSmallScreen = ResponsiveWidget.isSmallScreen(context);
-            bool isLargeScreen = ResponsiveWidget.isLargeScreen(context);
+           final bool isSmallScreen = ResponsiveWidget.isSmallScreen(context);
+            final bool isLargeScreen = ResponsiveWidget.isLargeScreen(context);
 
             expect(isSmallScreen, isTrue);
             expect(isLargeScreen, isFalse);
 
-            return Placeholder();
+            return const Placeholder();
           }),
         ),
       );
@@ -108,9 +108,9 @@ void main() {
 
 Future<void> _buildResponsiveWidget(
   WidgetTester tester, {
-  Widget smallScreen,
-  Widget mediumScreen,
-  Widget largeScreen,
+  Widget? smallScreen,
+  Widget? mediumScreen,
+  Widget? largeScreen,
 }) async {
   return tester.pumpWidget(
     MaterialApp(

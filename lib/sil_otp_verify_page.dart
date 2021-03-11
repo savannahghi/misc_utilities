@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:countdown_flutter/countdown_flutter.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:rxdart/rxdart.dart';
@@ -22,18 +23,8 @@ const int maxRetries = 3;
 /// 2. This library should be light-weight as possible
 /// 3. Easy to model and think through
 class VerifyModel {
-  int retryCount = 0;
-  bool invalidCode = false;
-  bool resending = false;
-  bool showResend = false;
-  bool isProcessing = false;
-  dynamic client;
-  String phoneNumber;
-  String email;
-  String otp;
-
   VerifyModel(
-      {this.retryCount,
+      {required this.retryCount,
       this.invalidCode,
       this.resending,
       this.showResend,
@@ -42,6 +33,15 @@ class VerifyModel {
       this.phoneNumber,
       this.email,
       this.otp});
+  int retryCount = 0;
+  bool? invalidCode = false;
+  bool? resending = false;
+  bool? showResend = false;
+  bool? isProcessing = false;
+  dynamic client;
+  String? phoneNumber;
+  String? email;
+  String? otp;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'retryCount': retryCount,
@@ -60,20 +60,21 @@ class VerifyModel {
 /// returns a singleton whose job is to provide initial state and mutate that state on call
 /// the [SILVerifyOTPPage] should change the UI to reflect changes in the state
 class StateManager {
-  static final StateManager _singleton = StateManager._internal();
-
   factory StateManager() {
     return _singleton;
   }
-
   StateManager._internal();
+  static final StateManager _singleton = StateManager._internal();
+
+  
 
   final BehaviorSubject<VerifyModel> _state = BehaviorSubject<VerifyModel>();
 
   ValueStream<VerifyModel> get stream$ => _state.stream;
-  VerifyModel get current => _state.value;
+  VerifyModel? get current => _state.value;
 
-  void initial({String phoneNumber, String email, String otp, dynamic client}) {
+  void initial(
+      {String? phoneNumber, String? email, String? otp, dynamic client}) {
     _state.add(VerifyModel(
       phoneNumber: phoneNumber,
       email: email,
@@ -88,12 +89,12 @@ class StateManager {
   }
 
   void update(
-      {bool invalidCode,
-      bool resending,
-      bool showResend,
-      String otp,
-      bool isProcessing}) {
-    final VerifyModel current = this.current;
+      {bool? invalidCode,
+      bool? resending,
+      bool? showResend,
+      String? otp,
+      bool? isProcessing}) {
+    final VerifyModel current = this.current!;
     this._state.add(VerifyModel(
           retryCount:
               resending == true ? current.retryCount += 1 : current.retryCount,
@@ -142,6 +143,25 @@ class StateManager {
 /// ````
 
 class SILVerifyOTPPage extends StatelessWidget {
+  SILVerifyOTPPage(
+      {required this.otp,
+      required this.phone,
+      required this.email,
+      required this.vType,
+      required this.client,
+      this.successCallback,
+      this.afterSuccessCallback,
+      this.onFailBackCallback,
+      this.generateOtpFunc,
+      this.sendOtpFunc,
+      this.showAlertSnackBarFunc,
+      this.loader,
+      this.retryTimeout}) {
+    this
+        .manager
+        .initial(phoneNumber: phone, email: email, otp: otp, client: client);
+  }
+
   final TextEditingController textEditingController = TextEditingController();
 
   /// [otp] the otp to verify against with
@@ -160,58 +180,39 @@ class SILVerifyOTPPage extends StatelessWidget {
   final dynamic client;
 
   /// [successCallback] called when otp has been verified successfully
-  final VerifySuccessCallback successCallback;
+  final VerifySuccessCallback? successCallback;
 
   /// [afterSuccessCallback] subsequent calls after successful otp verification
-  final Function afterSuccessCallback;
+  final Function? afterSuccessCallback;
 
   /// [onFailBackCallback] a navigation callback that will be called when the user reaches the maximum
   /// retry count
-  final Function onFailBackCallback;
+  final Function? onFailBackCallback;
 
   /// [GenerateRetryOtpFunc] will be called to generate a new otp
-  final GenerateRetryOtpFunc generateOtpFunc;
+  final GenerateRetryOtpFunc? generateOtpFunc;
 
-  final SendOtpFunc sendOtpFunc;
+  final SendOtpFunc? sendOtpFunc;
 
-  final Function showAlertSnackBarFunc;
+  final Function? showAlertSnackBarFunc;
 
-  final int retryTimeout;
+  final int? retryTimeout;
 
   final List<Function> callbacks = <Function>[];
 
-  final Widget loader;
+  final Widget? loader;
 
   final StateManager manager = StateManager();
 
-  SILVerifyOTPPage(
-      {Key key,
-      @required this.otp,
-      @required this.phone,
-      @required this.email,
-      @required this.vType,
-      @required this.client,
-      this.successCallback,
-      this.afterSuccessCallback,
-      this.onFailBackCallback,
-      this.generateOtpFunc,
-      this.sendOtpFunc,
-      this.showAlertSnackBarFunc,
-      this.loader,
-      this.retryTimeout}) {
-    this
-        .manager
-        .initial(phoneNumber: phone, email: email, otp: otp, client: client);
-  }
-
-  Function resendOtp(BuildContext context, String phone, dynamic client) {
+  
+  Function resendOtp(BuildContext context, String? phone, dynamic client) {
     return (int step) async {
       this.manager.update(resending: true);
-      dynamic otpCode = await this
-          .generateOtpFunc(client: client, phoneNumber: phone, step: step);
+      final String otpCode = await this.generateOtpFunc!(
+          client: client, phoneNumber: phone, step: step);
       if (otpCode != 'Error') {
         if (this.showAlertSnackBarFunc != null) {
-          this.showAlertSnackBarFunc(
+          this.showAlertSnackBarFunc!(
               context: context,
               message:
                   'A six digit code has been sent to ${step == 1 ? " your WhatsApp number" : this.phone}',
@@ -220,16 +221,16 @@ class SILVerifyOTPPage extends StatelessWidget {
         this.manager.update(showResend: false, otp: otpCode, resending: false);
       } else {
         if (this.showAlertSnackBarFunc != null) {
-          this.showAlertSnackBarFunc(context: context);
+          this.showAlertSnackBarFunc!(context: context);
         }
       }
     };
   }
 
-  Function resendOtpEmail(BuildContext context, String email, dynamic client) {
+  Function resendOtpEmail(BuildContext context, String? email, dynamic client) {
     return (int x) async {
       this.manager.update(resending: true);
-      dynamic otpCode = await this.sendOtpFunc(
+     final String otpCode = await this.sendOtpFunc!(
           context: context,
           client: client,
           email: this.email,
@@ -239,7 +240,7 @@ class SILVerifyOTPPage extends StatelessWidget {
           logDescription: 'send a verification to ');
       if (otpCode != 'Error') {
         if (this.showAlertSnackBarFunc != null) {
-          this.showAlertSnackBarFunc(
+          this.showAlertSnackBarFunc!(
               context: context,
               message: 'A verification code has been sent to ${this.email}',
               type: SnackBarType.info);
@@ -247,7 +248,7 @@ class SILVerifyOTPPage extends StatelessWidget {
         this.manager.update(showResend: false, otp: otpCode, resending: false);
       } else {
         if (this.showAlertSnackBarFunc != null) {
-          this.showAlertSnackBarFunc(context: context);
+          this.showAlertSnackBarFunc!(context: context);
         }
       }
     };
@@ -260,9 +261,9 @@ class SILVerifyOTPPage extends StatelessWidget {
     return StreamBuilder<VerifyModel>(
       stream: this.manager.stream$,
       builder: (BuildContext context, AsyncSnapshot<VerifyModel> snap) {
-        final VerifyModel data = snap.data;
+        final VerifyModel data = snap.data!;
 
-        print(data.toJson());
+       
 
         // remove previously set callbacks
         callbacks.removeRange(0, callbacks.length);
@@ -272,8 +273,8 @@ class SILVerifyOTPPage extends StatelessWidget {
         }
 
         return Column(
-          children: <Widget>[
-            Text('Enter the code below'),
+          children: <Widget?>[
+            const Text('Enter the code below'),
             smallVerticalSizedBox,
             smallVerticalSizedBox,
             PinCodeTextField(
@@ -290,30 +291,29 @@ class SILVerifyOTPPage extends StatelessWidget {
               pinBoxHeight: 38,
               wrapAlignment: WrapAlignment.spaceAround,
               pinBoxDecoration: SILMisc.customRoundedPinBoxDecoration,
-              pinTextStyle: TextStyle(fontSize: 10.0),
+              pinTextStyle:const TextStyle(fontSize: 10.0),
               pinTextAnimatedSwitcherTransition:
                   ProvidedPinBoxTextAnimation.scalingTransition,
               pinBoxColor: Theme.of(context).backgroundColor,
-              pinTextAnimatedSwitcherDuration: Duration(milliseconds: 300),
+              pinTextAnimatedSwitcherDuration:const Duration(milliseconds: 300),
               //highlightAnimation: true,
               highlightAnimationBeginColor: Colors.black,
               highlightAnimationEndColor: Colors.white12,
-              keyboardType: TextInputType.number,
               onDone: (dynamic value) async {
                 if (value == data.otp) {
                   this.manager.update(invalidCode: false, resending: false);
                   if (this.successCallback != null) {
                     this.manager.update(isProcessing: true);
-                    if (await this.successCallback(
+                    if (await this.successCallback!(
                         otp: otp, email: this.email, phone: this.phone)) {
                       if (this.afterSuccessCallback != null) {
-                        this.afterSuccessCallback();
+                        this.afterSuccessCallback!();
                         this.manager.update(isProcessing: false);
                       }
                     }
                   }
                   if (this.showAlertSnackBarFunc != null) {
-                    this.showAlertSnackBarFunc(context: context);
+                    this.showAlertSnackBarFunc!(context: context);
                   }
                   return;
                 }
@@ -323,43 +323,43 @@ class SILVerifyOTPPage extends StatelessWidget {
               },
             ),
             smallVerticalSizedBox,
-            if (data.invalidCode)
+            if (data.invalidCode!)
               Text(
                 'Wrong PIN. Please try again',
                 style: TextThemes.boldSize16Text(Colors.red),
               ),
-            if (data.resending) ...<Widget>[
+            if (data.resending!) ...<Widget?>[
               mediumVerticalSizedBox,
               this.loader,
               smallVerticalSizedBox,
             ],
-            if (data.isProcessing) ...<Widget>[
+            if (data.isProcessing!) ...<Widget?>[
               mediumVerticalSizedBox,
               this.loader,
               smallVerticalSizedBox,
             ],
             mediumVerticalSizedBox,
             ...<Widget>[
-              if (!data.showResend && (data.retryCount < maxRetries))
+              if (!data.showResend! && (data.retryCount < maxRetries))
                 CountdownFormatted(
                     duration: Duration(
                         seconds: this.retryTimeout ?? otpResendTimeoutDuration),
                     onFinish: () {
-                      print('call on counter finished');
+                     
                       this.manager.update(showResend: true);
                     },
                     builder: (BuildContext ctx, String remaining) {
                       return Text(
                         remaining,
-                        style: TextStyle(fontSize: 30),
+                        style:const TextStyle(fontSize: 30),
                       );
                     }),
-              if (data.showResend && (data.retryCount < maxRetries))
+              if (data.showResend! && (data.retryCount < maxRetries))
                 if (isPhone)
                   data.retryCount <= maxRetries
                       ? PhoneCodeResend(callbacks: this.callbacks)
                       : Container(),
-              if (data.showResend && (data.retryCount < maxRetries))
+              if (data.showResend! && (data.retryCount < maxRetries))
                 if (!isPhone)
                   data.retryCount <= maxRetries
                       ? ResendBtn(
@@ -374,7 +374,7 @@ class SILVerifyOTPPage extends StatelessWidget {
             if (data.retryCount >= maxRetries)
               Column(
                 children: <Widget>[
-                  Text(
+                 const Text(
                     'Maximum attempts reached. If the code fails to arrive, please go back to try again',
                     textAlign: TextAlign.justify,
                   ),
@@ -382,18 +382,18 @@ class SILVerifyOTPPage extends StatelessWidget {
                   RawMaterialButton(
                     onPressed: () {
                       this.onFailBackCallback != null
-                          ? this.onFailBackCallback()
+                          ? this.onFailBackCallback!()
                           : Navigator.pop(context);
                     },
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    shape: RoundedRectangleBorder(
+                    padding:const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    shape:const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(6))),
                     fillColor: green,
                     child: Text(
                       'GO BACK',
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .bodyText1!
                           .copyWith(color: Colors.white),
                     ),
                   ),
@@ -406,7 +406,7 @@ class SILVerifyOTPPage extends StatelessWidget {
               2,
             ].contains(data.retryCount))
               Text('Remaining ${maxRetries - data.retryCount} attempts'),
-          ],
+          ] as List<Widget>,
         );
       },
     );
@@ -414,11 +414,12 @@ class SILVerifyOTPPage extends StatelessWidget {
 }
 
 class PhoneCodeResend extends StatefulWidget {
+  const PhoneCodeResend({
+    required this.callbacks,
+  });
   final List<Function> callbacks;
 
-  const PhoneCodeResend({
-    @required this.callbacks,
-  });
+  
   @override
   PhoneCodeResendState createState() => PhoneCodeResendState();
 }
@@ -460,16 +461,17 @@ class PhoneCodeResendState extends State<PhoneCodeResend> {
 }
 
 class ResendBtn extends StatelessWidget {
+  const ResendBtn({
+    Key? key,
+    this.fill = Colors.white,
+    required this.callback,
+    required this.txt,
+  }) : super(key: key);
   final Color fill;
   final Function callback;
   final String txt;
 
-  const ResendBtn({
-    Key key,
-    this.fill = Colors.white,
-    @required this.callback,
-    @required this.txt,
-  }) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -478,13 +480,13 @@ class ResendBtn extends StatelessWidget {
           onPressed: () {
             callback(txt == 'Resend via WhatsApp' ? 1 : 2);
           },
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          shape: RoundedRectangleBorder(
+          padding:const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          shape:const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(6))),
           fillColor: fill,
           child: Text(
             txt,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(
+            style: Theme.of(context).textTheme.bodyText1!.copyWith(
                 color: fill == Colors.white ? Colors.grey : Colors.white),
           ),
         ),

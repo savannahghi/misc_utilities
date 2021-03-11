@@ -17,8 +17,8 @@ import 'package:sil_themes/text_themes.dart';
 typedef OnFileChanged = void Function(dynamic value);
 
 typedef GetUploadId = Future<String> Function({
-  @required Map<String, dynamic> fileData,
-  @required BuildContext context,
+  required Map<String, dynamic> fileData,
+  required BuildContext context,
 });
 
 /// renders a widget that can be used to
@@ -32,6 +32,18 @@ typedef GetUploadId = Future<String> Function({
 /// [snackBarTypes] is a list of the types of snackbars available
 
 class BWFileManager extends StatefulWidget {
+  const BWFileManager({
+    Key? key,
+    required this.onChanged,
+    required this.name,
+    required this.getUploadId,
+    required this.silLoader,
+    required this.showAlertSnackBar,
+    required this.snackBarTypes,
+    this.allowedExtensions = const <String>['jpg', 'png'],
+    this.invalidF = false,
+  }) : super(key: key);
+
   final OnFileChanged onChanged;
   final bool invalidF;
   final String name;
@@ -41,34 +53,16 @@ class BWFileManager extends StatefulWidget {
   final Function showAlertSnackBar;
   final List<dynamic> snackBarTypes;
 
-  const BWFileManager({
-    Key key,
-    @required this.onChanged,
-    @required this.name,
-    @required this.getUploadId,
-    @required this.silLoader,
-    @required this.showAlertSnackBar,
-    @required this.snackBarTypes,
-    this.allowedExtensions = const <String>['jpg', 'png'],
-    this.invalidF = false,
-  }) : super(key: key);
+  
   @override
   _BWFileManagerState createState() => _BWFileManagerState();
 }
 
 class _BWFileManagerState extends State<BWFileManager> {
-  File file;
+  File? file;
   bool uploading = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-  }
+  
 
   void toggleUpload() {
     setState(() {
@@ -89,7 +83,7 @@ class _BWFileManagerState extends State<BWFileManager> {
 
   /// select file from storage
   Future<void> selectFile() async {
-    FilePickerResult result;
+    FilePickerResult? result;
     try {
       /// Retrieves the file(s) from the underlying platform
       ///
@@ -107,11 +101,11 @@ class _BWFileManagerState extends State<BWFileManager> {
     }
     if (result != null) {
       /// checks that [result.files] has one file and returns that file
-      File selectedFile = File(result.files.single.path);
+      final File selectedFile = File(result.files.single.path!);
       toggleUpload();
 
       /// uploads the file and returns an [uploadID]
-      String uploadId = await widget.getUploadId(
+      final String uploadId = await widget.getUploadId(
           fileData: getFileData(selectedFile), context: context);
       toggleUpload();
       if (uploadId == 'err') {
@@ -134,20 +128,28 @@ class _BWFileManagerState extends State<BWFileManager> {
     }
   }
 
-  static Future<File> openCamera({@required BuildContext context}) async {
-    return await Navigator.push(context,
-        MaterialPageRoute<File>(builder: (BuildContext context) => Camera()));
+  Future<File?> openCamera({required BuildContext context}) async {
+    return Navigator.push(
+      context,
+      MaterialPageRoute<File>(
+        builder: (BuildContext context) => CameraCamera(
+          onFile: (File file) {
+            onFile(file);
+          },
+        ),
+      ),
+    );
   }
 
-  static Future<File> compressAndGetFile(File file) async {
+  static Future<File?> compressAndGetFile(File file) async {
     final String filePath = file.absolute.path;
 
     // Create output file path
-    final int lastIndex = filePath.lastIndexOf(RegExp(r'.jp'));
-    final String splitFilePath = filePath?.substring(0, lastIndex);
+    final int lastIndex = filePath.lastIndexOf(RegExp('.jp'));
+    final String splitFilePath = filePath.substring(0, lastIndex);
     final String outPath =
         '${splitFilePath}_out${filePath.substring(lastIndex)}';
-    File result = await FlutterImageCompress.compressAndGetFile(
+   final  File? result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       outPath,
       quality: 30,
@@ -158,15 +160,18 @@ class _BWFileManagerState extends State<BWFileManager> {
   /// take photo with camera
   Future<void> takePhoto() async {
     /// shows a dialogue that pushes a [MaterialPageRoute]
-    File pickedFile = await openCamera(context: context);
-    File compressedFile = await compressAndGetFile(pickedFile);
+    await openCamera(context: context);
+  }
+
+  Future<void> onFile(File file) async {
+    final File compressedFile = (await compressAndGetFile(file))!;
     final File image = File(compressedFile.path);
 
-    File selectedFile = image;
+    final File selectedFile = image;
     toggleUpload();
 
     /// uploads the file and returns an [uploadID
-    String uploadId = await widget.getUploadId(
+    final String uploadId = await widget.getUploadId(
         fileData: getFileData(selectedFile), context: context);
     toggleUpload();
     if (uploadId == 'err') {
@@ -177,7 +182,6 @@ class _BWFileManagerState extends State<BWFileManager> {
       return;
     }
     setState(() {
-      file = selectedFile;
       widget.onChanged(uploadId);
     });
   }
@@ -189,10 +193,9 @@ class _BWFileManagerState extends State<BWFileManager> {
       children: <Widget>[
         DottedBorder(
           color: Theme.of(context).primaryColor.withOpacity(0.8),
-          strokeWidth: 1,
-          dashPattern: <double>[14, 6],
+          dashPattern:const <double>[14, 6],
           borderType: BorderType.RRect,
-          radius: Radius.circular(10),
+          radius:const Radius.circular(10),
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
@@ -239,9 +242,9 @@ class _BWFileManagerState extends State<BWFileManager> {
 
                             /// -----reset file set to none
                             if (file != null) ...<Widget>[
-                              Container(
-                                child: Image.file(file),
+                              SizedBox(            
                                 height: 90,
+                                child: Image.file(file!),
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -252,7 +255,7 @@ class _BWFileManagerState extends State<BWFileManager> {
                                 },
                                 child: Column(
                                   children: <Widget>[
-                                    Icon(MdiIcons.closeCircle),
+                                   const Icon(MdiIcons.closeCircle),
                                     Text(UserFeedBackTexts.controlLabels[2]),
                                   ],
                                 ),
@@ -263,7 +266,7 @@ class _BWFileManagerState extends State<BWFileManager> {
                       ),
                       Container(
                         width: double.infinity,
-                        padding: EdgeInsets.all(10),
+                        padding:const EdgeInsets.all(10),
                         color: Colors.blueAccent.withOpacity(0.05),
                         child: Center(
                           child: Text(
@@ -291,13 +294,13 @@ class _BWFileManagerState extends State<BWFileManager> {
 
   /// builds a tappable widget to select file or take photo
   Widget _buildGestureDetector({
-    BuildContext context,
-    Function onTap,
-    String iconPath,
-    String text,
+    BuildContext? context,
+    Function? onTap,
+    required String iconPath,
+    required String text,
   }) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Column(
         children: <Widget>[
           SvgPicture.asset(

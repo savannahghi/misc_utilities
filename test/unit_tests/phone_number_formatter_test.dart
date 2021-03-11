@@ -2,11 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sil_misc/utils/phone_number_formatter.dart';
 
 void main() {
-  String usNumber = '+12025550163';
-  String usNumberFormated = '(+1) 202-5550163';
+  const String usNumber = '+12025550163';
+  const String usNumberFormated = '(+1) 202-5550163';
 
-  String keNumber = '+254776259035';
-  String keNumberFormated = '(+254) 776-259035';
+  const String keNumber = '+254776259035';
+  const String keNumberFormated = '(+254) 776-259035';
 
 //Us phone test
   test('US phone format test', () {

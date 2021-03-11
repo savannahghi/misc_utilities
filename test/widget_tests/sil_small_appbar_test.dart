@@ -10,10 +10,10 @@ void main() {
   group('SILSmallAppbar', () {
     testWidgets('should render a normal appbar correctly',
         (WidgetTester tester) async {
-      final String appbarTitle = 'small appbar';
+      const String appbarTitle = 'small appbar';
       final String expectedAppbarTitle = SILMisc.titleCase(appbarTitle);
       await tester.pumpWidget(
-        MaterialApp(
+       const MaterialApp(
           home: Scaffold(appBar: SILSmallAppBar(title: appbarTitle)),
         ),
       );
@@ -27,7 +27,7 @@ void main() {
 
     testWidgets('should render an appbar with tabs',
         (WidgetTester tester) async {
-      final String appbarTitle = 'small appbar';
+      const String appbarTitle = 'small appbar';
       final List<String> tabtitles = <String>['Test', 'Coverage', '100%'];
       final String expectedAppbarTitle = SILMisc.titleCase(appbarTitle);
 
@@ -50,7 +50,7 @@ void main() {
 
     testWidgets('should navigate to back route when provided',
         (WidgetTester tester) async {
-      MockNavigatorObserver navigatorObserver = MockNavigatorObserver();
+     final MockNavigatorObserver navigatorObserver = MockNavigatorObserver();
       await tester.pumpWidget(MaterialApp(
         initialRoute: MockRoutes.route2,
         onGenerateRoute: MockRouteGenerator.generateRoute,

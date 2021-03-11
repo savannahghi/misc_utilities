@@ -3,12 +3,12 @@ library sil_misc;
 import 'dart:async';
 import 'dart:io';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sil_misc/utils/widget_keys.dart';
 
@@ -23,20 +23,19 @@ class PageCopy {
 }
 
 class SILException implements Exception {
+  SILException({required this.cause, required this.message});
   final dynamic message;
   final dynamic cause;
-
-  SILException({@required this.cause, @required this.message});
 }
 
 class SILMisc {
   static LinearGradient backgroundGradient(
-          {@required dynamic primaryLinearGradientColor,
-          @required dynamic primaryColor}) =>
+          {required int primaryLinearGradientColor,
+          required int primaryColor}) =>
       LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        stops: <double>[0, 0.7],
+        stops: const <double>[0, 0.7],
         colors: <Color>[
           Color(primaryLinearGradientColor),
           Color(primaryColor),
@@ -44,8 +43,8 @@ class SILMisc {
       );
 
   static String convertDateToString({
-    @required DateTime date,
-    @required String format,
+    required DateTime date,
+    required String format,
   }) {
     return DateFormat(format).format(date);
   }
@@ -55,22 +54,22 @@ class SILMisc {
   /// Usage:
   ///
   /// if you pass in a name like 'Abiud Orina', it returns 'AO'
-  static String extractNamesInitials({@required String name}) {
+  static String extractNamesInitials({required String name}) {
     final List<String> parts = name.split(' ');
     if (parts.length >= 2) {
-      String initials = ' ';
+      final StringBuffer initials = StringBuffer();
       for (int i = 0; i <= 1; i++) {
         final String part = parts[i];
-        initials = initials + part[0].toUpperCase();
+        initials.write(part[0].toUpperCase());
       }
-      return initials.trim().substring(0, 2);
+      return initials.toString().trim().substring(0, 2);
     }
     return parts.first.split('')[0].toUpperCase();
   }
 
   /// converts a valid date time string to a [DateTime] object
   static DateTime convertStringToDate(
-      {@required String dateTimeString, @required String format}) {
+      {required String dateTimeString, required String format}) {
     return DateFormat(format).parse(dateTimeString);
   }
 
@@ -84,11 +83,11 @@ class SILMisc {
     return false;
   }
 
-  static PinBoxDecoration customRoundedPinBoxDecoration = (
+ static BoxDecoration customRoundedPinBoxDecoration(
     Color borderColor,
     Color pinBoxColor, {
     double borderWidth = 1.0,
-    double radius,
+    double? radius,
   }) {
     return BoxDecoration(
         border: Border.all(
@@ -96,19 +95,19 @@ class SILMisc {
           width: borderWidth,
         ),
         color: pinBoxColor,
-        borderRadius: BorderRadius.all(Radius.circular(8)));
-  };
+        borderRadius: const BorderRadius.all(Radius.circular(8)));
+  }
 
   static String formatPhoneNumber(
-      {@required String countryCode, @required String phoneNumber}) {
+      {required String countryCode, required String phoneNumber}) {
     if (!countryCode.startsWith('+')) {
-      countryCode = '+$countryCode';
+      return '+$countryCode';
     }
     if (countryCode == '+1') {
       return '$countryCode$phoneNumber';
     }
     if (phoneNumber.startsWith('0')) {
-      phoneNumber = phoneNumber.substring(1);
+      return phoneNumber.substring(1);
     }
     return '$countryCode$phoneNumber';
   }
@@ -118,20 +117,18 @@ class SILMisc {
   /// pass in a valid validTo string and it returns
   /// a validity period in human readable form
   static String getCoverValidityPeriod(String validTo) {
-    Duration validityDuration =
+    final Duration validityDuration =
         DateTime.parse(validTo).difference(DateTime.now());
-    String remainingMonths = (validityDuration.inDays / 30).floor().toString();
-    String remainingDays = (validityDuration.inDays % 30).floor().toString();
-    return 'Valid for the next ' +
-        remainingMonths +
-        ' months and ' +
-        remainingDays +
-        ' days';
+    final String remainingMonths =
+        (validityDuration.inDays / 30).floor().toString();
+    final String remainingDays =
+        (validityDuration.inDays % 30).floor().toString();
+    return 'Valid for the next $remainingMonths months and $remainingDays days';
   }
 
   /// formats the validity date into a human readable format
   static String getValidityDate(String validTo) {
-    return 'Till ' + DateFormat('MMM dd, yyyy').format(DateTime.parse(validTo));
+    return 'Till ${DateFormat('MMM dd, yyyy').format(DateTime.parse(validTo))}';
   }
 
   /// validates an email against a regex
@@ -162,7 +159,7 @@ class SILMisc {
   }
 
   /// returns the list of auth types by removing the last comma
-  static String parseAuthTypes(List<dynamic> authenticationTypes) {
+  static String parseAuthTypes(List<String> authenticationTypes) {
     String auth = '';
 
     for (int i = 0; i < authenticationTypes.length; i++) {
@@ -170,9 +167,9 @@ class SILMisc {
       //. check if its last or only item so as not to
       // append a comma
       if ((i + 1) == authenticationTypes.length) {
-        auth = auth + '$_auth ';
+        auth = '$auth${'$_auth '}';
       } else {
-        auth = auth + '$_auth & ';
+        auth = '$auth${'$_auth & '}';
       }
     }
 
@@ -180,29 +177,30 @@ class SILMisc {
   }
 
   static void showErr(BuildContext ctx,
-      [String msg, Color color = Colors.red]) {
-    Scaffold.of(ctx).showSnackBar(SnackBar(
+      [String? msg, Color color = Colors.red]) {
+    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
       backgroundColor: color,
       content: Text(
         msg ?? UserFeedBackTexts.getErrorMessage(),
-        style: Theme.of(ctx).textTheme.bodyText2.copyWith(color: Colors.white),
+        style: Theme.of(ctx).textTheme.bodyText2!.copyWith(color: Colors.white),
       ),
-      duration: Duration(seconds: kShortSnackBarDuration),
+      duration: const Duration(seconds: kShortSnackBarDuration),
     ));
     return;
   }
 
   /// gets the current time of day and determines which type of greetings to show
   /// to the user
-  static String getGreetingMessage(String firstName, {int currentHour}) {
-    int hour = currentHour ?? DateTime.now().hour;
+  static String getGreetingMessage(String? firstName, {int? currentHour}) {
+    final int hour = currentHour ?? DateTime.now().hour;
+    final String name = firstName == null ? '' : ', $firstName';
     if (hour < 12) {
-      return 'Good Morning, ${firstName ?? 'unknown'}';
+      return 'Good Morning$name';
     }
     if (hour < 17) {
-      return 'Good Afternoon, ${firstName ?? 'unknown'}';
+      return 'Good Afternoon$name';
     }
-    return 'Good Evening, ${firstName ?? 'unknown'}';
+    return 'Good Evening$name';
   }
 
   // removes underscores from a sentence
@@ -211,17 +209,17 @@ class SILMisc {
   }
 
   static void bottomSheet(
-      {@required BuildContext context,
-      @required String message,
-      @required Function action,
-      @required Color backgroundColor,
-      @required Color textColor,
-      @required Color primaryColor}) {
+      {required BuildContext context,
+      required String message,
+      required Function? action,
+      required Color backgroundColor,
+      required Color textColor,
+      required Color primaryColor}) {
     showModalBottomSheet<List<dynamic>>(
         context: context,
         enableDrag: true,
         isDismissible: true,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
@@ -230,7 +228,7 @@ class SILMisc {
         builder: (BuildContext bc) {
           return Container(
             key: containerKey,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40.0),
                 topRight: Radius.circular(40.0),
@@ -238,14 +236,14 @@ class SILMisc {
             ),
             height: action != null ? 314.0 : 250.0,
             child: Padding(
-              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
               child: Column(
                 key: columnKey,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   CircleAvatar(
                     radius: 30.0,
-                    backgroundColor: Color(0xFF50C878),
+                    backgroundColor: const Color(0xFF50C878),
                     child: Icon(
                       Icons.check,
                       size: 36.0,
@@ -253,34 +251,34 @@ class SILMisc {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Text(
                       message,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline6.copyWith(
+                      style: Theme.of(context).textTheme.headline6!.copyWith(
                             color: textColor,
                           ),
                     ),
                   ),
                   if (action != null)
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       width: double.infinity,
                       height: 56,
                       child: MaterialButton(
                         key: okButtonKey,
                         elevation: 0,
-                        child: Text('OK',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 20,
-                            )),
                         color: primaryColor,
                         textColor: Theme.of(context).backgroundColor,
                         onPressed: () {
                           Navigator.pop(context);
                           action();
                         },
+                        child: const Text('OK',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 20,
+                            )),
                       ),
                     ),
                 ],
@@ -291,16 +289,16 @@ class SILMisc {
   }
 
   static void verifyOTPErrorBottomSheet(
-      {@required BuildContext context,
-      @required String message,
-      @required Function actionEnterCode,
-      @required Color textColor,
-      @required Color primaryColor}) {
+      {required BuildContext context,
+      required String message,
+      required Function? actionEnterCode,
+      required Color textColor,
+      required Color primaryColor}) {
     showModalBottomSheet<List<dynamic>>(
         context: context,
         enableDrag: true,
         isDismissible: true,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
@@ -309,7 +307,7 @@ class SILMisc {
         builder: (BuildContext bc) {
           return Container(
             key: containerKey,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40.0),
                 topRight: Radius.circular(40.0),
@@ -317,19 +315,19 @@ class SILMisc {
             ),
             height: actionEnterCode != null ? 314.0 : 250.0,
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Column(
                 key: columnKey,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.all(
                         Radius.circular(40.0),
                       ),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.error,
                       size: 58,
                       color: Colors.white,
@@ -338,15 +336,17 @@ class SILMisc {
                   Center(
                     child: Text(
                       message,
-                      style: Theme.of(context).textTheme.headline6.copyWith(
-                            color: Theme.of(context).textSelectionColor,
+                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                            color: Theme.of(context)
+                                .textSelectionTheme
+                                .selectionColor,
                           ),
                     ),
                   ),
                   if (actionEnterCode != null)
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: SizedBox(
                         width: double.infinity,
                         child: MaterialButton(
                           key: reenterCodeButtonKey,
@@ -356,7 +356,7 @@ class SILMisc {
                             Navigator.pop(context);
                             actionEnterCode();
                           },
-                          child: Text(
+                          child: const Text(
                             'RE-ENTER CODE',
                             style: TextStyle(
                               color: Colors.white,
@@ -375,21 +375,23 @@ class SILMisc {
   }
 
   static SnackBar snackbar(
-      {@required dynamic content,
+      {required dynamic content,
       int durationSeconds = 10,
-      String label,
-      Function callback}) {
-    // ignore: always_specify_types
-    if (![String, Widget].contains(content.runtimeType)) {
-      FlutterError.dumpErrorToConsole(FlutterErrorDetails(
+      String? label,
+      Function? callback}) {
+    if (!<dynamic>[String, Widget].contains(content.runtimeType)) {
+      FlutterError.dumpErrorToConsole(const FlutterErrorDetails(
           exception: 'Content must be either of type String or Widget!'));
     }
 
     return SnackBar(
-      content: content.runtimeType == String ? Text(content) : content,
+      content: content.runtimeType == String
+          ? Text(content as String)
+          : content as Widget,
       duration: Duration(seconds: durationSeconds),
       action: callback != null
-          ? SnackBarAction(label: label, onPressed: callback)
+          ? SnackBarAction(
+              label: label!, onPressed: callback as void Function())
           : null,
     );
   }
@@ -404,7 +406,7 @@ class SILMisc {
 
   static Map<String, dynamic> uploadMutationVariable(
       Map<String, dynamic> payload) {
-    Map<String, dynamic> inputVariables = <String, dynamic>{};
+    final Map<String, dynamic> inputVariables = <String, dynamic>{};
     inputVariables['title'] = payload['title'];
     inputVariables['contentType'] = payload['contentType'];
     inputVariables['language'] = 'en';
@@ -440,13 +442,13 @@ class SILMisc {
 ///     do some time math and determine whether its the right time to call for a
 ///     a fresh id-token
 class RefreshTokenManger {
-  static final RefreshTokenManger _singleton = RefreshTokenManger._internal();
-
   factory RefreshTokenManger() {
     return _singleton;
   }
 
   RefreshTokenManger._internal();
+
+  static final RefreshTokenManger _singleton = RefreshTokenManger._internal();
 
   //ignore: close_sinks
   BehaviorSubject<dynamic> listen = BehaviorSubject<dynamic>();
@@ -477,7 +479,7 @@ class RefreshTokenManger {
 
   /// [checkExpireValidity] for checking whether the expire time is valid.
   /// Recommended to be called just before the app draws its first widget in main.dart
-  bool checkExpireValidity(String expireAt) {
+  bool checkExpireValidity(String? expireAt) {
     try {
       if (expireAt == null || expireAt.isEmpty) {
         return false;
@@ -498,13 +500,12 @@ class RefreshTokenManger {
   /// [reset] is responsible for resetting the timeout clock and notifying the listener [listen]
   /// when fetch a new token
   void reset() {
-    print(
-        '===> Expiry timer reset has been set for time ${this._expireTime.value}');
+    
 
     try {
       if (this._expireTime.value != null) {
         // this is the time from login or retrieved from state store as string
-        final DateTime _parsed = DateTime.parse(this._expireTime.value);
+        final DateTime _parsed = DateTime.parse(this._expireTime.value!);
         // determine if the parsed time is after the current time
         if (this._ifAfterCurrentTime(_parsed)) {
           this.listen.add(true);
@@ -518,7 +519,7 @@ class RefreshTokenManger {
         }
 
         // refresh 15 minutes before token expires
-        final DateTime _threshold = _parsed.subtract(Duration(minutes: 15));
+        final DateTime _threshold = _parsed.subtract(const Duration(minutes: 15));
         final Duration _duration = _threshold.difference(DateTime.now());
         if (_duration.inSeconds <= 0) {
           final Duration _duration = _parsed.difference(DateTime.now());
@@ -534,7 +535,7 @@ class RefreshTokenManger {
         return;
       }
     } catch (e) {
-      print(e);
+     
       return;
     }
 
@@ -544,7 +545,7 @@ class RefreshTokenManger {
 
 class SILPerfMonitor {
   /// monitor async function that at least return a future void
-  static void monitorAsyncFunc(Function action, String traceName) async {
+  static Future<void> monitorAsyncFunc(Function action, String traceName) async {
     final Trace trace = FirebasePerformance.instance.newTrace(traceName);
     await trace.start();
     await action();
@@ -552,7 +553,7 @@ class SILPerfMonitor {
   }
 
   // monitors sync function that at least returns a void
-  static void monitorSyncFunc(Function action, String traceName) async {
+  static Future<void> monitorSyncFunc(Function action, String traceName) async {
     final Trace trace = FirebasePerformance.instance.newTrace(traceName);
     await trace.start();
     await action();
@@ -561,16 +562,17 @@ class SILPerfMonitor {
 }
 
 class SILEventBus {
+  SILEventBus({bool sync = false})
+      : _streamController = StreamController<dynamic>.broadcast(sync: sync);
   final StreamController<dynamic> _streamController;
 
   StreamController<dynamic> get streamController => _streamController;
 
-  SILEventBus({bool sync = false})
-      : _streamController = StreamController<dynamic>.broadcast(sync: sync);
+  
 
   Stream<T> on<T>() {
     if (T == dynamic) {
-      return streamController.stream;
+      return streamController.stream as Stream<T>;
     } else {
       return streamController.stream
           .where((dynamic event) => event is T)
@@ -578,7 +580,7 @@ class SILEventBus {
     }
   }
 
-  void fire(dynamic event) async {
+  Future<void> fire(dynamic event) async {
     streamController.add(event);
   }
 
@@ -588,11 +590,12 @@ class SILEventBus {
 }
 
 class TriggeredEvent {
-  String eventName;
-  Map<String, dynamic> eventPayload;
-
   TriggeredEvent(
     this.eventName,
     this.eventPayload,
   );
+  String eventName;
+  Map<String, dynamic> eventPayload;
+
+  
 }
