@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sil_misc/utils/phone_constants.dart';
+import 'package:sil_misc/src/phone_constants.dart';
 
 void main() {
 //Us phone test

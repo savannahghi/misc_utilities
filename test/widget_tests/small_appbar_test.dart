@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sil_misc/sil_misc.dart';
-import 'package:sil_misc/sil_small_appbar.dart';
+
+import 'package:sil_misc/src/small_appbar.dart';
 
 import '../mocks.dart';
 
@@ -11,9 +12,9 @@ void main() {
     testWidgets('should render a normal appbar correctly',
         (WidgetTester tester) async {
       const String appbarTitle = 'small appbar';
-      final String expectedAppbarTitle = SILMisc.titleCase(appbarTitle);
+      final String expectedAppbarTitle = titleCase(appbarTitle);
       await tester.pumpWidget(
-       const MaterialApp(
+        const MaterialApp(
           home: Scaffold(appBar: SILSmallAppBar(title: appbarTitle)),
         ),
       );
@@ -29,7 +30,7 @@ void main() {
         (WidgetTester tester) async {
       const String appbarTitle = 'small appbar';
       final List<String> tabtitles = <String>['Test', 'Coverage', '100%'];
-      final String expectedAppbarTitle = SILMisc.titleCase(appbarTitle);
+      final String expectedAppbarTitle = titleCase(appbarTitle);
 
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
@@ -50,7 +51,7 @@ void main() {
 
     testWidgets('should navigate to back route when provided',
         (WidgetTester tester) async {
-     final MockNavigatorObserver navigatorObserver = MockNavigatorObserver();
+      final MockNavigatorObserver navigatorObserver = MockNavigatorObserver();
       await tester.pumpWidget(MaterialApp(
         initialRoute: MockRoutes.route2,
         onGenerateRoute: MockRouteGenerator.generateRoute,

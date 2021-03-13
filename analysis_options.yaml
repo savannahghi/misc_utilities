@@ -13,6 +13,7 @@ analyzer:
     - 'bin/cache/**'
     - 'lib/**/*.g.dart'
     - 'lib/**/*.freezed.dart' 
+    - 'test/**/*.mocks.dart'
     
 
 linter:
@@ -50,3 +51,4 @@ linter:
     prefer_constructors_over_static_methods: false
     file_names: false
     constant_identifier_names: false
+

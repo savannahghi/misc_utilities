@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sil_misc/responsive_widget.dart';
+import 'package:sil_misc/sil_responsive_widget.dart';
 
-import '../test_utils/test_utils.dart';
+import '../test_utils.dart';
 
 void main() {
   group('ResponsiveWidget tests', () {
@@ -61,8 +61,10 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(builder: (BuildContext context) {
-            final bool isSmallScreen = ResponsiveWidget.isSmallScreen(context);
-            final bool isLargeScreen = ResponsiveWidget.isLargeScreen(context);
+            final bool isSmallScreen =
+                SILResponsiveWidget.isSmallScreen(context);
+            final bool isLargeScreen =
+                SILResponsiveWidget.isLargeScreen(context);
 
             expect(isSmallScreen, isFalse);
             expect(isLargeScreen, isTrue);
@@ -87,8 +89,10 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(builder: (BuildContext context) {
-           final bool isSmallScreen = ResponsiveWidget.isSmallScreen(context);
-            final bool isLargeScreen = ResponsiveWidget.isLargeScreen(context);
+            final bool isSmallScreen =
+                SILResponsiveWidget.isSmallScreen(context);
+            final bool isLargeScreen =
+                SILResponsiveWidget.isLargeScreen(context);
 
             expect(isSmallScreen, isTrue);
             expect(isLargeScreen, isFalse);
@@ -114,7 +118,7 @@ Future<void> _buildResponsiveWidget(
 }) async {
   return tester.pumpWidget(
     MaterialApp(
-      home: ResponsiveWidget(
+      home: SILResponsiveWidget(
         smallScreen: smallScreen,
         mediumScreen: mediumScreen,
         largeScreen: largeScreen,

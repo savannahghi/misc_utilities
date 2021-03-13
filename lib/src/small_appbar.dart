@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:sil_misc/sil_misc.dart';
+import 'package:sil_misc/src/misc.dart';
 import 'package:sil_themes/text_themes.dart';
 
 class SILSmallAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -34,11 +34,11 @@ class SILSmallAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Theme.of(context).primaryColor,
-      iconTheme:const IconThemeData(color: Colors.white),
+      iconTheme: const IconThemeData(color: Colors.white),
       elevation: elevation ?? 5,
       leading: IconButton(
         key: backButtonKey,
-        icon:const Icon(Icons.arrow_back),
+        icon: const Icon(Icons.arrow_back),
         onPressed: () {
           if (backRoute != null) {
             if (backRouteNavigationFunction != null) {
@@ -52,7 +52,7 @@ class SILSmallAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
       ),
       centerTitle: true,
-      title: Text(formatTitle ? SILMisc.titleCase(title) : title,
+      title: Text(formatTitle ? titleCase(title) : title,
           style: TextThemes.boldSize20Text()),
       bottom: tabTitles != null && tabTitles!.isNotEmpty
           ? PreferredSize(

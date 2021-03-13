@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
-import 'package:sil_misc/sil_small_appbar.dart';
+import 'package:sil_misc/src/small_appbar.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
@@ -41,7 +41,7 @@ class MockRouteGenerator {
     }
 
     return MaterialPageRoute<MaterialApp>(
-      builder: (_) =>const MaterialApp(
+      builder: (_) => const MaterialApp(
         home: Scaffold(
           appBar: SILSmallAppBar(title: 'Default route'),
         ),

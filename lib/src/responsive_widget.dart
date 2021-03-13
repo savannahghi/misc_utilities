@@ -6,9 +6,10 @@ enum DeviceScreenType { Mobile, Tablet, Desktop }
 /// if you want to introduce medium screen in future
 
 /// Widget that draws depending on screen size as specified by the breakpoints.
-class ResponsiveWidget extends StatelessWidget {
-  const ResponsiveWidget(
+class SILResponsiveWidget extends StatelessWidget {
+  const SILResponsiveWidget(
       {this.largeScreen, this.mediumScreen, this.smallScreen});
+
   /// Refer to https://developer.android.com/training/multiscreen/screensizes#TaskUseSWQuali
   static const int smallScreenBreakPoint = 900;
   static const int smallScreenHeight = 600;
@@ -18,7 +19,6 @@ class ResponsiveWidget extends StatelessWidget {
   /// The argument [largeScreen] must not be null.
   /// If medium screen is null then large screen will be drawn in place.
   /// if small screen is null then large screen will be drawn in place.
-  
 
   /// Widget to be drawn on a large screen.
   final Widget? largeScreen;

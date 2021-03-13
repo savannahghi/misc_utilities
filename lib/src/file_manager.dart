@@ -9,10 +9,12 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:camera_camera/camera_camera.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:sil_misc/type_defs/type_defs.dart';
+
 import 'package:sil_themes/constants.dart';
 import 'package:sil_themes/spaces.dart';
 import 'package:sil_themes/text_themes.dart';
+
+import 'enums.dart';
 
 typedef OnFileChanged = void Function(dynamic value);
 
@@ -31,8 +33,8 @@ typedef GetUploadId = Future<String> Function({
 /// data and returns an [uploadId]
 /// [snackBarTypes] is a list of the types of snackbars available
 
-class BWFileManager extends StatefulWidget {
-  const BWFileManager({
+class SILFileManager extends StatefulWidget {
+  const SILFileManager({
     Key? key,
     required this.onChanged,
     required this.name,
@@ -53,16 +55,13 @@ class BWFileManager extends StatefulWidget {
   final Function showAlertSnackBar;
   final List<dynamic> snackBarTypes;
 
-  
   @override
-  _BWFileManagerState createState() => _BWFileManagerState();
+  _SILFileManagerState createState() => _SILFileManagerState();
 }
 
-class _BWFileManagerState extends State<BWFileManager> {
+class _SILFileManagerState extends State<SILFileManager> {
   File? file;
   bool uploading = false;
-
-  
 
   void toggleUpload() {
     setState(() {
@@ -149,7 +148,7 @@ class _BWFileManagerState extends State<BWFileManager> {
     final String splitFilePath = filePath.substring(0, lastIndex);
     final String outPath =
         '${splitFilePath}_out${filePath.substring(lastIndex)}';
-   final  File? result = await FlutterImageCompress.compressAndGetFile(
+    final File? result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       outPath,
       quality: 30,
@@ -193,9 +192,9 @@ class _BWFileManagerState extends State<BWFileManager> {
       children: <Widget>[
         DottedBorder(
           color: Theme.of(context).primaryColor.withOpacity(0.8),
-          dashPattern:const <double>[14, 6],
+          dashPattern: const <double>[14, 6],
           borderType: BorderType.RRect,
-          radius:const Radius.circular(10),
+          radius: const Radius.circular(10),
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
@@ -209,7 +208,7 @@ class _BWFileManagerState extends State<BWFileManager> {
                         children: <Widget>[
                           widget.silLoader,
                           smallVerticalSizedBox,
-                          Text(UserFeedBackTexts.savingFile)
+                          const Text(UserFeedBackTexts.savingFile)
                         ],
                       ),
                     ),
@@ -242,7 +241,7 @@ class _BWFileManagerState extends State<BWFileManager> {
 
                             /// -----reset file set to none
                             if (file != null) ...<Widget>[
-                              SizedBox(            
+                              SizedBox(
                                 height: 90,
                                 child: Image.file(file!),
                               ),
@@ -255,7 +254,7 @@ class _BWFileManagerState extends State<BWFileManager> {
                                 },
                                 child: Column(
                                   children: <Widget>[
-                                   const Icon(MdiIcons.closeCircle),
+                                    const Icon(MdiIcons.closeCircle),
                                     Text(UserFeedBackTexts.controlLabels[2]),
                                   ],
                                 ),
@@ -266,7 +265,7 @@ class _BWFileManagerState extends State<BWFileManager> {
                       ),
                       Container(
                         width: double.infinity,
-                        padding:const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         color: Colors.blueAccent.withOpacity(0.05),
                         child: Center(
                           child: Text(
