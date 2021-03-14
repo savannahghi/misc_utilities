@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-enum DeviceScreenType { Mobile, Tablet, Desktop }
+import 'package:sil_misc/sil_enums.dart';
+import 'package:sil_misc/sil_misc.dart';
 
 /// Refer to https://gitlab.slade360emr.com/optimalhealth/healthcloud/-/merge_requests/355/diffs
 /// if you want to introduce medium screen in future
@@ -83,22 +83,8 @@ class SILResponsiveWidget extends StatelessWidget {
   }
 
   /// returns the device type but first checks the device orientation before checking its width
-  static DeviceScreenType getDeviceType(BuildContext context) {
+  static DeviceScreenType deviceType(BuildContext context) {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
-    final Orientation deviceOrientation = mediaQuery.orientation;
-    double deviceWidth = 0;
-    if (deviceOrientation == Orientation.landscape) {
-      deviceWidth = mediaQuery.size.height;
-    } else {
-      deviceWidth = mediaQuery.size.width;
-    }
-
-    if (deviceWidth > 950) {
-      return DeviceScreenType.Desktop;
-    }
-    if (deviceWidth > 600) {
-      return DeviceScreenType.Tablet;
-    }
-    return DeviceScreenType.Mobile;
+    return getDeviceType(mediaQuery);
   }
 }

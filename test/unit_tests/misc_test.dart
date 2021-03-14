@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:rxdart/rxdart.dart';
+import 'package:sil_misc/sil_enums.dart';
 import 'package:sil_misc/sil_exception.dart';
 import 'package:sil_misc/sil_misc.dart';
 import 'package:sil_misc/sil_refresh_token_manager.dart';
+
+import '../mocks.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -176,15 +181,50 @@ void main() {
       expect(formatedNumber, expectedNumber);
     });
 
-    // test('should test background gradient', () {
-    //   final LinearGradient backgroundGradient = backgroundGradient(
-    //     primaryColor: 0xFF7949AF,
-    //     primaryLinearGradientColor: 0xFF7949AF,
-    //   );
-    //   expect(backgroundGradient, isA<LinearGradient>());
-    //   expect(backgroundGradient.begin, Alignment.topLeft);
-    //   expect(backgroundGradient.end, Alignment.bottomRight);
-    // });
+    test('should return correct device screen', () {
+      const MockLandscapeMediaQueryData mediaQuery1 =
+          MockLandscapeMediaQueryData(Size(0, 1080));
+      expect(getDeviceType(mediaQuery1), DeviceScreenType.Desktop);
+
+      const MockPortraitMediaQueryData mediaQuery2 =
+          MockPortraitMediaQueryData(Size(700, 0));
+      expect(getDeviceType(mediaQuery2), DeviceScreenType.Tablet);
+
+      const MockPortraitMediaQueryData mediaQuery3 =
+          MockPortraitMediaQueryData(Size(500, 0));
+      expect(getDeviceType(mediaQuery3), DeviceScreenType.Mobile);
+    });
+
+    test('should return background gradient', () {
+      final LinearGradient gradient = backgroundGradient(
+        primaryColor: 0xFF7949AF,
+        primaryLinearGradientColor: 0xFF7949AF,
+      );
+      expect(gradient, isA<LinearGradient>());
+      expect(gradient.begin, Alignment.topLeft);
+      expect(gradient.end, Alignment.bottomRight);
+    });
+
+    test('should return uploadMutationVariable', () {
+      final Map<String, dynamic> variables =
+          uploadMutationVariable(<String, dynamic>{
+        'title': 'title',
+        'contentType': 'contentType',
+        'filename': 'filename',
+        'base64data': 'base64data'
+      });
+      expect(variables, isA<Map<String, dynamic>>());
+      expect(variables['input'], isA<Map<String, dynamic>>());
+    });
+
+    test('should return localPath', () {
+      final Future<String> path = localPath(
+          fetchApplicationDirectory: () =>
+              Future<Directory>.value(Directory('test')));
+      expect(path, isA<Future<String>>());
+      path.then((String value) =>
+          expect(value, contains('test/Pictures/sil-mobile')));
+    });
 
     test('should test SILException', () {
       expect(

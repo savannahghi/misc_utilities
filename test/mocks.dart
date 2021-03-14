@@ -49,3 +49,19 @@ class MockRouteGenerator {
     );
   }
 }
+
+class MockSize extends Size {
+  MockSize(double width, double height) : super(width, height);
+}
+
+class MockLandscapeMediaQueryData extends MediaQueryData {
+  const MockLandscapeMediaQueryData(Size size) : super(size: size);
+  @override
+  Orientation get orientation => Orientation.landscape;
+}
+
+class MockPortraitMediaQueryData extends MediaQueryData {
+  const MockPortraitMediaQueryData(Size size) : super(size: size);
+  @override
+  Orientation get orientation => Orientation.portrait;
+}

@@ -111,10 +111,6 @@ String formatCurrency(dynamic amount) {
 
 /// [titleCase] returns a title cased sentence
 String titleCase(String sentence) {
-  if (sentence is! String || sentence.isEmpty) {
-    return '';
-  }
-
   return sentence
       .toLowerCase()
       .split(' ')
@@ -347,15 +343,12 @@ void verifyOTPErrorBottomSheet(
 
 /// [snackbar]
 SnackBar snackbar(
+
+    /// [content] must be either of type [Widget] or [String]
     {required dynamic content,
     int durationSeconds = 10,
     String? label,
     Function? callback}) {
-  if (!<dynamic>[String, Widget].contains(content.runtimeType)) {
-    FlutterError.dumpErrorToConsole(const FlutterErrorDetails(
-        exception: 'Content must be either of type String or Widget!'));
-  }
-
   return SnackBar(
     content: content.runtimeType == String
         ? Text(content as String)
@@ -368,8 +361,10 @@ SnackBar snackbar(
 }
 
 /// [localPath]
-Future<String> get localPath async {
-  final Directory directory = await getApplicationDocumentsDirectory();
+Future<String> localPath(
+    {Future<Directory> Function() fetchApplicationDirectory =
+        getApplicationDocumentsDirectory}) async {
+  final Directory directory = await fetchApplicationDirectory();
   final String dirPath = '${directory.path}/Pictures/sil-mobile';
   await Directory(dirPath).create(recursive: true);
   final String filePath = '$dirPath/{$DateTime.now()}.png';

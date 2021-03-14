@@ -4,7 +4,7 @@ image:
 stages:
   - test
 
-SILMISCTests:
+sil_misc_tests:
   stage: test 
   tags:
     - healthcloud-multi

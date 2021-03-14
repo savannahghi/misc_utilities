@@ -52,11 +52,7 @@ class SILRefreshTokenManger {
   /// Recommended to be called just before the app draws its first widget in main.dart
   bool checkExpireValidity(String? expireAt) {
     try {
-      if (expireAt == null || expireAt.isEmpty) {
-        return false;
-      }
-
-      final DateTime _parsed = DateTime.parse(expireAt);
+      final DateTime _parsed = DateTime.parse(expireAt!);
       if (this._ifAfterCurrentTime(_parsed) == true ||
           this._ifApproachingCurrentTime(_parsed) == true) {
         return false;
