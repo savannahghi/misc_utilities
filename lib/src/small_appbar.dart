@@ -32,6 +32,7 @@ class SILSmallAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(backRouteNavigationFunction);
     return AppBar(
       backgroundColor: Theme.of(context).primaryColor,
       iconTheme: const IconThemeData(color: Colors.white),

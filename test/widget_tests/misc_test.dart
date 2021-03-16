@@ -229,6 +229,7 @@ void main() {
             return TextButton(
               key: launchBottomSheetKey,
               onPressed: () {
+                
                 bottomSheet(
                     context: context, builder: TestComplexBottomSheet());
               },
@@ -499,6 +500,7 @@ void main() {
         await tester.pump();
 
         await tester.pumpAndSettle();
+      
 
         await tester.tap(find.byType(SILPrimaryButton));
         await tester.pumpAndSettle();

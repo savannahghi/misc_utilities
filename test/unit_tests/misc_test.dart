@@ -399,5 +399,103 @@ void main() {
         }
       });
     });
+    group('get ID type', () {
+      test('should select passport ID type', () {
+        const String idType = 'Passport';
+        const bool userString = true;
+
+        expect(getIdType(idType: idType, userString: userString), 'Passport');
+      });
+      test('should select national ID type', () {
+        const String idType = 'national';
+        const bool userString = true;
+
+        expect(
+            getIdType(idType: idType, userString: userString), 'National ID');
+      });
+      test('should select military ID type', () {
+        const String idType = 'military';
+        const bool userString = true;
+
+        expect(
+            getIdType(idType: idType, userString: userString), 'Military ID');
+      });
+    });
+
+    test('should return a trimmed string', () {
+      const String name = 'be   well';
+      const String expectedFormattedName = 'bewell';
+      final String actualTrimmedString = trimWhitespace(name);
+
+      expect(actualTrimmedString, expectedFormattedName);
+    });
+
+    test('should return a string without underscore', () {
+      const String name = 'be_well';
+      const String expectedFormattedName = 'Be Well';
+      final String actualRemovedUnderscoreString = removeUnderscores(name);
+
+      expect(actualRemovedUnderscoreString, expectedFormattedName);
+    });
+
+    group('Return Response', () {
+      test('should return response when status code is 200', () {
+        final http.Response query = http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{'setupAsExperimentParticipant': true}
+            }),
+            200);
+        final http.Response actualQuery = returnResponse(query);
+
+        expect(query, actualQuery);
+      });
+
+      test('should return response when status code is 400', () {
+        final http.Response query = http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{'error': 'true'}
+            }),
+            400);
+        try {
+          final http.Response actualQuery = returnResponse(query);
+
+          expect(() => actualQuery, throwsException);
+        } catch (e) {
+          expect(e.runtimeType, SILException);
+        }
+      });
+
+      test('should return response when status code is 403', () {
+        final http.Response query = http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{'error': 'true'}
+            }),
+            403);
+
+        try {
+          final http.Response actualQuery = returnResponse(query);
+
+          expect(() => actualQuery, throwsException);
+        } catch (e) {
+          expect(e.runtimeType, SILException);
+        }
+      });
+
+      test('should return response when status code is 500', () {
+        final http.Response query = http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{'error': 'true'}
+            }),
+            500);
+
+        try {
+          final http.Response actualQuery = returnResponse(query);
+
+          expect(() => actualQuery, throwsException);
+        } catch (e) {
+          expect(e.runtimeType, SILException);
+        }
+      });
+    });
   });
 }
