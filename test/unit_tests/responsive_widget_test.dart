@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sil_misc/sil_number_constants.dart';
 import 'package:sil_misc/sil_responsive_widget.dart';
 
 import '../test_utils.dart';
@@ -101,6 +102,98 @@ void main() {
           }),
         ),
       );
+
+      addTearDown(() {
+        tester.binding.window.clearPhysicalSizeTestValue();
+        tester.binding.window.clearDevicePixelRatioTestValue();
+      });
+    });
+
+    testWidgets(
+        'preferredPaddingOnStretchedScreens should return padding for small device',
+        (WidgetTester tester) async {
+      tester.binding.window.devicePixelRatioTestValue = 1.0;
+      tester.binding.window.physicalSizeTestValue =
+          typicalPhoneScreenSizePortrait;
+
+      await tester.pumpWidget(MaterialApp(
+        home: Builder(builder: (BuildContext context) {
+          expect(
+              SILResponsiveWidget.preferredPaddingOnStretchedScreens(
+                  context: context),
+              number15);
+
+          return Container();
+        }),
+      ));
+
+      addTearDown(() {
+        tester.binding.window.clearPhysicalSizeTestValue();
+        tester.binding.window.clearDevicePixelRatioTestValue();
+      });
+    });
+
+    testWidgets(
+        'preferredPaddingOnStretchedScreens should return padding for large device',
+        (WidgetTester tester) async {
+      tester.binding.window.devicePixelRatioTestValue = 1.0;
+      tester.binding.window.physicalSizeTestValue = tabletLandscape;
+
+      const double width = (number1280 - number420) / number2;
+
+      await tester.pumpWidget(MaterialApp(
+        home: Builder(builder: (BuildContext context) {
+          expect(
+              SILResponsiveWidget.preferredPaddingOnStretchedScreens(
+                  context: context),
+              width);
+
+          return Container();
+        }),
+      ));
+
+      addTearDown(() {
+        tester.binding.window.clearPhysicalSizeTestValue();
+        tester.binding.window.clearDevicePixelRatioTestValue();
+      });
+    });
+
+    testWidgets('isSmallScreenAndOnLandscape should return true',
+        (WidgetTester tester) async {
+      tester.binding.window.devicePixelRatioTestValue = 1.0;
+      tester.binding.window.physicalSizeTestValue =
+          typicalPhoneScreenSizeLandscape;
+
+      await tester.pumpWidget(MaterialApp(
+        home: Builder(builder: (BuildContext context) {
+          expect(
+              SILResponsiveWidget.isSmallScreenAndOnLandscape(context: context),
+              true);
+
+          return Container();
+        }),
+      ));
+
+      addTearDown(() {
+        tester.binding.window.clearPhysicalSizeTestValue();
+        tester.binding.window.clearDevicePixelRatioTestValue();
+      });
+    });
+
+    testWidgets('isSmallScreenAndOnLandscape should return false',
+        (WidgetTester tester) async {
+      tester.binding.window.devicePixelRatioTestValue = 1.0;
+      tester.binding.window.physicalSizeTestValue = tabletLandscape;
+
+      await tester.pumpWidget(MaterialApp(
+        home: Builder(builder: (BuildContext context) {
+          expect(
+              SILResponsiveWidget.isSmallScreenAndOnLandscape(context: context),
+              false);
+
+          return Container();
+        }),
+      ));
 
       addTearDown(() {
         tester.binding.window.clearPhysicalSizeTestValue();

@@ -5,8 +5,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sil_misc/sil_event_bus.dart';
 import 'package:sil_misc/sil_misc.dart';
-
 import 'package:sil_misc/src/widget_keys.dart';
+import 'package:sil_misc/sil_enums.dart';
+
+import '../mocks.dart';
 
 void main() {
   group('SILMisc', () {
@@ -264,6 +266,63 @@ void main() {
           isA<Container>().having((Container t) => t.decoration, 'decoration',
               customRoundedPinBoxDecoration(Colors.black, Colors.black)),
         );
+      });
+    });
+
+    group('DeviceType', () {
+      testWidgets('should return Tablet', (WidgetTester tester) async {
+        tester.binding.window.devicePixelRatioTestValue = 1.0;
+        tester.binding.window.physicalSizeTestValue = tabletLandscape;
+
+        await tester.pumpWidget(MaterialApp(
+          home: Builder(builder: (BuildContext context) {
+            expect(getDeviceType(context), DeviceScreenType.Tablet);
+
+            return Material(child: Container());
+          }),
+        ));
+
+        addTearDown(() {
+          tester.binding.window.clearPhysicalSizeTestValue();
+          tester.binding.window.clearDevicePixelRatioTestValue();
+        });
+      });
+
+      testWidgets('should return Mobile', (WidgetTester tester) async {
+        tester.binding.window.devicePixelRatioTestValue = 1.0;
+        tester.binding.window.physicalSizeTestValue =
+            typicalPhoneScreenSizePortrait;
+
+        await tester.pumpWidget(MaterialApp(
+          home: Builder(builder: (BuildContext context) {
+            expect(getDeviceType(context), DeviceScreenType.Mobile);
+
+            return Material(child: Container());
+          }),
+        ));
+
+        addTearDown(() {
+          tester.binding.window.clearPhysicalSizeTestValue();
+          tester.binding.window.clearDevicePixelRatioTestValue();
+        });
+      });
+
+      testWidgets('should return Desktop', (WidgetTester tester) async {
+        tester.binding.window.devicePixelRatioTestValue = 1.0;
+        tester.binding.window.physicalSizeTestValue = typicalDesktop;
+
+        await tester.pumpWidget(MaterialApp(
+          home: Builder(builder: (BuildContext context) {
+            expect(getDeviceType(context), DeviceScreenType.Mobile);
+
+            return Material(child: Container());
+          }),
+        ));
+
+        addTearDown(() {
+          tester.binding.window.clearPhysicalSizeTestValue();
+          tester.binding.window.clearDevicePixelRatioTestValue();
+        });
       });
     });
   });

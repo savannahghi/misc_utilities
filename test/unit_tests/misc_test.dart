@@ -2,14 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:rxdart/rxdart.dart';
-import 'package:sil_misc/sil_enums.dart';
 import 'package:sil_misc/sil_exception.dart';
 import 'package:sil_misc/sil_misc.dart';
 import 'package:sil_misc/sil_refresh_token_manager.dart';
-
-import '../mocks.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -179,20 +175,6 @@ void main() {
           formatPhoneNumber(phoneNumber: '1234567', countryCode: '+255');
       const String expectedNumber = '+2551234567';
       expect(formatedNumber, expectedNumber);
-    });
-
-    test('should return correct device screen', () {
-      const MockLandscapeMediaQueryData mediaQuery1 =
-          MockLandscapeMediaQueryData(Size(0, 1080));
-      expect(getDeviceType(mediaQuery1), DeviceScreenType.Desktop);
-
-      const MockPortraitMediaQueryData mediaQuery2 =
-          MockPortraitMediaQueryData(Size(700, 0));
-      expect(getDeviceType(mediaQuery2), DeviceScreenType.Tablet);
-
-      const MockPortraitMediaQueryData mediaQuery3 =
-          MockPortraitMediaQueryData(Size(500, 0));
-      expect(getDeviceType(mediaQuery3), DeviceScreenType.Mobile);
     });
 
     test('should return background gradient', () {

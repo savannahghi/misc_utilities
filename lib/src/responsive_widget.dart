@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sil_misc/sil_enums.dart';
 import 'package:sil_misc/sil_misc.dart';
+import 'package:sil_misc/sil_number_constants.dart';
 
 /// Refer to https://gitlab.slade360emr.com/optimalhealth/healthcloud/-/merge_requests/355/diffs
 /// if you want to introduce medium screen in future
@@ -84,7 +85,29 @@ class SILResponsiveWidget extends StatelessWidget {
 
   /// returns the device type but first checks the device orientation before checking its width
   static DeviceScreenType deviceType(BuildContext context) {
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
-    return getDeviceType(mediaQuery);
+    return getDeviceType(context);
+  }
+
+  /// [preferredPaddingOnStretchedScreens] function is used to calculate give a constant size in width of the items to be displayed on the screen
+  /// First it gets the width of the device
+  /// Subtracts `420` which is a one size fit all cosntant for widgets on a stretched view/display
+  /// The difference is then divided by `2` to get the size that will be feed to our padding so that the widgets take up a width of `420`
+  static double preferredPaddingOnStretchedScreens(
+      {required BuildContext context}) {
+    final double deviceWidth = MediaQuery.of(context).size.width;
+    if (deviceWidth >= number420) {
+      final double paddingSize = (deviceWidth - number420) / number2;
+      return paddingSize;
+    } else {
+      return number15;
+    }
+  }
+
+  static bool isSmallScreenAndOnLandscape({required BuildContext context}) {
+    if (isLandscape(context: context) &&
+        getDeviceType(context) == DeviceScreenType.Mobile) {
+      return true;
+    }
+    return false;
   }
 }

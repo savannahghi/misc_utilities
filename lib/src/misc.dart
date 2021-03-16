@@ -404,7 +404,8 @@ String convertDateToString({
 }
 
 /// [getDeviceType]
-DeviceScreenType getDeviceType(MediaQueryData mediaQuery) {
+DeviceScreenType getDeviceType(BuildContext context) {
+  final MediaQueryData mediaQuery = MediaQuery.of(context);
   final Orientation deviceOrientation = mediaQuery.orientation;
   double deviceWidth = 0;
   if (deviceOrientation == Orientation.landscape) {
