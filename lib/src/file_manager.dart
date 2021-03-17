@@ -9,12 +9,11 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:camera_camera/camera_camera.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:sil_misc/src/misc.dart';
 
 import 'package:sil_themes/constants.dart';
 import 'package:sil_themes/spaces.dart';
 import 'package:sil_themes/text_themes.dart';
-
-import 'enums.dart';
 
 typedef OnFileChanged = void Function(dynamic value);
 
@@ -40,8 +39,6 @@ class SILFileManager extends StatefulWidget {
     required this.name,
     required this.getUploadId,
     required this.silLoader,
-    required this.showAlertSnackBar,
-    required this.snackBarTypes,
     this.allowedExtensions = const <String>['jpg', 'png'],
     this.invalidF = false,
   }) : super(key: key);
@@ -52,8 +49,6 @@ class SILFileManager extends StatefulWidget {
   final List<String> allowedExtensions;
   final GetUploadId getUploadId;
   final Widget silLoader;
-  final Function showAlertSnackBar;
-  final List<dynamic> snackBarTypes;
 
   @override
   _SILFileManagerState createState() => _SILFileManagerState();
@@ -93,10 +88,8 @@ class _SILFileManagerState extends State<SILFileManager> {
         type: FileType.custom,
       );
     } catch (e) {
-      widget.showAlertSnackBar(
-          context: context,
-          message: UserFeedBackTexts.selectFileError,
-          type: SnackBarType.danger);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(snackbar(content: UserFeedBackTexts.selectFileError));
     }
     if (result != null) {
       /// checks that [result.files] has one file and returns that file
@@ -108,10 +101,8 @@ class _SILFileManagerState extends State<SILFileManager> {
           fileData: getFileData(selectedFile), context: context);
       toggleUpload();
       if (uploadId == 'err') {
-        widget.showAlertSnackBar(
-            context: context,
-            message: UserFeedBackTexts.uploadFileFail,
-            type: widget.snackBarTypes[0]);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(snackbar(content: UserFeedBackTexts.uploadFileFail));
         return;
       }
       setState(() {
@@ -120,10 +111,8 @@ class _SILFileManagerState extends State<SILFileManager> {
       });
     } else {
       // User canceled the picker
-      widget.showAlertSnackBar(
-          context: context,
-          message: UserFeedBackTexts.noFileSelected,
-          type: widget.snackBarTypes[1]);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(snackbar(content: UserFeedBackTexts.noFileSelected));
     }
   }
 
@@ -174,10 +163,9 @@ class _SILFileManagerState extends State<SILFileManager> {
         fileData: getFileData(selectedFile), context: context);
     toggleUpload();
     if (uploadId == 'err') {
-      widget.showAlertSnackBar(
-          context: context,
-          message: UserFeedBackTexts.uploadFileFail,
-          type: widget.snackBarTypes[0]);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(snackbar(content: UserFeedBackTexts.uploadFileFail));
+
       return;
     }
     setState(() {
