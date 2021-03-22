@@ -298,8 +298,24 @@ void main() {
 
         expect(listen.valueWrapper, null);
       });
+      test('should reset minutes to the expiry time', () {
+        final String expiryTime = DateTime.now()
+            .add(const Duration(hours: 2, minutes: 50))
+            .toString();
 
-     
+        SILRefreshTokenManger().checkExpireValidity(expiryTime);
+
+        expect(SILRefreshTokenManger().checkExpireValidity(expiryTime), true);
+        expect(listen.valueWrapper, null);
+
+        expect(listen.value, null);
+        //Set expiry time
+        SILRefreshTokenManger().updateExpireTime(expiryTime);
+        //Reset expiry time
+        SILRefreshTokenManger().updateExpireTime(expiryTime).reset();
+
+        expect(listen.valueWrapper, null);
+      });
     });
     group('get ID type', () {
       test('should select passport ID type', () {
