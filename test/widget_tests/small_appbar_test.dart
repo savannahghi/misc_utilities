@@ -67,5 +67,48 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(SILSmallAppBar), findsOneWidget);
     });
+
+    testWidgets('should pop when back route is not provided',
+        (WidgetTester tester) async {
+      final MockNavigatorObserver navigatorObserver = MockNavigatorObserver();
+      await tester.pumpWidget(MaterialApp(
+        onGenerateRoute: MockRouteGenerator.generateRoute,
+        navigatorObservers: <NavigatorObserver>[navigatorObserver],
+      ));
+
+      // check for the necessary items in the appbar
+      expect(find.byType(IconButton), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_back), findsOneWidget);
+
+      // tap the back button
+      await tester.tap(find.byType(IconButton));
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('should back route is not provided',
+        (WidgetTester tester) async {
+      final MockNavigatorObserver navigatorObserver = MockNavigatorObserver();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          initialRoute: MockRoutes.route2,
+          onGenerateRoute: MockRouteGenerator.generateRoute,
+          navigatorObservers: <NavigatorObserver>[navigatorObserver],
+          home: const Scaffold(
+            appBar: SILSmallAppBar(
+              title: 'home',
+            ),
+          ),
+        ),
+      );
+
+      // check for the necessary items in the appbar
+      expect(find.byType(IconButton), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_back), findsOneWidget);
+
+      // tap the back button
+      await tester.tap(find.byType(IconButton));
+      await tester.pumpAndSettle();
+    });
   });
 }

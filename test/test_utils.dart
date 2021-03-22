@@ -11,3 +11,5 @@ const Size mediumSizedTabletLandscape = Size(1024, 600);
 
 const Size tabletPortrait = Size(720, 1280);
 const Size tabletLandscape = Size(1280, 720);
+
+const Size desktop = Size(1920, 1280);

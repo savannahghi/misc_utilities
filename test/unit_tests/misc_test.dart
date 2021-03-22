@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
@@ -6,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sil_misc/sil_exception.dart';
 import 'package:sil_misc/sil_misc.dart';
 import 'package:sil_misc/sil_refresh_token_manager.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +25,7 @@ void main() {
       expect('DD', extractNamesInitials(name: 'david dexter'));
       expect('MV', extractNamesInitials(name: 'Michuki vincent'));
       expect('dd', isNot(extractNamesInitials(name: 'david dexter mwangi')));
+      expect('D', extractNamesInitials(name: 'david'));
     });
 
     test('convertStringToDate should return correct date', () {
@@ -168,6 +171,10 @@ void main() {
       expect(greetingMessage, isA<String>());
       expect(greetingMessage.contains('Evening'), true);
       expect(greetingMessage.contains(firstName), true);
+
+      greetingMessage = getGreetingMessage(firstName);
+      expect(greetingMessage, isA<String>());
+      expect(greetingMessage.contains(firstName), true);
     });
 
     test('should test other phone number', () {
@@ -175,6 +182,16 @@ void main() {
           formatPhoneNumber(phoneNumber: '1234567', countryCode: '+255');
       const String expectedNumber = '+2551234567';
       expect(formatedNumber, expectedNumber);
+      expect(
+        formatPhoneNumber(countryCode: '254', phoneNumber: '100000'),
+        '+254',
+      );
+      expect(
+        formatPhoneNumber(countryCode: '+1', phoneNumber: '100000'),
+        '+1100000',
+      );
+      expect(formatPhoneNumber(countryCode: '+254', phoneNumber: '07100000'),
+          '7100000');
     });
 
     test('should return background gradient', () {
@@ -241,20 +258,32 @@ void main() {
       });
 
       test('should reset 6 minutes to the expiry time', () {
-        final String approachingCurrentTime =
+        final String expiresAt =
             DateTime.now().add(const Duration(minutes: 6)).toString();
 
-        SILRefreshTokenManger().checkExpireValidity(approachingCurrentTime);
-        expect(
-            SILRefreshTokenManger().checkExpireValidity(approachingCurrentTime),
-            true);
-
+        SILRefreshTokenManger().checkExpireValidity(expiresAt);
+        expect(SILRefreshTokenManger().checkExpireValidity(expiresAt), false);
         //Set expiry time
-        SILRefreshTokenManger().updateExpireTime(approachingCurrentTime);
+        SILRefreshTokenManger().updateExpireTime(expiresAt);
         //Reset expiry time
-        SILRefreshTokenManger()
-            .updateExpireTime(approachingCurrentTime)
-            .reset();
+        SILRefreshTokenManger().updateExpireTime(expiresAt).reset();
+
+        expect(listen.valueWrapper, null);
+      });
+
+      test('should reset 7 minutes to the expiry time', () {
+        final String expiresAt = DateTime.now()
+            .subtract(const Duration(minutes: 10, seconds: 1))
+            .toString();
+
+        SILRefreshTokenManger().checkExpireValidity(expiresAt);
+
+        expect(SILRefreshTokenManger().checkExpireValidity(expiresAt), false);
+        expect(listen.valueWrapper, null);
+        //Set expiry time
+        SILRefreshTokenManger().updateExpireTime(expiresAt);
+        //Reset expiry time
+        SILRefreshTokenManger().updateExpireTime(expiresAt).reset();
 
         expect(listen.valueWrapper, null);
       });
@@ -267,6 +296,104 @@ void main() {
         SILRefreshTokenManger().updateExpireTime(expiryTime).reset();
 
         expect(listen.valueWrapper, null);
+      });
+    });
+    group('get ID type', () {
+      test('should select passport ID type', () {
+        const String idType = 'Passport';
+        const bool userString = true;
+
+        expect(getIdType(idType: idType, userString: userString), 'Passport');
+      });
+      test('should select national ID type', () {
+        const String idType = 'national';
+        const bool userString = true;
+
+        expect(
+            getIdType(idType: idType, userString: userString), 'National ID');
+      });
+      test('should select military ID type', () {
+        const String idType = 'military';
+        const bool userString = true;
+
+        expect(
+            getIdType(idType: idType, userString: userString), 'Military ID');
+      });
+    });
+
+    test('should return a trimmed string', () {
+      const String name = 'be   well';
+      const String expectedFormattedName = 'bewell';
+      final String actualTrimmedString = trimWhitespace(name);
+
+      expect(actualTrimmedString, expectedFormattedName);
+    });
+
+    test('should return a string without underscore', () {
+      const String name = 'be_well';
+      const String expectedFormattedName = 'Be Well';
+      final String actualRemovedUnderscoreString = removeUnderscores(name);
+
+      expect(actualRemovedUnderscoreString, expectedFormattedName);
+    });
+
+    group('Return Response', () {
+      test('should return response when status code is 200', () {
+        final http.Response query = http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{'setupAsExperimentParticipant': true}
+            }),
+            200);
+        final http.Response actualQuery = returnResponse(query);
+
+        expect(query, actualQuery);
+      });
+
+      test('should return response when status code is 400', () {
+        final http.Response query = http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{'error': 'true'}
+            }),
+            400);
+        try {
+          final http.Response actualQuery = returnResponse(query);
+
+          expect(() => actualQuery, throwsException);
+        } catch (e) {
+          expect(e.runtimeType, SILException);
+        }
+      });
+
+      test('should return response when status code is 403', () {
+        final http.Response query = http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{'error': 'true'}
+            }),
+            403);
+
+        try {
+          final http.Response actualQuery = returnResponse(query);
+
+          expect(() => actualQuery, throwsException);
+        } catch (e) {
+          expect(e.runtimeType, SILException);
+        }
+      });
+
+      test('should return response when status code is 500', () {
+        final http.Response query = http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{'error': 'true'}
+            }),
+            500);
+
+        try {
+          final http.Response actualQuery = returnResponse(query);
+
+          expect(() => actualQuery, throwsException);
+        } catch (e) {
+          expect(e.runtimeType, SILException);
+        }
       });
     });
   });

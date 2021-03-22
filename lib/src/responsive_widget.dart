@@ -84,7 +84,7 @@ class SILResponsiveWidget extends StatelessWidget {
   }
 
   /// returns the device type but first checks the device orientation before checking its width
-  static DeviceScreenType deviceType(BuildContext context) {
+  static DeviceScreensType deviceType(BuildContext context) {
     return getDeviceType(context);
   }
 
@@ -105,7 +105,7 @@ class SILResponsiveWidget extends StatelessWidget {
 
   static bool isSmallScreenAndOnLandscape({required BuildContext context}) {
     if (isLandscape(context: context) &&
-        getDeviceType(context) == DeviceScreenType.Mobile) {
+        getDeviceType(context) == DeviceScreensType.Mobile) {
       return true;
     }
     return false;

@@ -1,8 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sil_app_wrapper/device_capabilities.dart';
+import 'package:sil_graphql_client/graph_client.dart';
 import 'package:sil_misc/src/small_appbar.dart';
+import 'package:http/http.dart' as http;
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class MockDeviceCapabilities extends IDeviceCapabilities {}
 
 class MockRoutes {
   static const String route1 = 'route1';
@@ -81,3 +89,136 @@ const Size tabletLandscape = Size(1280, 720);
 const Size typicalLargePhoneScreenSizePortrait = Size(300, 800);
 
 const Size typicalDesktop = Size(0, 1080);
+final Map<String, bool> settingsVariables = <String, bool>{
+  'allowEmail': true,
+  'allowText': true,
+  'allowWhatsApp': true,
+  'allowPush': true,
+};
+
+// ignore: subtype_of_sealed_class
+class MockSILGraphQlClient extends Mock implements SILGraphQlClient {
+  String setupUserAsExperimentorVariables =
+      json.encode(<String, bool>{'participate': true});
+  String removeUserAsExperimentorVariables =
+      json.encode(<String, bool>{'participate': false});
+
+  @override
+  Future<http.Response> query(
+      String queryString, Map<String, dynamic> variables,
+      [ContentType contentType = ContentType.json]) {
+    if (json.encode(variables) == setupUserAsExperimentorVariables) {
+      return Future<http.Response>.value(
+        http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{'setupAsExperimentParticipant': true}
+            }),
+            200),
+      );
+    }
+
+    if (json.encode(variables) == removeUserAsExperimentorVariables) {
+      return Future<http.Response>.value(
+        http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{'setupAsExperimentParticipant': true}
+            }),
+            200),
+      );
+    }
+    if (queryString.contains('setUserCommunicationsSettings')) {
+      return Future<http.Response>.value(
+        http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{
+                'setUserCommunicationsSettings': <String, dynamic>{
+                  'allowWhatsApp': true,
+                  'allowPush': false,
+                  'allowEmail': true,
+                  'allowTextSMS': true
+                }
+              }
+            }),
+            201),
+      );
+    }
+    if (queryString.contains('Trace')) {
+      /// return fake data here
+      return Future<http.Response>.value(
+        http.Response(
+            json.encode(
+              <String, dynamic>{
+                'data': <String, dynamic>{'logDebugInfo': true}
+              },
+            ),
+            201),
+      );
+    }
+    if (queryString.contains('upload')) {
+      return Future<http.Response>.value(
+        http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{
+                'upload': <String, dynamic>{
+                  'id': 'uploadID',
+                },
+              }
+            }),
+            201),
+      );
+    }
+
+    if (queryString.contains('UpdateUserData')) {
+      return Future<http.Response>.value(
+        http.Response(
+            json.encode(<String, dynamic>{
+              'data': <String, dynamic>{
+                'UpdateUserData': <String, dynamic>{
+                  'allowWhatsApp': true,
+                  'allowPush': false,
+                  'allowEmail': true,
+                  'allowTextSMS': true
+                }
+              }
+            }),
+            408),
+      );
+    }
+
+    if (queryString.contains('UpdateUserProfile')) {
+      return Future<http.Response>.value(
+        http.Response(json.encode(<String, dynamic>{'error': 'error'}), 201),
+      );
+    }
+    return Future<http.Response>.value();
+  }
+
+  @override
+  Map<String, dynamic> toMap(Response? response) {
+    if (response == null) return <String, dynamic>{};
+    final dynamic _res = json.decode(response.body);
+    if (_res is List<dynamic>) return _res[0] as Map<String, dynamic>;
+    return _res as Map<String, dynamic>;
+  }
+}
+
+String updateUserData = r'''
+mutation UpdateUserData($allowWhatsApp: Boolean, $allowTextSMS: Boolean, $allowPush: Boolean, $allowEmail: Boolean) {
+  UpdateUserData(allowWhatsApp: $allowWhatsApp, allowTextSMS: $allowTextSMS, allowPush: $allowPush, allowEmail: $allowEmail){
+    allowWhatsApp
+    allowPush
+    allowEmail
+    allowTextSMS
+  }
+}
+ ''';
+String updateUserProfile = r'''
+mutation UpdateUserProfile($allowWhatsApp: Boolean, $allowTextSMS: Boolean, $allowPush: Boolean, $allowEmail: Boolean) {
+  UpdateUserProfile(allowWhatsApp: $allowWhatsApp, allowTextSMS: $allowTextSMS, allowPush: $allowPush, allowEmail: $allowEmail){
+    allowWhatsApp
+    allowPush
+    allowEmail
+    allowTextSMS
+  }
+}
+ ''';

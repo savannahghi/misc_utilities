@@ -1,16 +1,27 @@
 library sil_misc;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sil_app_wrapper/sil_app_wrapper_base.dart';
+import 'package:sil_graphql_client/graph_client.dart';
+import 'package:sil_graphql_client/graph_event_bus.dart';
+import 'package:sil_misc/sil_bottom_sheet_builder.dart';
 import 'package:sil_misc/sil_enums.dart';
-import 'package:sil_misc/src/widget_keys.dart';
+import 'package:sil_misc/sil_exception.dart';
+import 'package:sil_misc/sil_mutations.dart';
 
 import 'package:sil_themes/constants.dart';
+import 'package:http/http.dart' as http;
+import 'package:sil_ui_components/sil_comms_setting.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+enum UserInactivityStatus { okey, requiresLogin, requiresPin }
 
 /// [extractNamesInitials] extracts name initials from a name
 ///
@@ -173,13 +184,10 @@ String removeUnderscores(String sentence) {
 }
 
 /// [bottomSheet]
-void bottomSheet(
-    {required BuildContext context,
-    required String message,
-    required Function? action,
-    required Color backgroundColor,
-    required Color textColor,
-    required Color primaryColor}) {
+void bottomSheet({
+  required BuildContext context,
+  required SILBottomSheetBuilder builder,
+}) {
   showModalBottomSheet<List<dynamic>>(
     context: context,
     enableDrag: true,
@@ -190,154 +198,7 @@ void bottomSheet(
         topRight: Radius.circular(20.0),
       ),
     ),
-    builder: (BuildContext bc) {
-      return Container(
-        key: containerKey,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(40.0),
-            topRight: Radius.circular(40.0),
-          ),
-        ),
-        height: action != null ? 314.0 : 250.0,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-          child: Column(
-            key: columnKey,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              CircleAvatar(
-                radius: 30.0,
-                backgroundColor: const Color(0xFF50C878),
-                child: Icon(
-                  Icons.check,
-                  size: 36.0,
-                  color: Theme.of(context).backgroundColor,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(
-                  message,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline6!.copyWith(
-                        color: textColor,
-                      ),
-                ),
-              ),
-              if (action != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  width: double.infinity,
-                  height: 56,
-                  child: MaterialButton(
-                    key: okButtonKey,
-                    elevation: 0,
-                    color: primaryColor,
-                    textColor: Theme.of(context).backgroundColor,
-                    onPressed: () {
-                      Navigator.pop(context);
-                      action();
-                    },
-                    child: const Text('OK',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 20,
-                        )),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
-
-/// [verifyOTPErrorBottomSheet]
-void verifyOTPErrorBottomSheet(
-    {required BuildContext context,
-    required String message,
-    required Function? actionEnterCode,
-    required Color textColor,
-    required Color primaryColor}) {
-  showModalBottomSheet<List<dynamic>>(
-    context: context,
-    enableDrag: true,
-    isDismissible: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(20.0),
-        topRight: Radius.circular(20.0),
-      ),
-    ),
-    builder: (BuildContext bc) {
-      return Container(
-        key: containerKey,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(40.0),
-            topRight: Radius.circular(40.0),
-          ),
-        ),
-        height: actionEnterCode != null ? 314.0 : 250.0,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: Column(
-            key: columnKey,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Container(
-                decoration: const BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(40.0),
-                  ),
-                ),
-                child: const Icon(
-                  Icons.error,
-                  size: 58,
-                  color: Colors.white,
-                ),
-              ),
-              Center(
-                child: Text(
-                  message,
-                  style: Theme.of(context).textTheme.headline6!.copyWith(
-                        color:
-                            Theme.of(context).textSelectionTheme.selectionColor,
-                      ),
-                ),
-              ),
-              if (actionEnterCode != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: MaterialButton(
-                      key: reenterCodeButtonKey,
-                      height: 56,
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () {
-                        Navigator.pop(context);
-                        actionEnterCode();
-                      },
-                      child: const Text(
-                        'RE-ENTER CODE',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-            ],
-          ),
-        ),
-      );
-    },
+    builder: builder.build,
   );
 }
 
@@ -404,7 +265,7 @@ String convertDateToString({
 }
 
 /// [getDeviceType]
-DeviceScreenType getDeviceType(BuildContext context) {
+DeviceScreensType getDeviceType(BuildContext context) {
   final MediaQueryData mediaQuery = MediaQuery.of(context);
   final Orientation deviceOrientation = mediaQuery.orientation;
   double deviceWidth = 0;
@@ -415,10 +276,257 @@ DeviceScreenType getDeviceType(BuildContext context) {
   }
 
   if (deviceWidth > 950) {
-    return DeviceScreenType.Desktop;
+    return DeviceScreensType.Desktop;
   }
   if (deviceWidth > 600) {
-    return DeviceScreenType.Tablet;
+    return DeviceScreensType.Tablet;
   }
-  return DeviceScreenType.Mobile;
+  return DeviceScreensType.Mobile;
+}
+
+///[Change Communication Settings]
+Future<bool> changeCommunicationSetting(
+    {required CommunicationType channel,
+    required bool isAllowed,
+    required BuildContext context,
+    required Map<String, bool>? settings,
+    required Function communicationSettingsFunc}) async {
+  final Map<String, bool> _variables = <String, bool>{
+    'allowEmail': settings!['allowEmail']!,
+    'allowWhatsApp': settings['allowWhatsApp']!,
+    'allowTextSMS': settings['allowText']!,
+    'allowPush': settings['allowPush']!,
+  };
+  final SILGraphQlClient _client = SILAppWrapperBase.of(context)!.graphQLClient;
+
+  _variables[channel.toShortString()] = isAllowed;
+
+  /// fetch the data from the api
+  final http.Response _result = await _client.query(
+    setCommSettingsMutation,
+    _variables,
+  );
+
+  final Map<String, dynamic> response = _client.toMap(_result);
+  // /// check if the response has timeout metadata. If yes, return an error to
+  // /// handled correctly
+  if (_result.statusCode == 408) {
+    return false;
+  }
+
+  // // check for errors in the data here
+  if (_client.parseError(response) != null) {
+    return false;
+  }
+  communicationSettingsFunc(communicationSettings: _variables);
+  return true;
+}
+
+///[Set-up as an Experiment Participant]
+///function for getting whether a user is set up as an experiment participant
+Future<bool?> setupAsExperimentParticipant(
+    {required BuildContext context, bool participate = false}) async {
+  final SILGraphQlClient _client = SILAppWrapperBase.of(context)!.graphQLClient;
+
+  final http.Response result = await _client.query(
+      setupUserAsExperimentParticipant,
+      setupAsExperimentParticipantVariables(participate));
+
+  final Map<String, dynamic> response = _client.toMap(result);
+
+  SaveTraceLog(
+    client: SILAppWrapperBase.of(context)!.graphQLClient,
+    query: setupUserAsExperimentParticipant,
+    data: setupAsExperimentParticipantVariables(participate),
+    response: response,
+    title: 'Setup user as experiment participant',
+    description: 'Setup user as experiment participant',
+  ).saveLog();
+
+  if (_client.parseError(response) != null) {
+    return null;
+  } else {
+    final bool responseData =
+        response['data']['setupAsExperimentParticipant'] as bool;
+
+    return responseData;
+  }
+}
+
+///[Get Upload ID]
+///get ID of uploaded file
+Future<String?> getUploadId(
+    {required Map<String, dynamic> fileData,
+    required BuildContext context}) async {
+  final SILGraphQlClient _client = SILAppWrapperBase.of(context)!.graphQLClient;
+  try {
+    final http.Response result = await _client
+        .query(uploadMutation, <String, dynamic>{'input': fileData});
+    final Map<String, dynamic> body = _client.toMap(result);
+
+    //check first for errors
+    if (_client.parseError(body) != null) {
+      return 'err';
+    }
+
+    if (body['data'] != null) {
+      return body['data']['upload']['id'] as String;
+    } else {
+      return 'err';
+    }
+  } catch (e) {
+    return 'err';
+  }
+}
+
+///[Generic Fetch Function]
+/// fetches data from API
+Future<dynamic> genericFetchFunction(
+    {required StreamController<dynamic> streamController,
+    required BuildContext context,
+    required String queryString,
+    required Map<String, dynamic> variables,
+    required String logTitle}) async {
+  // indicate processing is ongoing
+  streamController.add(<String, dynamic>{'loading': true});
+
+  final SILGraphQlClient _client = SILAppWrapperBase.of(context)!.graphQLClient;
+
+  /// fetch the data from the api
+  final http.Response _result = await _client.query(
+    queryString,
+    variables,
+  );
+
+  final Map<String, dynamic> response = _client.toMap(_result);
+
+  SaveTraceLog(
+    client: SILAppWrapperBase.of(context)!.graphQLClient,
+    query: queryString,
+    data: variables,
+    response: response,
+    title: logTitle,
+    description: logTitle,
+  ).saveLog();
+
+  // /// check if the response has timeout metadata. If yes, return an error to
+  // /// handled correctly
+  if (_result.statusCode == 408) {
+    streamController.addError(<String, dynamic>{'error': 'timeout'});
+    return Future<dynamic>.value();
+  }
+
+  // // check for errors in the data here
+  if (response['error'] != null) {
+    streamController.addError(<String, dynamic>{'error': response['error']});
+    return Future<dynamic>.value();
+  }
+
+  streamController.add(response);
+}
+
+///[Get ID Type]
+/// gets the selected ID type
+String getIdType({required String idType, required bool userString}) {
+  if (idType.toLowerCase().contains('passport')) {
+    return userString ? 'Passport' : 'PASSPORT';
+  }
+  if (idType.toLowerCase().contains('national')) {
+    return userString ? 'National ID' : 'NATIONALID';
+  }
+  return userString ? 'Military ID' : 'MILITARY';
+}
+
+///[Launch WhatsApp]
+///function that launches whatsapp
+Future<String?> launchWhatsApp({
+  required String phone,
+  required String message,
+}) async {
+  final String whatsAppUrl = 'https://wa.me/$phone/?text=${Uri.parse(message)}';
+  try {
+    await launch(whatsAppUrl);
+  } catch (e) {
+    throw 'Could not launch $whatsAppUrl';
+  }
+}
+
+///[check inactivity time]
+/// if inactivity period is less than an hour --- just resume
+/// if inactivity time is greater than 1 and less than 12 hours --- require pin
+/// if inactivity period is greater than 12 hours --- require login
+UserInactivityStatus checkInactivityTime(
+  String? inActivitySetInTime,
+  String? expiresAt,
+) {
+  if (inActivitySetInTime == null) {
+    return UserInactivityStatus.okey;
+  }
+
+  final DateTime? lastActivityTime = DateTime.tryParse(inActivitySetInTime);
+  if (lastActivityTime == null) {
+    // we can't determine last activity time, so login is required
+    return UserInactivityStatus.requiresLogin;
+  }
+
+  final int timeDiff = DateTime.now().difference(lastActivityTime).inHours;
+
+  if (timeDiff < 1) {
+    // check if token has expired or is about to and require pin if so
+    final int tokenAge =
+        DateTime.now().difference(DateTime.tryParse(expiresAt!)!).inMinutes;
+    // require pin login if token is about to expire
+    if (tokenAge > -5) {
+      return UserInactivityStatus.requiresPin;
+    }
+
+    return UserInactivityStatus.okey;
+  }
+
+  if (timeDiff > 1 && timeDiff < 12) {
+    return UserInactivityStatus.requiresPin;
+  }
+
+  return UserInactivityStatus.requiresLogin;
+}
+
+///[trim white space]
+/// removes white spaces in between a string, at the beginning and at the end
+String trimWhitespace(String param) {
+  assert(param is String);
+  return param.toString().trim().split(' ').join();
+}
+
+///[token manager]
+///returns responses from API
+http.Response returnResponse(http.Response response) {
+  switch (response.statusCode) {
+    case 200:
+      return response;
+    case 400:
+      final Map<String, dynamic> _response =
+          json.decode(response.body) as Map<String, dynamic>;
+      throw SILException(cause: 'bad_request', message: _response['error']);
+    case 401:
+    case 403:
+      final Map<String, dynamic> _response =
+          json.decode(response.body) as Map<String, dynamic>;
+      throw SILException(cause: 'unauthorized', message: _response['error']);
+    case 500:
+    default:
+      final Map<String, dynamic> _response =
+          json.decode(response.body) as Map<String, dynamic>;
+      throw SILException(cause: 'server_error', message: _response['error']);
+  }
+}
+
+///[dismiss snackbar]
+SnackBarAction dismissSnackBar(String text, Color color, BuildContext context) {
+  return SnackBarAction(
+    label: text,
+    textColor: color,
+    onPressed: () {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    },
+  );
 }

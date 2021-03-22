@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sil_misc/sil_number_constants.dart';
+import 'package:sil_misc/sil_enums.dart';
+import 'package:sil_misc/sil_misc.dart';
 import 'package:sil_misc/sil_responsive_widget.dart';
 
 import '../test_utils.dart';
@@ -200,6 +202,103 @@ void main() {
         tester.binding.window.clearDevicePixelRatioTestValue();
       });
     });
+    testWidgets('isLandscape returns true for large screen',
+      (WidgetTester tester) async {
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    tester.binding.window.physicalSizeTestValue = tabletLandscape;
+
+    await tester.pumpWidget(
+      MediaQuery(
+        data: MediaQueryData.fromWindow(tester.binding.window)
+            .copyWith(size: const Size(1280, 720)),
+        child: MaterialApp(
+          home: Builder(builder: (BuildContext context) {
+            final bool isLandscape =
+                SILResponsiveWidget.isLandscape(context: context);
+            final bool isLargeScreen = SILResponsiveWidget.isLargeScreen(context);
+
+            expect(isLandscape, isTrue);
+            expect(isLargeScreen, isTrue);
+
+            return const Placeholder();
+          }),
+        ),
+      ),
+    );
+
+    addTearDown(() {
+      tester.binding.window.clearPhysicalSizeTestValue();
+      tester.binding.window.clearDevicePixelRatioTestValue();
+    });
+  });
+
+  testWidgets('returns device width for large screen landscape',
+      (WidgetTester tester) async {
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    tester.binding.window.physicalSizeTestValue = tabletLandscape;
+
+    await tester.pumpWidget(
+      MediaQuery(
+        data: MediaQueryData.fromWindow(tester.binding.window)
+            .copyWith(size: tabletLandscape),
+        child: MaterialApp(
+          home: Builder(builder: (BuildContext context) {
+            final MediaQueryData mediaQuery = MediaQuery.of(context);
+            final bool isLandscape =
+                SILResponsiveWidget.isLandscape(context: context);
+            final DeviceScreensType screenType =
+                getDeviceType(context);
+
+            expect(isLandscape, isTrue);
+            expect(mediaQuery.size.width, 1280);
+            expect(screenType, DeviceScreensType.Tablet);
+
+            return const Placeholder();
+          }),
+        ),
+      ),
+    );
+
+    addTearDown(() {
+      tester.binding.window.clearPhysicalSizeTestValue();
+      tester.binding.window.clearDevicePixelRatioTestValue();
+    });
+  });
+
+  testWidgets('returns device width for desktop',
+      (WidgetTester tester) async {
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    tester.binding.window.physicalSizeTestValue = desktop;
+
+    await tester.pumpWidget(
+      MediaQuery(
+        data: MediaQueryData.fromWindow(tester.binding.window)
+            .copyWith(size: const Size(1280, 720)),
+        child: MaterialApp(
+          home: Builder(builder: (BuildContext context) {
+            final MediaQueryData mediaQuery = MediaQuery.of(context);
+            final bool isLandscape =
+                SILResponsiveWidget.isLandscape(context: context);
+            final DeviceScreensType screenType =
+               SILResponsiveWidget.deviceType(context);
+                
+            expect(isLandscape, isTrue);
+            expect(mediaQuery.size.width, 1920);
+            expect(screenType, DeviceScreensType.Desktop);
+
+            return const Placeholder();
+          }),
+        ),
+      ),
+    );
+
+    addTearDown(() {
+      tester.binding.window.clearPhysicalSizeTestValue();
+      tester.binding.window.clearDevicePixelRatioTestValue();
+    });
+  });
+
+ 
   });
 }
 
