@@ -444,10 +444,10 @@ void main() {
                   return SILPrimaryButton(
                       buttonKey: const Key('get_upload_id'),
                       onPressed: () async {
-                        uploadID = (await getUploadId(
+                        uploadID = await getUploadId(
                           fileData: fileData,
                           context: context,
-                        ))!;
+                        );
                       });
                 }),
               ),

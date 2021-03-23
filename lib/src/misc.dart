@@ -353,7 +353,7 @@ Future<bool?> setupAsExperimentParticipant(
 
 ///[Get Upload ID]
 ///get ID of uploaded file
-Future<String?> getUploadId(
+Future<String> getUploadId(
     {required Map<String, dynamic> fileData,
     required BuildContext context}) async {
   final SILGraphQlClient _client = SILAppWrapperBase.of(context)!.graphQLClient;
