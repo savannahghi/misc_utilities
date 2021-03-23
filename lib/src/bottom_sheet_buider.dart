@@ -36,12 +36,13 @@ import 'package:flutter/widgets.dart';
 ///```
 abstract class SILBottomSheetBuilder {
   SILBottomSheetBuilder(
-      {required this.message,
-      required this.action,
-      required this.backgroundColor,
-      required this.textColor,
-      required this.primaryColor,
+      {
+      this.action,
+      this.backgroundColor,
+      this.textColor,
+      this.primaryColor,
       this.isError,
+      this.message,
       this.showPrimaryButton,
       this.showSecondaryButton,
       this.showTertiaryButton,

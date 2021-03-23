@@ -168,22 +168,6 @@ class MockSILGraphQlClient extends Mock implements SILGraphQlClient {
       );
     }
 
-    if (queryString.contains('UpdateUserData')) {
-      return Future<http.Response>.value(
-        http.Response(
-            json.encode(<String, dynamic>{
-              'data': <String, dynamic>{
-                'UpdateUserData': <String, dynamic>{
-                  'allowWhatsApp': true,
-                  'allowPush': false,
-                  'allowEmail': true,
-                  'allowTextSMS': true
-                }
-              }
-            }),
-            408),
-      );
-    }
 
     if (queryString.contains('UpdateUserProfile')) {
       return Future<http.Response>.value(

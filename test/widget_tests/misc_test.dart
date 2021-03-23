@@ -507,52 +507,7 @@ void main() {
         await _streamController.close();
       });
 
-      testWidgets('should add error to streamcontroller when statuscode= 408',
-          (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
-        final StreamController<dynamic> _streamControllers =
-            StreamController<dynamic>.broadcast();
-        final Map<String, bool> userData = <String, bool>{
-          'allowWhatsApp': true,
-          'allowPush': false,
-          'allowEmail': true,
-          'allowTextSMS': true
-        };
-
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: SILAppWrapperBase(
-              deviceCapabilities: MockDeviceCapabilities(),
-              appName: 'testAppName',
-              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
-              child: Center(
-                child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('fetch_data'),
-                      onPressed: () async {
-                        await genericFetchFunction(
-                            streamController: _streamControllers,
-                            context: context,
-                            queryString: updateUserData,
-                            variables: userData,
-                            logTitle: 'logTitle');
-                      });
-                }),
-              ),
-            ),
-          ),
-        ));
-        await tester.pump();
-
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.byType(SILPrimaryButton));
-        await tester.pumpAndSettle();
-
-        await _streamControllers.close();
-      });
+   
 
       testWidgets('should add error to streamcontroller when there is an error',
           (WidgetTester tester) async {

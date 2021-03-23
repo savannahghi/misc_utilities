@@ -13,15 +13,17 @@ String uploadMutationQuery = r'''
   }
 }
 ''';
- String setupUserAsExperimentParticipant = r'''
+ const String setupUserAsExperimentParticipant = r'''
 mutation SetupExperimentParticipant($participate:Boolean){
   setupAsExperimentParticipant(participate:$participate)
 }
 ''';
-// ignore: avoid_positional_boolean_parameters
-Map<String, dynamic> setupAsExperimentParticipantVariables(bool participate) {
+
+Map<String, dynamic> setupAsExperimentParticipantVariables(
+    {bool participate = false}) {
   return <String, dynamic>{'participate': participate};
 }
+
 
 String setCommSettingsMutation = r'''
 mutation SetUserCommunicationsSettings($allowWhatsApp: Boolean, $allowTextSMS: Boolean, $allowPush: Boolean, $allowEmail: Boolean) {

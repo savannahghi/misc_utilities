@@ -1,7 +1,6 @@
 library sil_misc;
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -13,7 +12,6 @@ import 'package:sil_graphql_client/graph_client.dart';
 import 'package:sil_graphql_client/graph_event_bus.dart';
 import 'package:sil_misc/sil_bottom_sheet_builder.dart';
 import 'package:sil_misc/sil_enums.dart';
-import 'package:sil_misc/sil_exception.dart';
 import 'package:sil_misc/sil_mutations.dart';
 
 import 'package:sil_themes/constants.dart';
@@ -330,14 +328,14 @@ Future<bool?> setupAsExperimentParticipant(
 
   final http.Response result = await _client.query(
       setupUserAsExperimentParticipant,
-      setupAsExperimentParticipantVariables(participate));
+      setupAsExperimentParticipantVariables());
 
   final Map<String, dynamic> response = _client.toMap(result);
 
   SaveTraceLog(
     client: SILAppWrapperBase.of(context)!.graphQLClient,
     query: setupUserAsExperimentParticipant,
-    data: setupAsExperimentParticipantVariables(participate),
+    data: setupAsExperimentParticipantVariables(),
     response: response,
     title: 'Setup user as experiment participant',
     description: 'Setup user as experiment participant',
@@ -380,49 +378,55 @@ Future<String?> getUploadId(
 }
 
 ///[Generic Fetch Function]
-/// fetches data from API
+/// a generic fetch function for fetching all the problems, allergies
+/// medications, tests and diagnoses for the current patient
+/// in an episode
+///
+/// it takes in a [String queryString], the Map of the query variables [variables],
+/// the BuildContext [context], and a stream controller [streamController] in which the data is added to
+///
+/// it then updates the stream controller with the returned data (if any) or
+/// an error if there was an error
 Future<dynamic> genericFetchFunction(
     {required StreamController<dynamic> streamController,
     required BuildContext context,
     required String queryString,
     required Map<String, dynamic> variables,
-    required String logTitle}) async {
+     String? logTitle,
+     String? logDescription,
+    }) async {
   // indicate processing is ongoing
   streamController.add(<String, dynamic>{'loading': true});
 
   final SILGraphQlClient _client = SILAppWrapperBase.of(context)!.graphQLClient;
 
   /// fetch the data from the api
-  final http.Response _result = await _client.query(
+  final http.Response response = await _client.query(
     queryString,
     variables,
   );
 
-  final Map<String, dynamic> response = _client.toMap(_result);
+  final Map<String, dynamic> payLoad = _client.toMap(response);
+
 
   SaveTraceLog(
     client: SILAppWrapperBase.of(context)!.graphQLClient,
     query: queryString,
     data: variables,
-    response: response,
-    title: logTitle,
-    description: logTitle,
+    response: payLoad,
+    title: logTitle!,
+    description: logDescription,
   ).saveLog();
 
-  // /// check if the response has timeout metadata. If yes, return an error to
-  // /// handled correctly
-  if (_result.statusCode == 408) {
-    streamController.addError(<String, dynamic>{'error': 'timeout'});
-    return Future<dynamic>.value();
+  //check first for errors
+  if (_client.parseError(payLoad) != null) {
+    return streamController
+        .addError(<String, dynamic>{'error': _client.parseError(payLoad)});
   }
 
-  // // check for errors in the data here
-  if (response['error'] != null) {
-    streamController.addError(<String, dynamic>{'error': response['error']});
-    return Future<dynamic>.value();
-  }
-
-  streamController.add(response);
+  return (payLoad['data'] != null)
+      ? streamController.add(payLoad['data'])
+      : streamController.add(null);
 }
 
 ///[Get ID Type]
@@ -463,6 +467,7 @@ UserInactivityStatus checkInactivityTime(
     return UserInactivityStatus.okey;
   }
 
+  
   final DateTime? lastActivityTime = DateTime.tryParse(inActivitySetInTime);
   if (lastActivityTime == null) {
     // we can't determine last activity time, so login is required
@@ -497,28 +502,7 @@ String trimWhitespace(String param) {
   return param.toString().trim().split(' ').join();
 }
 
-///[token manager]
-///returns responses from API
-http.Response returnResponse(http.Response response) {
-  switch (response.statusCode) {
-    case 200:
-      return response;
-    case 400:
-      final Map<String, dynamic> _response =
-          json.decode(response.body) as Map<String, dynamic>;
-      throw SILException(cause: 'bad_request', message: _response['error']);
-    case 401:
-    case 403:
-      final Map<String, dynamic> _response =
-          json.decode(response.body) as Map<String, dynamic>;
-      throw SILException(cause: 'unauthorized', message: _response['error']);
-    case 500:
-    default:
-      final Map<String, dynamic> _response =
-          json.decode(response.body) as Map<String, dynamic>;
-      throw SILException(cause: 'server_error', message: _response['error']);
-  }
-}
+
 
 ///[dismiss snackbar]
 SnackBarAction dismissSnackBar(String text, Color color, BuildContext context) {

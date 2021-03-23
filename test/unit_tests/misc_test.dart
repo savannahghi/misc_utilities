@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
@@ -8,7 +7,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sil_misc/sil_exception.dart';
 import 'package:sil_misc/sil_misc.dart';
 import 'package:sil_misc/sil_refresh_token_manager.dart';
-import 'package:http/http.dart' as http;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -356,65 +354,9 @@ void main() {
       expect(actualRemovedUnderscoreString, expectedFormattedName);
     });
 
-    group('Return Response', () {
-      test('should return response when status code is 200', () {
-        final http.Response query = http.Response(
-            json.encode(<String, dynamic>{
-              'data': <String, dynamic>{'setupAsExperimentParticipant': true}
-            }),
-            200);
-        final http.Response actualQuery = returnResponse(query);
+   
 
-        expect(query, actualQuery);
-      });
-
-      test('should return response when status code is 400', () {
-        final http.Response query = http.Response(
-            json.encode(<String, dynamic>{
-              'data': <String, dynamic>{'error': 'true'}
-            }),
-            400);
-        try {
-          final http.Response actualQuery = returnResponse(query);
-
-          expect(() => actualQuery, throwsException);
-        } catch (e) {
-          expect(e.runtimeType, SILException);
-        }
-      });
-
-      test('should return response when status code is 403', () {
-        final http.Response query = http.Response(
-            json.encode(<String, dynamic>{
-              'data': <String, dynamic>{'error': 'true'}
-            }),
-            403);
-
-        try {
-          final http.Response actualQuery = returnResponse(query);
-
-          expect(() => actualQuery, throwsException);
-        } catch (e) {
-          expect(e.runtimeType, SILException);
-        }
-      });
-
-      test('should return response when status code is 500', () {
-        final http.Response query = http.Response(
-            json.encode(<String, dynamic>{
-              'data': <String, dynamic>{'error': 'true'}
-            }),
-            500);
-
-        try {
-          final http.Response actualQuery = returnResponse(query);
-
-          expect(() => actualQuery, throwsException);
-        } catch (e) {
-          expect(e.runtimeType, SILException);
-        }
-      });
-    });
+    
     group('get ID type', () {
       test('should select passport ID type', () {
         const String idType = 'Passport';
@@ -452,66 +394,6 @@ void main() {
       final String actualRemovedUnderscoreString = removeUnderscores(name);
 
       expect(actualRemovedUnderscoreString, expectedFormattedName);
-    });
-
-    group('Return Response', () {
-      test('should return response when status code is 200', () {
-        final http.Response query = http.Response(
-            json.encode(<String, dynamic>{
-              'data': <String, dynamic>{'setupAsExperimentParticipant': true}
-            }),
-            200);
-        final http.Response actualQuery = returnResponse(query);
-
-        expect(query, actualQuery);
-      });
-
-      test('should return response when status code is 400', () {
-        final http.Response query = http.Response(
-            json.encode(<String, dynamic>{
-              'data': <String, dynamic>{'error': 'true'}
-            }),
-            400);
-        try {
-          final http.Response actualQuery = returnResponse(query);
-
-          expect(() => actualQuery, throwsException);
-        } catch (e) {
-          expect(e.runtimeType, SILException);
-        }
-      });
-
-      test('should return response when status code is 403', () {
-        final http.Response query = http.Response(
-            json.encode(<String, dynamic>{
-              'data': <String, dynamic>{'error': 'true'}
-            }),
-            403);
-
-        try {
-          final http.Response actualQuery = returnResponse(query);
-
-          expect(() => actualQuery, throwsException);
-        } catch (e) {
-          expect(e.runtimeType, SILException);
-        }
-      });
-
-      test('should return response when status code is 500', () {
-        final http.Response query = http.Response(
-            json.encode(<String, dynamic>{
-              'data': <String, dynamic>{'error': 'true'}
-            }),
-            500);
-
-        try {
-          final http.Response actualQuery = returnResponse(query);
-
-          expect(() => actualQuery, throwsException);
-        } catch (e) {
-          expect(e.runtimeType, SILException);
-        }
-      });
-    });
+    });     
   });
 }
