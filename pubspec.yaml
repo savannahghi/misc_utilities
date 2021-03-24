@@ -7,41 +7,41 @@ homepage: https://gitlab.slade360emr.com/optimalhealth/sil_dart_utils
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
-  flutter: ">=2.0.0"
+  flutter: '>=2.0.0'
 
 dependencies:
   async_redux: ^9.0.0
   camera: ^0.8.0
-  camera_camera: ^2.0.0-nullsafety.2   
+  camera_camera: ^2.0.0-nullsafety.2
   dotted_border: ^2.0.0-nullsafety.0
   file_picker: ^3.0.0
   flutter:
-    sdk: flutter  
-  flutter_image_compress: ^1.0.0-nullsafety  
-  flutter_svg: ^0.21.0-nullsafety.0  
+    sdk: flutter
+  flutter_image_compress: ^1.0.0-nullsafety
+  flutter_svg: ^0.21.0-nullsafety.0
   http: ^0.13.0
   intl: ^0.17.0
   material_design_icons_flutter: ^5.0.5955-rc.1
-  path_provider: ^2.0.1   
-  rxdart: ^0.26.0 
+  path_provider: ^2.0.1
+  rxdart: ^0.26.0
   sil_app_wrapper:
     git:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_app_wrapper.git
-      ref: 0.0.5-nullsafety 
+      ref: 0.0.5-nullsafety
   sil_graphql_client:
     git:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_graphql_client.git
-      ref: 0.0.5-nullsafety 
+      ref: 0.0.5-nullsafety
 
   sil_themes:
-    git: 
+    git:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_themes.git
       ref: 0.0.4-nullsafety
-  
+
   sil_ui_components:
     git:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_ui_components.git
-      ref: 0.0.23-nullsafety
+      ref: 0.0.24-nullsafety
 
   url_launcher: ^6.0.2
 
@@ -50,7 +50,6 @@ dev_dependencies:
     sdk: flutter
   lint: ^1.0.0
   mockito: ^5.0.0
-  
 
 flutter:
   assets:
