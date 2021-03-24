@@ -15,21 +15,17 @@ import 'package:sil_misc/sil_mutations.dart';
 import 'package:sil_themes/constants.dart';
 import 'package:sil_themes/spaces.dart';
 
-import 'package:sil_ui_components/sil_buttons.dart';
-import 'package:sil_ui_components/sil_comms_setting.dart';
-
 import '../mocks.dart';
 
 class TestComplexBottomSheet extends SILBottomSheetBuilder {
   TestComplexBottomSheet()
       : super(
-          primaryColor: Colors.amber,
-          textColor: Colors.amberAccent,
-          backgroundColor: Colors.black,
-          action: () => true,
-          message: 'test message',
-          showSecondaryButton: true
-        );
+            primaryColor: Colors.amber,
+            textColor: Colors.amberAccent,
+            backgroundColor: Colors.black,
+            action: () => true,
+            message: 'test message',
+            showSecondaryButton: true);
 
   @override
   Widget build(BuildContext context) {
@@ -76,29 +72,18 @@ class TestComplexBottomSheet extends SILBottomSheetBuilder {
                 Container(
                   padding: veryLargeHorizontalPadding,
                   width: double.infinity,
-                  child: SILPrimaryButton(
-                      buttonColor: buttonColor,
-                      borderColor: borderColor,
-                      customPadding: customPadding,
-                      text: primaryActionText ?? 'Complete',
-                      onPressed: primaryActionCallback),
+                  child: ElevatedButton(
+                      onPressed: () => primaryActionCallback,
+                      child: const Text('Primary')),
                 ),
               smallVerticalSizedBox,
               if (showSecondaryButton! || secondaryActionCallback != null)
                 Container(
                   padding: veryLargeHorizontalPadding,
                   width: double.infinity,
-                  child: SILSecondaryButton(
-                    buttonColor: buttonColor,
-                    borderColor: borderColor,
-                    customPadding: customPadding,
-                    text: secondaryActionText ?? 'Close',
-                    addBorder: true,
-                    textColor: buttonColor ?? Theme.of(context).accentColor,
-                    onPressed: secondaryActionCallback ??
-                        () {
-                          Navigator.pop(context);
-                        },
+                  child: ElevatedButton(
+                    onPressed: () => secondaryActionCallback,
+                    child: const Text('Close'),
                   ),
                 ),
               smallVerticalSizedBox,
@@ -106,9 +91,9 @@ class TestComplexBottomSheet extends SILBottomSheetBuilder {
                 Container(
                   padding: veryLargeHorizontalPadding,
                   width: double.infinity,
-                  child: SILNoBorderButton(
-                    text: tertiaryActionText ?? 'Complete',
-                    onPressed: tertiaryActionCallback,
+                  child: ElevatedButton(
+                    onPressed: () => tertiaryActionCallback,
+                    child: const Text('Complete'),
                   ),
                 ),
             ],
@@ -283,144 +268,6 @@ void main() {
       });
     });
 
-    group('communication settings', () {
-      testWidgets('changeCommunicationSetting works correctly',
-          (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
-        final Map<String, bool> settings = settingsVariables;
-        final Map<String, bool> _variables = <String, bool>{
-          'allowEmail': settings['allowEmail']!,
-          'allowWhatsApp': settings['allowWhatsApp']!,
-          'allowTextSMS': settings['allowText']!,
-          'allowPush': settings['allowPush']!,
-        };
-        dynamic commSettings(
-            {required Map<String, bool> communicationSettings}) {
-          return _variables;
-        }
-
-        bool? response;
-        await tester.pumpWidget(Builder(
-          builder: (BuildContext context) {
-            return MaterialApp(
-              home: SILAppWrapperBase(
-                appName: 'testAppName',
-                appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-                graphQLClient: mockSILGraphQlClient,
-                deviceCapabilities: MockDeviceCapabilities(),
-                child: Scaffold(
-                  body: LayoutBuilder(
-                      builder: (BuildContext context, BoxConstraints box) {
-                    return SILPrimaryButton(
-                      onPressed: () async {
-                        response = await changeCommunicationSetting(
-                            context: context,
-                            channel: CommunicationType.allowEmail,
-                            isAllowed: true,
-                            settings: settings,
-                            communicationSettingsFunc: commSettings);
-                      },
-                      text: 'Add',
-                    );
-                  }),
-                ),
-              ),
-            );
-          },
-        ));
-
-        await tester.pumpAndSettle();
-
-        expect(find.byType(SILPrimaryButton), findsOneWidget);
-        await tester.tap(find.byType(SILPrimaryButton));
-        await tester.pumpAndSettle();
-
-        expect(response, true);
-      });
-    });
-    group('set up user experiment', () {
-      testWidgets('should add user as experiment participant',
-          (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
-        bool response = false;
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: SILAppWrapperBase(
-              appName: '',
-              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
-              deviceCapabilities: MockDeviceCapabilities(),
-              child: Builder(builder: (BuildContext context) {
-                return Center(
-                  child: SILPrimaryButton(
-                    buttonKey: const Key('add_experiment_participant'),
-                    onPressed: () async {
-                      response = (await setupAsExperimentParticipant(
-                          context: context, participate: true))!;
-                    },
-                  ),
-                );
-              }),
-            ),
-          ),
-        ));
-
-        expect(find.byType(SILAppWrapperBase), findsOneWidget);
-        expect(find.byType(SILPrimaryButton), findsOneWidget);
-
-        expect(find.byKey(const Key('add_experiment_participant')),
-            findsOneWidget);
-        expect(response, false);
-
-        // tap the button to show the toast
-        await tester.tap(find.byKey(const Key('add_experiment_participant')));
-
-        expect(response, true);
-      });
-
-      testWidgets('should remove user as experiment participant',
-          (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
-        bool response = false;
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: SILAppWrapperBase(
-              appName: '',
-              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              deviceCapabilities: MockDeviceCapabilities(),
-              graphQLClient: mockSILGraphQlClient,
-              child: Builder(builder: (BuildContext context) {
-                return Center(
-                  child: SILPrimaryButton(
-                    buttonKey: const Key('add_experiment_participant'),
-                    onPressed: () async {
-                      response = (await setupAsExperimentParticipant(
-                        context: context,
-                      ))!;
-                    },
-                  ),
-                );
-              }),
-            ),
-          ),
-        ));
-
-        expect(find.byType(SILAppWrapperBase), findsOneWidget);
-        expect(find.byType(SILPrimaryButton), findsOneWidget);
-
-        expect(find.byKey(const Key('add_experiment_participant')),
-            findsOneWidget);
-        expect(response, false);
-
-        // tap the button to show the toast
-        await tester.tap(find.byKey(const Key('add_experiment_participant')));
-        expect(response, true);
-      });
-    });
-
     group('upload ID', () {
       testWidgets('should getUploadId and return a string',
           (WidgetTester tester) async {
@@ -441,14 +288,16 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('get_upload_id'),
-                      onPressed: () async {
-                        uploadID = await getUploadId(
-                          fileData: fileData,
-                          context: context,
-                        );
-                      });
+                  return ElevatedButton(
+                    key: const Key('get_upload_id'),
+                    onPressed: () async {
+                      uploadID = await getUploadId(
+                        fileData: fileData,
+                        context: context,
+                      );
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),
@@ -481,16 +330,18 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('fetch_data'),
-                      onPressed: () async {
-                        await genericFetchFunction(
-                            streamController: _streamController,
-                            context: context,
-                            queryString: setupUserAsExperimentParticipant,
-                            variables: variables,
-                            logTitle: 'logTitle');
-                      });
+                  return ElevatedButton(
+                    key: const Key('fetch_data'),
+                    onPressed: () async {
+                      await genericFetchFunction(
+                          streamController: _streamController,
+                          context: context,
+                          queryString: uploadMutationQuery,
+                          variables: variables,
+                          logTitle: 'logTitle');
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),
@@ -499,15 +350,12 @@ void main() {
         await tester.pump();
 
         await tester.pumpAndSettle();
-      
 
-        await tester.tap(find.byType(SILPrimaryButton));
+        await tester.tap(find.byType(ElevatedButton));
         await tester.pumpAndSettle();
 
         await _streamController.close();
       });
-
-   
 
       testWidgets('should add error to streamcontroller when there is an error',
           (WidgetTester tester) async {
@@ -531,16 +379,18 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('fetch_data'),
-                      onPressed: () async {
-                        await genericFetchFunction(
-                            streamController: _controller,
-                            context: context,
-                            queryString: updateUserProfile,
-                            variables: userProfile,
-                            logTitle: 'logTitle');
-                      });
+                  return ElevatedButton(
+                    key: const Key('fetch_data'),
+                    onPressed: () async {
+                      await genericFetchFunction(
+                          streamController: _controller,
+                          context: context,
+                          queryString: updateUserProfile,
+                          variables: userProfile,
+                          logTitle: 'logTitle');
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),
@@ -550,7 +400,7 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byType(SILPrimaryButton));
+        await tester.tap(find.byType(ElevatedButton));
         await tester.pumpAndSettle();
 
         await _controller.close();
@@ -573,11 +423,13 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('launch'),
-                      onPressed: () async {
-                        (await launchWhatsApp(phone: phone, message: message))!;
-                      });
+                  return ElevatedButton(
+                    key: const Key('launch'),
+                    onPressed: () async {
+                      (await launchWhatsApp(phone: phone, message: message))!;
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),
@@ -605,11 +457,13 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('launch'),
-                      onPressed: () async {
-                        (await launchWhatsApp(phone: phone, message: message))!;
-                      });
+                  return ElevatedButton(
+                    key: const Key('launch'),
+                    onPressed: () async {
+                      (await launchWhatsApp(phone: phone, message: message))!;
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),
@@ -641,12 +495,13 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('launch'),
-                      onPressed: () => <UserInactivityStatus>{
-                            (checkInactivityTime(
-                                inActivitySetInTime, expiresAt))
-                          });
+                  return ElevatedButton(
+                    key: const Key('launch'),
+                    onPressed: () => <UserInactivityStatus>{
+                      (checkInactivityTime(inActivitySetInTime, expiresAt))
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),
@@ -678,12 +533,13 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('launch'),
-                      onPressed: () => <UserInactivityStatus>{
-                            (checkInactivityTime(
-                                inActivitySetInTime, expiresAt))
-                          });
+                  return ElevatedButton(
+                    key: const Key('launch'),
+                    onPressed: () => <UserInactivityStatus>{
+                      (checkInactivityTime(inActivitySetInTime, expiresAt))
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),
@@ -716,12 +572,13 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('launch'),
-                      onPressed: () => <UserInactivityStatus>{
-                            (checkInactivityTime(
-                                inActivitySetInTime, expiresAt))
-                          });
+                  return ElevatedButton(
+                    key: const Key('launch'),
+                    onPressed: () => <UserInactivityStatus>{
+                      (checkInactivityTime(inActivitySetInTime, expiresAt))
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),
@@ -754,12 +611,13 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('launch'),
-                      onPressed: () => <UserInactivityStatus>{
-                            (checkInactivityTime(
-                                inActivitySetInTime, expiresAt))
-                          });
+                  return ElevatedButton(
+                    key: const Key('launch'),
+                    onPressed: () => <UserInactivityStatus>{
+                      (checkInactivityTime(inActivitySetInTime, expiresAt))
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),
@@ -794,12 +652,13 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('launch'),
-                      onPressed: () => <UserInactivityStatus>{
-                            (checkInactivityTime(
-                                inActivitySetInTime, expiresAt))
-                          });
+                  return ElevatedButton(
+                    key: const Key('launch'),
+                    onPressed: () => <UserInactivityStatus>{
+                      (checkInactivityTime(inActivitySetInTime, expiresAt))
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),
@@ -832,12 +691,13 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('launch'),
-                      onPressed: () => <UserInactivityStatus>{
-                            (checkInactivityTime(
-                                inActivitySetInTime, expiresAt))
-                          });
+                  return ElevatedButton(
+                    key: const Key('launch'),
+                    onPressed: () => <UserInactivityStatus>{
+                      (checkInactivityTime(inActivitySetInTime, expiresAt))
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),
@@ -871,12 +731,13 @@ void main() {
               graphQLClient: mockSILGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
-                  return SILPrimaryButton(
-                      buttonKey: const Key('launch'),
-                      onPressed: () => <UserInactivityStatus>{
-                            (checkInactivityTime(
-                                inActivitySetInTime, expiresAt))
-                          });
+                  return ElevatedButton(
+                    key: const Key('launch'),
+                    onPressed: () => <UserInactivityStatus>{
+                      (checkInactivityTime(inActivitySetInTime, expiresAt))
+                    },
+                    child: const Text('press me'),
+                  );
                 }),
               ),
             ),

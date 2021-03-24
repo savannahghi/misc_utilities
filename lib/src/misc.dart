@@ -16,7 +16,7 @@ import 'package:sil_misc/sil_mutations.dart';
 
 import 'package:sil_themes/constants.dart';
 import 'package:http/http.dart' as http;
-import 'package:sil_ui_components/sil_comms_setting.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 enum UserInactivityStatus { okey, requiresLogin, requiresPin }
@@ -282,75 +282,6 @@ DeviceScreensType getDeviceType(BuildContext context) {
   return DeviceScreensType.Mobile;
 }
 
-///[Change Communication Settings]
-Future<bool> changeCommunicationSetting(
-    {required CommunicationType channel,
-    required bool isAllowed,
-    required BuildContext context,
-    required Map<String, bool>? settings,
-    required Function communicationSettingsFunc}) async {
-  final Map<String, bool> _variables = <String, bool>{
-    'allowEmail': settings!['allowEmail']!,
-    'allowWhatsApp': settings['allowWhatsApp']!,
-    'allowTextSMS': settings['allowText']!,
-    'allowPush': settings['allowPush']!,
-  };
-  final SILGraphQlClient _client = SILAppWrapperBase.of(context)!.graphQLClient;
-
-  _variables[channel.toShortString()] = isAllowed;
-
-  /// fetch the data from the api
-  final http.Response _result = await _client.query(
-    setCommSettingsMutation,
-    _variables,
-  );
-
-  final Map<String, dynamic> response = _client.toMap(_result);
-  // /// check if the response has timeout metadata. If yes, return an error to
-  // /// handled correctly
-  if (_result.statusCode == 408) {
-    return false;
-  }
-
-  // // check for errors in the data here
-  if (_client.parseError(response) != null) {
-    return false;
-  }
-  communicationSettingsFunc(communicationSettings: _variables);
-  return true;
-}
-
-///[Set-up as an Experiment Participant]
-///function for getting whether a user is set up as an experiment participant
-Future<bool?> setupAsExperimentParticipant(
-    {required BuildContext context, bool participate = false}) async {
-  final SILGraphQlClient _client = SILAppWrapperBase.of(context)!.graphQLClient;
-
-  final http.Response result = await _client.query(
-      setupUserAsExperimentParticipant,
-      setupAsExperimentParticipantVariables());
-
-  final Map<String, dynamic> response = _client.toMap(result);
-
-  SaveTraceLog(
-    client: SILAppWrapperBase.of(context)!.graphQLClient,
-    query: setupUserAsExperimentParticipant,
-    data: setupAsExperimentParticipantVariables(),
-    response: response,
-    title: 'Setup user as experiment participant',
-    description: 'Setup user as experiment participant',
-  ).saveLog();
-
-  if (_client.parseError(response) != null) {
-    return null;
-  } else {
-    final bool responseData =
-        response['data']['setupAsExperimentParticipant'] as bool;
-
-    return responseData;
-  }
-}
-
 ///[Get Upload ID]
 ///get ID of uploaded file
 Future<String> getUploadId(
@@ -387,14 +318,14 @@ Future<String> getUploadId(
 ///
 /// it then updates the stream controller with the returned data (if any) or
 /// an error if there was an error
-Future<dynamic> genericFetchFunction(
-    {required StreamController<dynamic> streamController,
-    required BuildContext context,
-    required String queryString,
-    required Map<String, dynamic> variables,
-     String? logTitle,
-     String? logDescription,
-    }) async {
+Future<dynamic> genericFetchFunction({
+  required StreamController<dynamic> streamController,
+  required BuildContext context,
+  required String queryString,
+  required Map<String, dynamic> variables,
+  String? logTitle,
+  String? logDescription,
+}) async {
   // indicate processing is ongoing
   streamController.add(<String, dynamic>{'loading': true});
 
@@ -407,7 +338,6 @@ Future<dynamic> genericFetchFunction(
   );
 
   final Map<String, dynamic> payLoad = _client.toMap(response);
-
 
   SaveTraceLog(
     client: SILAppWrapperBase.of(context)!.graphQLClient,
@@ -467,7 +397,6 @@ UserInactivityStatus checkInactivityTime(
     return UserInactivityStatus.okey;
   }
 
-  
   final DateTime? lastActivityTime = DateTime.tryParse(inActivitySetInTime);
   if (lastActivityTime == null) {
     // we can't determine last activity time, so login is required
@@ -501,8 +430,6 @@ String trimWhitespace(String param) {
   assert(param is String);
   return param.toString().trim().split(' ').join();
 }
-
-
 
 ///[dismiss snackbar]
 SnackBarAction dismissSnackBar(String text, Color color, BuildContext context) {

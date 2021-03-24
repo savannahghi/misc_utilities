@@ -168,7 +168,6 @@ class MockSILGraphQlClient extends Mock implements SILGraphQlClient {
       );
     }
 
-
     if (queryString.contains('UpdateUserProfile')) {
       return Future<http.Response>.value(
         http.Response(json.encode(<String, dynamic>{'error': 'error'}), 201),

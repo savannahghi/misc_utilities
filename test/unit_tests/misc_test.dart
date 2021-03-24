@@ -354,9 +354,6 @@ void main() {
       expect(actualRemovedUnderscoreString, expectedFormattedName);
     });
 
-   
-
-    
     group('get ID type', () {
       test('should select passport ID type', () {
         const String idType = 'Passport';
@@ -394,6 +391,6 @@ void main() {
       final String actualRemovedUnderscoreString = removeUnderscores(name);
 
       expect(actualRemovedUnderscoreString, expectedFormattedName);
-    });     
+    });
   });
 }
