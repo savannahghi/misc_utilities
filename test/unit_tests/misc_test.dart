@@ -177,20 +177,26 @@ void main() {
     });
 
     test('should test other phone number', () {
-      final String formatedNumber =
-          formatPhoneNumber(phoneNumber: '1234567', countryCode: '+255');
-      const String expectedNumber = '+2551234567';
-      expect(formatedNumber, expectedNumber);
+      expect(formatPhoneNumber(phoneNumber: '1234567', countryCode: '+255'),
+          '+2551234567');
+
       expect(
-        formatPhoneNumber(countryCode: '254', phoneNumber: '100000'),
-        '+254',
+        formatPhoneNumber(countryCode: '254', phoneNumber: '790123456'),
+        '+254790123456',
       );
+
+      expect(
+        formatPhoneNumber(countryCode: '254', phoneNumber: '0790123456'),
+        '+254790123456',
+      );
+
       expect(
         formatPhoneNumber(countryCode: '+1', phoneNumber: '100000'),
         '+1100000',
       );
+
       expect(formatPhoneNumber(countryCode: '+254', phoneNumber: '07100000'),
-          '7100000');
+          '+2547100000');
     });
 
     test('should return background gradient', () {

@@ -74,16 +74,17 @@ BoxDecoration customRoundedPinBoxDecoration(
 /// [formatPhoneNumber]
 String formatPhoneNumber(
     {required String countryCode, required String phoneNumber}) {
-  if (!countryCode.startsWith('+')) {
-    return '+$countryCode';
-  }
-  if (countryCode == '+1') {
+  final String _countryCode =
+      !countryCode.startsWith('+') ? '+$countryCode' : countryCode;
+
+  if (_countryCode == '+1') {
     return '$countryCode$phoneNumber';
   }
-  if (phoneNumber.startsWith('0')) {
-    return phoneNumber.substring(1);
-  }
-  return '$countryCode$phoneNumber';
+
+  final String _phoneNumber =
+      phoneNumber.startsWith('0') ? phoneNumber.substring(1) : phoneNumber;
+
+  return '$_countryCode$_phoneNumber';
 }
 
 /// [getCoverValidityPeriod] gets the validity period of a cover
