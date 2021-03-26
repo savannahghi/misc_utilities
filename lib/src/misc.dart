@@ -325,7 +325,7 @@ Future<dynamic> genericFetchFunction({
   required BuildContext context,
   required String queryString,
   required Map<String, dynamic> variables,
-  String? logTitle,
+  required String logTitle,
   String? logDescription,
 }) async {
   // indicate processing is ongoing
@@ -347,7 +347,7 @@ Future<dynamic> genericFetchFunction({
     query: queryString,
     data: variables,
     response: payLoad,
-    title: logTitle!,
+    title: logTitle,
     description: logDescription,
   ).saveLog();
 
