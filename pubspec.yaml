@@ -30,11 +30,11 @@ dependencies:
   sil_app_wrapper:
     git:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_app_wrapper.git
-      ref: 0.0.7-nullsafety
+      ref: 0.0.8-nullsafety
   sil_graphql_client:
     git:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_graphql_client.git
-      ref: 0.0.7-nullsafety
+      ref: 0.0.8-nullsafety
 
   sil_themes:
     git:

@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sil_app_wrapper/sil_app_wrapper_base.dart';
+import 'package:sil_app_wrapper/sil_app_wrapper.dart';
 import 'package:sil_graphql_client/graph_client.dart';
 import 'package:sil_graphql_client/graph_event_bus.dart';
 import 'package:sil_misc/sil_bottom_sheet_builder.dart';
