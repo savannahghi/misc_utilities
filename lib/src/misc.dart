@@ -19,7 +19,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:url_launcher/url_launcher.dart';
 
-enum UserInactivityStatus { okey, requiresLogin, requiresPin }
+enum UserInactivityStatus { okay, requiresLogin, requiresPin }
 
 /// [extractNamesInitials] extracts name initials from a name
 ///
@@ -389,15 +389,18 @@ Future<String?> launchWhatsApp({
 }
 
 ///[check inactivity time]
-/// if inactivity period is less than an hour --- just resume
+/// if inactivity period is less than an half an hour --- just resume
 /// if inactivity time is greater than 1 and less than 12 hours --- require pin
 /// if inactivity period is greater than 12 hours --- require login
+/// [inActivitySetInTime] represents the last time the user was active in the app.
+/// when user logs in or creates an account, this value is set to the current timestamp.
+/// It's is then update every often when the app moves back to the foreground.
 UserInactivityStatus checkInactivityTime(
   String? inActivitySetInTime,
   String? expiresAt,
 ) {
   if (inActivitySetInTime == null) {
-    return UserInactivityStatus.okey;
+    return UserInactivityStatus.okay;
   }
 
   final DateTime? lastActivityTime = DateTime.tryParse(inActivitySetInTime);
@@ -410,14 +413,19 @@ UserInactivityStatus checkInactivityTime(
 
   if (timeDiff < 1) {
     // check if token has expired or is about to and require pin if so
-    final int tokenAge =
-        DateTime.now().difference(DateTime.tryParse(expiresAt!)!).inMinutes;
+    lastActivityTime.add(Duration(seconds: int.tryParse(expiresAt!)!));
+
+    final int tokenAge = DateTime.now()
+        .difference(
+            lastActivityTime.add(Duration(seconds: int.tryParse(expiresAt)!)))
+        .inMinutes;
+
     // require pin login if token is about to expire
-    if (tokenAge > -5) {
+    if (tokenAge > -10) {
       return UserInactivityStatus.requiresPin;
     }
 
-    return UserInactivityStatus.okey;
+    return UserInactivityStatus.okay;
   }
 
   if (timeDiff > 1 && timeDiff < 12) {

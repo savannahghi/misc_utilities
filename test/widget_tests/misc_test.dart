@@ -476,314 +476,37 @@ void main() {
       });
     });
 
-    group('User inactivity status ', () {
-      testWidgets('shoul be okey when inActivitySetInTime is null',
-          (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
-
-        const String inActivitySetInTime = '';
-        const String expiresAt = '';
-
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: SILAppWrapperBase(
-              deviceCapabilities: MockDeviceCapabilities(),
-              appName: 'testAppName',
-              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
-              child: Center(
-                child: Builder(builder: (BuildContext context) {
-                  return ElevatedButton(
-                    key: const Key('launch'),
-                    onPressed: () => <UserInactivityStatus>{
-                      (checkInactivityTime(inActivitySetInTime, expiresAt))
-                    },
-                    child: const Text('press me'),
-                  );
-                }),
-              ),
-            ),
+    testWidgets('should show dismiss snackbar', (WidgetTester tester) async {
+      const Key snackbarKey = Key('show_dismiss_snackbar');
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: Builder(builder: (BuildContext context) {
+              return ElevatedButton(
+                  key: snackbarKey,
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text('done'),
+                        action: dismissSnackBar(
+                            'An error occured', Colors.amber, context)));
+                  },
+                  child: const SizedBox());
+            }),
           ),
-        ));
+        ),
+      ));
+      expect(find.byKey(snackbarKey), findsOneWidget);
 
-        await tester.pump();
+      await tester.tap(find.byKey(snackbarKey));
+      await tester.pumpAndSettle();
+      expect(find.text('done'), findsOneWidget);
+      expect(find.text('An error occured'), findsOneWidget);
+      expect(find.byType(SnackBarAction), findsOneWidget);
 
-        await tester.tap(find.byKey(const Key('launch')));
-        await tester.pumpAndSettle();
+      await tester.tap(find.byType(SnackBarAction));
+      await tester.pumpAndSettle();
 
-        expect(UserInactivityStatus.okey, UserInactivityStatus.okey);
-      });
-
-      testWidgets('should be requires login when lastActivityTime is null',
-          (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
-
-        const String inActivitySetInTime = ' 20:18:04Z:1969-07-20';
-        const String expiresAt = '';
-
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: SILAppWrapperBase(
-              deviceCapabilities: MockDeviceCapabilities(),
-              appName: 'testAppName',
-              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
-              child: Center(
-                child: Builder(builder: (BuildContext context) {
-                  return ElevatedButton(
-                    key: const Key('launch'),
-                    onPressed: () => <UserInactivityStatus>{
-                      (checkInactivityTime(inActivitySetInTime, expiresAt))
-                    },
-                    child: const Text('press me'),
-                  );
-                }),
-              ),
-            ),
-          ),
-        ));
-
-        await tester.pump();
-
-        await tester.tap(find.byKey(const Key('launch')));
-        await tester.pumpAndSettle();
-
-        expect(UserInactivityStatus.requiresLogin,
-            UserInactivityStatus.requiresLogin);
-      });
-
-      testWidgets('should be requires login when lastActivityTime is null',
-          (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
-
-        const String inActivitySetInTime = ' 20:18:04Z:1969-07-20';
-        const String expiresAt = '';
-
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: SILAppWrapperBase(
-              deviceCapabilities: MockDeviceCapabilities(),
-              appName: 'testAppName',
-              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
-              child: Center(
-                child: Builder(builder: (BuildContext context) {
-                  return ElevatedButton(
-                    key: const Key('launch'),
-                    onPressed: () => <UserInactivityStatus>{
-                      (checkInactivityTime(inActivitySetInTime, expiresAt))
-                    },
-                    child: const Text('press me'),
-                  );
-                }),
-              ),
-            ),
-          ),
-        ));
-
-        await tester.pump();
-
-        await tester.tap(find.byKey(const Key('launch')));
-        await tester.pumpAndSettle();
-
-        expect(UserInactivityStatus.requiresLogin,
-            UserInactivityStatus.requiresLogin);
-      });
-
-      testWidgets('should be requiresPin when tokenAge <-5',
-          (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
-
-        final String inActivitySetInTime = DateTime.now().toString();
-        final String expiresAt = DateTime.now().toString();
-
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: SILAppWrapperBase(
-              deviceCapabilities: MockDeviceCapabilities(),
-              appName: 'testAppName',
-              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
-              child: Center(
-                child: Builder(builder: (BuildContext context) {
-                  return ElevatedButton(
-                    key: const Key('launch'),
-                    onPressed: () => <UserInactivityStatus>{
-                      (checkInactivityTime(inActivitySetInTime, expiresAt))
-                    },
-                    child: const Text('press me'),
-                  );
-                }),
-              ),
-            ),
-          ),
-        ));
-
-        await tester.pump();
-
-        await tester.tap(find.byKey(const Key('launch')));
-        await tester.pumpAndSettle();
-
-        expect(
-            UserInactivityStatus.requiresPin, UserInactivityStatus.requiresPin);
-      });
-
-      testWidgets('should be okey when tokenAge >-5',
-          (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
-        final DateTime tokenAge = DateTime.now().subtract(const Duration(
-          minutes: 5,
-        ));
-        final String inActivitySetInTime = DateTime.now().toString();
-        final String expiresAt = tokenAge.toString();
-
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: SILAppWrapperBase(
-              deviceCapabilities: MockDeviceCapabilities(),
-              appName: 'testAppName',
-              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
-              child: Center(
-                child: Builder(builder: (BuildContext context) {
-                  return ElevatedButton(
-                    key: const Key('launch'),
-                    onPressed: () => <UserInactivityStatus>{
-                      (checkInactivityTime(inActivitySetInTime, expiresAt))
-                    },
-                    child: const Text('press me'),
-                  );
-                }),
-              ),
-            ),
-          ),
-        ));
-
-        await tester.pump();
-
-        await tester.tap(find.byKey(const Key('launch')));
-        await tester.pumpAndSettle();
-
-        expect(UserInactivityStatus.okey, UserInactivityStatus.okey);
-      });
-
-      testWidgets('should be requiresPin when timeDiff >12',
-          (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
-        final DateTime timeDiff =
-            DateTime.now().subtract(const Duration(minutes: 5, days: 5));
-        final String inActivitySetInTime = timeDiff.toString();
-        const String expiresAt = '';
-
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: SILAppWrapperBase(
-              deviceCapabilities: MockDeviceCapabilities(),
-              appName: 'testAppName',
-              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
-              child: Center(
-                child: Builder(builder: (BuildContext context) {
-                  return ElevatedButton(
-                    key: const Key('launch'),
-                    onPressed: () => <UserInactivityStatus>{
-                      (checkInactivityTime(inActivitySetInTime, expiresAt))
-                    },
-                    child: const Text('press me'),
-                  );
-                }),
-              ),
-            ),
-          ),
-        ));
-
-        await tester.pump();
-
-        await tester.tap(find.byKey(const Key('launch')));
-        await tester.pumpAndSettle();
-
-        expect(UserInactivityStatus.requiresLogin,
-            UserInactivityStatus.requiresLogin);
-      });
-
-      testWidgets('should be requiresPin when timeDiff >1 and <12',
-          (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
-        final DateTime timeDiff =
-            DateTime.now().subtract(const Duration(minutes: 5, hours: 5));
-        final String inActivitySetInTime = timeDiff.toString();
-        const String expiresAt = '';
-
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: SILAppWrapperBase(
-              deviceCapabilities: MockDeviceCapabilities(),
-              appName: 'testAppName',
-              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
-              child: Center(
-                child: Builder(builder: (BuildContext context) {
-                  return ElevatedButton(
-                    key: const Key('launch'),
-                    onPressed: () => <UserInactivityStatus>{
-                      (checkInactivityTime(inActivitySetInTime, expiresAt))
-                    },
-                    child: const Text('press me'),
-                  );
-                }),
-              ),
-            ),
-          ),
-        ));
-
-        await tester.pump();
-
-        await tester.tap(find.byKey(const Key('launch')));
-        await tester.pumpAndSettle();
-
-        expect(
-            UserInactivityStatus.requiresPin, UserInactivityStatus.requiresPin);
-      });
-
-      testWidgets('should show dismiss snackbar', (WidgetTester tester) async {
-        const Key snackbarKey = Key('show_dismiss_snackbar');
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: Builder(builder: (BuildContext context) {
-                return ElevatedButton(
-                    key: snackbarKey,
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: const Text('done'),
-                          action: dismissSnackBar(
-                              'An error occured', Colors.amber, context)));
-                    },
-                    child: const SizedBox());
-              }),
-            ),
-          ),
-        ));
-        expect(find.byKey(snackbarKey), findsOneWidget);
-
-        await tester.tap(find.byKey(snackbarKey));
-        await tester.pumpAndSettle();
-        expect(find.text('done'), findsOneWidget);
-        expect(find.text('An error occured'), findsOneWidget);
-        expect(find.byType(SnackBarAction), findsOneWidget);
-
-        await tester.tap(find.byType(SnackBarAction));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(SnackBarAction), findsNothing);
-      });
+      expect(find.byType(SnackBarAction), findsNothing);
     });
 
     group('DeviceType', () {

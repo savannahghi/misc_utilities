@@ -253,6 +253,56 @@ void main() {
       });
     });
 
+    group('checkInactivityTime', () {
+      test('should return okay if null', () {
+        expect(checkInactivityTime(null, null), UserInactivityStatus.okay);
+      });
+
+      test(
+          'should return requiresLogin because we cannot determine last activity time',
+          () {
+        expect(checkInactivityTime('unknown', null),
+            UserInactivityStatus.requiresLogin);
+      });
+
+      test('should return okay after just login', () {
+        expect(checkInactivityTime(DateTime.now().toIso8601String(), '3600'),
+            UserInactivityStatus.okay);
+      });
+
+      test('should return requiresPin when token is about to expire', () {
+        expect(
+            checkInactivityTime(
+                DateTime.now()
+                    .subtract(const Duration(minutes: 53))
+                    .toIso8601String(),
+                '3600'),
+            UserInactivityStatus.requiresPin);
+      });
+
+      test('should return requiresPin when last activity was hours ago', () {
+        expect(
+            checkInactivityTime(
+                DateTime.now()
+                    .subtract(const Duration(hours: 3))
+                    .toIso8601String(),
+                '3600'),
+            UserInactivityStatus.requiresPin);
+      });
+
+      test(
+          'should return requiresLogin when last activity is more than 12 hours',
+          () {
+        expect(
+            checkInactivityTime(
+                DateTime.now()
+                    .subtract(const Duration(hours: 17))
+                    .toIso8601String(),
+                '3600'),
+            UserInactivityStatus.requiresLogin);
+      });
+    });
+
     group('RefreshTokenManger', () {
       final BehaviorSubject<dynamic> listen = BehaviorSubject<dynamic>();
       test('should updateExpireTime', () {
