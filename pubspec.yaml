@@ -11,11 +11,6 @@ environment:
 
 dependencies:
   async_redux: ^9.0.0
-  camera: ^0.8.0
-  camera_camera:
-    git:
-      url: https://github.com/mattermoran/camera_camera.git
-      ref: master
   dotted_border: ^2.0.0-nullsafety.0
   file_picker: ^3.0.0
   flutter:
@@ -27,6 +22,7 @@ dependencies:
   material_design_icons_flutter: ^5.0.5955-rc.1
   path_provider: ^2.0.1
   rxdart: ^0.26.0
+  image_picker: ^0.7.3
   sil_app_wrapper:
     git:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_app_wrapper.git

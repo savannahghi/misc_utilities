@@ -4,11 +4,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:camera_camera/camera_camera.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:sil_misc/src/misc.dart';
 
 import 'package:sil_themes/constants.dart';
@@ -77,23 +76,19 @@ class _SILFileManagerState extends State<SILFileManager> {
 
   /// select file from storage
   Future<void> selectFile() async {
-    FilePickerResult? result;
+    PickedFile? result;
     try {
       /// Retrieves the file(s) from the underlying platform
       ///
-      /// Default [type] set to [FileType.any] with [allowMultiple] set to [false]
-      /// The result is wrapped in a [FilePickerResult]
-      result = await FilePicker.platform.pickFiles(
-        allowedExtensions: widget.allowedExtensions,
-        type: FileType.custom,
-      );
+      result = await ImagePicker()
+          .getImage(source: ImageSource.gallery, imageQuality: 50);
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(snackbar(content: UserFeedBackTexts.selectFileError));
     }
     if (result != null) {
       /// checks that [result.files] has one file and returns that file
-      final File selectedFile = File(result.files.single.path!);
+      final File selectedFile = File(result.path);
       toggleUpload();
 
       /// uploads the file and returns an [uploadID]
@@ -116,19 +111,6 @@ class _SILFileManagerState extends State<SILFileManager> {
     }
   }
 
-  Future<File?> openCamera({required BuildContext context}) async {
-    return Navigator.push(
-      context,
-      MaterialPageRoute<File>(
-        builder: (BuildContext context) => CameraCamera(
-          onFile: (File file) {
-            onFile(file);
-          },
-        ),
-      ),
-    );
-  }
-
   static Future<File?> compressAndGetFile(File file) async {
     final String filePath = file.absolute.path;
 
@@ -148,11 +130,13 @@ class _SILFileManagerState extends State<SILFileManager> {
   /// take photo with camera
   Future<void> takePhoto() async {
     /// shows a dialogue that pushes a [MaterialPageRoute]
-    await openCamera(context: context);
+    final PickedFile? image = await ImagePicker()
+        .getImage(source: ImageSource.camera, imageQuality: 50);
+    onFile(File(image!.path));
   }
 
-  Future<void> onFile(File file) async {
-    final File compressedFile = (await compressAndGetFile(file))!;
+  Future<void> onFile(File fileData) async {
+    final File compressedFile = (await compressAndGetFile(fileData))!;
     final File image = File(compressedFile.path);
 
     final File selectedFile = image;
@@ -169,6 +153,7 @@ class _SILFileManagerState extends State<SILFileManager> {
       return;
     }
     setState(() {
+      file = selectedFile;
       widget.onChanged(uploadId);
     });
   }

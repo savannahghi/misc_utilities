@@ -49,6 +49,7 @@ linter:
     avoid_escaping_inner_quotes: false
     avoid_classes_with_only_static_members: false
     prefer_constructors_over_static_methods: false
+    sort_pub_dependencies: false
     file_names: false
     constant_identifier_names: false
 
