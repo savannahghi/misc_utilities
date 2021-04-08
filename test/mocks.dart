@@ -131,6 +131,33 @@ class MockSILGraphQlClient extends Mock implements SILGraphQlClient {
         http.Response(json.encode(<String, dynamic>{'error': 'error'}), 201),
       );
     }
+
+    if (queryString.contains('FakeQuery')) {
+      /// return fake data here
+      return Future<http.Response>.value(
+        http.Response(
+            json.encode(
+              <String, dynamic>{
+                'errors': <Map<String, dynamic>>[
+                  <String, String>{'message': 'generic list error occurred'}
+                ]
+              },
+            ),
+            200),
+      );
+    }
+
+    if (queryString.contains('TooQueryFake')) {
+      /// return fake data here
+      return Future<http.Response>.value(
+        http.Response(
+            json.encode(
+              <String, dynamic>{'data': null},
+            ),
+            200),
+      );
+    }
+
     return Future<http.Response>.value();
   }
 
@@ -163,3 +190,23 @@ mutation UpdateUserProfile($allowWhatsApp: Boolean, $allowTextSMS: Boolean, $all
   }
 }
  ''';
+
+// intentional ignore
+// ignore: unnecessary_raw_strings
+String fakeQuery = r'''
+  query FakeQuery() {
+  fake() {
+    id    
+  }
+}
+''';
+
+// intentional ignore
+// ignore: unnecessary_raw_strings
+String fakeQueryTwo = r'''
+  query TooQueryFake() {
+  fake() {
+    id    
+  }
+}
+''';

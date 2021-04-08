@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sil_app_wrapper/sil_app_wrapper.dart';
 import 'package:sil_graphql_client/graph_client.dart';
+import 'package:sil_graphql_client/graph_constants.dart';
 import 'package:sil_graphql_client/graph_event_bus.dart';
 import 'package:sil_misc/sil_bottom_sheet_builder.dart';
 import 'package:sil_misc/sil_enums.dart';
@@ -309,6 +310,28 @@ Future<String> getUploadId(
   }
 }
 
+String? parseError(Map<String, dynamic>? body) {
+  if (body == null) return null;
+
+  final Object? error =
+      body.containsKey('errors') ? body['errors'] : body['error'];
+
+  if (error == null) return null;
+
+  if (error is List<dynamic>) {
+    final Map<String, dynamic> firstEntry = error.first as Map<String, dynamic>;
+    return firstEntry['message'] as String;
+  }
+
+  if (error is String) {
+    return error.contains(RegExp('ID token', caseSensitive: false))
+        ? kLoginLogoutPrompt
+        : error;
+  }
+
+  return null;
+}
+
 ///[Generic Fetch Function]
 /// a generic fetch function for fetching all the problems, allergies
 /// medications, tests and diagnoses for the current patient
@@ -350,8 +373,10 @@ Future<dynamic> genericFetchFunction({
     description: logDescription,
   ).saveLog();
 
+  final String? error = parseError(payLoad);
+
   //check first for errors
-  if (_client.parseError(payLoad) != null) {
+  if (error != null) {
     return streamController
         .addError(<String, dynamic>{'error': _client.parseError(payLoad)});
   }

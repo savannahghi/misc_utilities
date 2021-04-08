@@ -358,6 +358,91 @@ void main() {
         await _streamController.close();
       });
 
+      testWidgets('should get data with error', (WidgetTester tester) async {
+        final MockSILGraphQlClient mockSILGraphQlClient =
+            MockSILGraphQlClient();
+        final StreamController<dynamic> _streamController =
+            StreamController<dynamic>.broadcast();
+        final Map<String, bool> variables = <String, bool>{'fake': true};
+
+        await tester.pumpWidget(MaterialApp(
+          home: Scaffold(
+            body: SILAppWrapperBase(
+              deviceCapabilities: MockDeviceCapabilities(),
+              appName: 'testAppName',
+              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
+              graphQLClient: mockSILGraphQlClient,
+              child: Center(
+                child: Builder(builder: (BuildContext context) {
+                  return ElevatedButton(
+                    key: const Key('fetch_data'),
+                    onPressed: () async {
+                      await genericFetchFunction(
+                          streamController: _streamController,
+                          context: context,
+                          queryString: fakeQuery,
+                          variables: variables,
+                          logTitle: 'logTitle');
+                    },
+                    child: const Text('press me'),
+                  );
+                }),
+              ),
+            ),
+          ),
+        ));
+        await tester.pump();
+
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+        await _streamController.close();
+      });
+
+      testWidgets('should get data with data as null',
+          (WidgetTester tester) async {
+        final MockSILGraphQlClient mockSILGraphQlClient =
+            MockSILGraphQlClient();
+        final StreamController<dynamic> _streamController =
+            StreamController<dynamic>.broadcast();
+        final Map<String, bool> variables = <String, bool>{'fake': true};
+
+        await tester.pumpWidget(MaterialApp(
+          home: Scaffold(
+            body: SILAppWrapperBase(
+              deviceCapabilities: MockDeviceCapabilities(),
+              appName: 'testAppName',
+              appContexts: const <AppContext>[AppContext.BewellCONSUMER],
+              graphQLClient: mockSILGraphQlClient,
+              child: Center(
+                child: Builder(builder: (BuildContext context) {
+                  return ElevatedButton(
+                    key: const Key('fetch_data'),
+                    onPressed: () async {
+                      await genericFetchFunction(
+                          streamController: _streamController,
+                          context: context,
+                          queryString: fakeQueryTwo,
+                          variables: variables,
+                          logTitle: 'logTitle');
+                    },
+                    child: const Text('press me'),
+                  );
+                }),
+              ),
+            ),
+          ),
+        ));
+        await tester.pump();
+
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+        await _streamController.close();
+      });
+
       testWidgets('should add error to streamcontroller when there is an error',
           (WidgetTester tester) async {
         final MockSILGraphQlClient mockSILGraphQlClient =
