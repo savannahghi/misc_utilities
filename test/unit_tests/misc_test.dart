@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sil_misc/sil_exception.dart';
 import 'package:sil_misc/sil_misc.dart';
 import 'package:sil_misc/sil_refresh_token_manager.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -234,6 +236,20 @@ void main() {
       expect(
           () => throw SILException(
               cause: 'no_user_account_found', message: 'No user'),
+          throwsException);
+    });
+
+    test('should throw exeption when launching whatsapp', () {
+      const String phone = '';
+      const String message = '';
+      final String whatsAppUrl =
+          'https//wa.me/$phone/?text=${Uri.parse(message)}';
+      expect(
+          () async => launchWhatsApp(
+              phone: phone,
+              message: message,
+              launch:
+                  launch(whatsAppUrl, statusBarBrightness: Brightness.dark)),
           throwsException);
     });
 

@@ -7,12 +7,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sil_app_wrapper/sil_app_wrapper.dart';
 import 'package:sil_misc/sil_bottom_sheet_builder.dart';
+import 'package:sil_misc/sil_enums.dart';
 import 'package:sil_misc/sil_event_bus.dart';
 import 'package:sil_misc/sil_misc.dart';
-import 'package:sil_misc/sil_enums.dart';
 import 'package:sil_misc/sil_mutations.dart';
+import 'package:sil_misc/src/refresh_token_manager.dart';
 import 'package:sil_themes/constants.dart';
 import 'package:sil_themes/spaces.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../mocks.dart';
 
@@ -412,6 +414,8 @@ void main() {
             MockSILGraphQlClient();
         const String phone = '0710000000';
         const String message = 'hi';
+        final String whatsAppUrl =
+            'https://wa.me/$phone/?text=${Uri.parse(message)}';
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
@@ -425,7 +429,10 @@ void main() {
                   return ElevatedButton(
                     key: const Key('launch'),
                     onPressed: () async {
-                      (await launchWhatsApp(phone: phone, message: message))!;
+                      (await launchWhatsApp(
+                          phone: phone,
+                          message: message,
+                          launch: launch(whatsAppUrl)))!;
                     },
                     child: const Text('press me'),
                   );
@@ -446,6 +453,8 @@ void main() {
             MockSILGraphQlClient();
         const String phone = '';
         const String message = '';
+        final String whatsAppUrl =
+            'https://wa.me/$phone/?text=${Uri.parse(message)}';
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
@@ -459,7 +468,10 @@ void main() {
                   return ElevatedButton(
                     key: const Key('launch'),
                     onPressed: () async {
-                      (await launchWhatsApp(phone: phone, message: message))!;
+                      (await launchWhatsApp(
+                          phone: phone,
+                          message: message,
+                          launch: launch(whatsAppUrl)))!;
                     },
                     child: const Text('press me'),
                   );
@@ -473,6 +485,70 @@ void main() {
 
         await tester.tap(find.byKey(const Key('launch')));
         await tester.pumpAndSettle();
+      });
+    });
+
+    group('Refresh Token Manager', () {
+      testWidgets('should reset 15 minutes to the expiry time',
+          (WidgetTester tester) async {
+        final String expiryTime =
+            DateTime.now().add(const Duration(minutes: 15)).toString();
+        const Key buttonKey = Key('button_key');
+
+        await tester.pumpWidget(MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: Builder(builder: (BuildContext context) {
+                return ElevatedButton(
+                    key: buttonKey,
+                    onPressed: () {
+                      //Reset expiry time
+                      SILRefreshTokenManger()
+                          .updateExpireTime(expiryTime)
+                          .reset();
+                    },
+                    child: const SizedBox());
+              }),
+            ),
+          ),
+        ));
+
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(buttonKey));
+        await tester.pump(const Duration(minutes: 15));
+
+        expect(SILRefreshTokenManger().listen.valueWrapper!.value, true);
+      });
+
+      testWidgets('should not reset 16 minutes to the expiry time',
+          (WidgetTester tester) async {
+        final String expiryTime =
+            DateTime.now().add(const Duration(minutes: 16)).toString();
+        const Key buttonKey = Key('button_key');
+
+        await tester.pumpWidget(MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: Builder(builder: (BuildContext context) {
+                return ElevatedButton(
+                    key: buttonKey,
+                    onPressed: () {
+                      //Reset expiry time
+                      SILRefreshTokenManger()
+                          .updateExpireTime(expiryTime)
+                          .reset();
+                    },
+                    child: const SizedBox());
+              }),
+            ),
+          ),
+        ));
+
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(buttonKey));
+        await tester.pump(const Duration(minutes: 15));
+
+        expect(SILRefreshTokenManger().listen.valueWrapper!.value, true);
       });
     });
 

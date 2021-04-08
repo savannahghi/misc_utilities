@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sil_app_wrapper/sil_app_wrapper.dart';
@@ -12,12 +13,10 @@ import 'package:sil_graphql_client/graph_client.dart';
 import 'package:sil_graphql_client/graph_event_bus.dart';
 import 'package:sil_misc/sil_bottom_sheet_builder.dart';
 import 'package:sil_misc/sil_enums.dart';
+import 'package:sil_misc/sil_exception.dart';
 import 'package:sil_misc/sil_mutations.dart';
-
+import 'package:sil_misc/src/string_constant.dart';
 import 'package:sil_themes/constants.dart';
-import 'package:http/http.dart' as http;
-
-import 'package:url_launcher/url_launcher.dart';
 
 enum UserInactivityStatus { okay, requiresLogin, requiresPin }
 
@@ -274,7 +273,7 @@ DeviceScreensType getDeviceType(BuildContext context) {
     deviceWidth = mediaQuery.size.width;
   }
 
-  if (deviceWidth > 950) {
+  if (deviceWidth > 1200) {
     return DeviceScreensType.Desktop;
   }
   if (deviceWidth > 600) {
@@ -379,12 +378,15 @@ String getIdType({required String idType, required bool userString}) {
 Future<String?> launchWhatsApp({
   required String phone,
   required String message,
+  required Future<bool> launch,
 }) async {
-  final String whatsAppUrl = 'https://wa.me/$phone/?text=${Uri.parse(message)}';
   try {
-    await launch(whatsAppUrl);
+    await launch;
   } catch (e) {
-    throw 'Could not launch $whatsAppUrl';
+    throw SILException(
+        cause: 'launch_whatsApp',
+        message:
+            'Could not launch ${whatsAppUrl(phone: phone, message: message)}');
   }
 }
 
