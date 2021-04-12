@@ -204,12 +204,7 @@ class _SILFileManagerState extends State<SILFileManager> {
                               ),
 
                               /// -----take photo
-                              _buildGestureDetector(
-                                context: context,
-                                iconPath: 'assets/images/camera.svg',
-                                text: UserFeedBackTexts.controlLabels[1],
-                                onTap: takePhoto,
-                              ),
+                              /// debugging ongoing
                             ],
 
                             /// -----reset file set to none
