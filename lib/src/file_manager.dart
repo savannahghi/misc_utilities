@@ -204,7 +204,12 @@ class _SILFileManagerState extends State<SILFileManager> {
                               ),
 
                               /// -----take photo
-                              /// debugging ongoing
+                              _buildGestureDetector(
+                                context: context,
+                                iconPath: 'assets/images/camera.svg',
+                                text: UserFeedBackTexts.controlLabels[1],
+                                onTap: takePhoto,
+                              ),
                             ],
 
                             /// -----reset file set to none
@@ -238,7 +243,8 @@ class _SILFileManagerState extends State<SILFileManager> {
                         child: Center(
                           child: Text(
                             UserFeedBackTexts.selectOrTakeMessage(widget.name),
-                            style: TextThemes.heavySize14Text(
+                            textAlign: TextAlign.center,
+                            style: TextThemes.normalSize14Text(
                               Theme.of(context).primaryColor,
                             ),
                           ),
