@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:sil_misc/src/misc.dart';
+import 'package:sil_misc/src/string_constant.dart';
 
 import 'package:sil_themes/constants.dart';
 import 'package:sil_themes/spaces.dart';
@@ -127,14 +128,6 @@ class _SILFileManagerState extends State<SILFileManager> {
     return result;
   }
 
-  /// take photo with camera
-  Future<void> takePhoto() async {
-    /// shows a dialogue that pushes a [MaterialPageRoute]
-    final PickedFile? image = await ImagePicker()
-        .getImage(source: ImageSource.camera, imageQuality: 50);
-    onFile(File(image!.path));
-  }
-
   Future<void> onFile(File fileData) async {
     final File compressedFile = (await compressAndGetFile(fileData))!;
     final File image = File(compressedFile.path);
@@ -204,12 +197,6 @@ class _SILFileManagerState extends State<SILFileManager> {
                               ),
 
                               /// -----take photo
-                              _buildGestureDetector(
-                                context: context,
-                                iconPath: 'assets/images/camera.svg',
-                                text: UserFeedBackTexts.controlLabels[1],
-                                onTap: takePhoto,
-                              ),
                             ],
 
                             /// -----reset file set to none
@@ -242,9 +229,9 @@ class _SILFileManagerState extends State<SILFileManager> {
                         color: Colors.blueAccent.withOpacity(0.05),
                         child: Center(
                           child: Text(
-                            UserFeedBackTexts.selectOrTakeMessage(widget.name),
+                            selectOrTakeMessage(widget.name),
                             textAlign: TextAlign.center,
-                            style: TextThemes.normalSize14Text(
+                            style: TextThemes.heavySize14Text(
                               Theme.of(context).primaryColor,
                             ),
                           ),
