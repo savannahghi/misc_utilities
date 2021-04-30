@@ -229,7 +229,7 @@ class _SILFileManagerState extends State<SILFileManager> {
                         color: Colors.blueAccent.withOpacity(0.05),
                         child: Center(
                           child: Text(
-                            selectOrTakeMessage(widget.name),
+                            selectAPhotoOfMessage(widget.name),
                             textAlign: TextAlign.center,
                             style: TextThemes.heavySize14Text(
                               Theme.of(context).primaryColor,

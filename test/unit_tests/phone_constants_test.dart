@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sil_misc/sil_string_constant.dart';
 import 'package:sil_misc/src/phone_constants.dart';
 
 void main() {
@@ -25,5 +26,6 @@ void main() {
     expect(PhoneNoConstants.viaWhatsApp, 'via WhatsApp');
     expect(PhoneNoConstants.noAccount,
         'That phone number does not exist, please enter the number you registered with');
+    expect(selectAPhotoOfMessage('Passport'), 'Select a photo of Passport');
   });
 }
