@@ -26,6 +26,7 @@ void main() {
     expect(PhoneNoConstants.viaWhatsApp, 'via WhatsApp');
     expect(PhoneNoConstants.noAccount,
         'That phone number does not exist, please enter the number you registered with');
-    expect(selectAPhotoOfMessage('Passport'), 'Select a photo of Passport');
+    expect(selectAPhotoOfMessage('Passport'),
+        'Select a photo of Passport (Max size 3MB)');
   });
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -8,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:sil_misc/constants.dart';
 import 'package:sil_misc/src/misc.dart';
 import 'package:sil_misc/src/string_constant.dart';
 
@@ -90,6 +92,16 @@ class _SILFileManagerState extends State<SILFileManager> {
     if (result != null) {
       /// checks that [result.files] has one file and returns that file
       final File selectedFile = File(result.path);
+      final int selctedFileSize =
+          (log(await selectedFile.length()) / log(1024)).floor();
+      if (selctedFileSize > fileUploadSize) {
+        // User canceled the picker
+        ScaffoldMessenger.of(context).showSnackBar(snackbar(
+            content:
+                'The size of the image is too big. Please select another image and try again.'));
+        return;
+      }
+
       toggleUpload();
 
       /// uploads the file and returns an [uploadID]
