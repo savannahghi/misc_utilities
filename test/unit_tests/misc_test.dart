@@ -199,6 +199,46 @@ void main() {
 
       expect(formatPhoneNumber(countryCode: '+254', phoneNumber: '07100000'),
           '+2547100000');
+
+      // Output should be +442087599036 (A UK phone number)
+      final String formattedUKPhoneNumber =
+          formatPhoneNumber(countryCode: '+44', phoneNumber: '2087599036');
+      expect(formattedUKPhoneNumber, '+442087599036');
+
+      // validate the phone number
+      expect(validatePhoneNumber(formattedUKPhoneNumber), true);
+
+      // Output should be +32460205037 (A Belgium phone number)
+      final String formattedBelgiumPhoneNumber =
+          formatPhoneNumber(countryCode: '+32', phoneNumber: '460205037');
+      expect(formattedBelgiumPhoneNumber, '+32460205037');
+
+      // validate the phone number
+      expect(validatePhoneNumber(formattedBelgiumPhoneNumber), true);
+
+      // Output should be +2547123456789 (A normal Kenyan phone number)
+      final String formattedNormalKenyanPhoneNumber =
+          formatPhoneNumber(countryCode: '+254', phoneNumber: '7123456789');
+      expect(formattedNormalKenyanPhoneNumber, '+2547123456789');
+
+      // validate the phone number
+      expect(validatePhoneNumber(formattedNormalKenyanPhoneNumber), true);
+
+      // Output should be +254110123456 (A new Safaricom phone number)
+      final String formattedNewSafaricomKenyanPhoneNumber =
+          formatPhoneNumber(countryCode: '+254', phoneNumber: '110123456');
+      expect(formattedNewSafaricomKenyanPhoneNumber, '+254110123456');
+
+      // validate the phone number
+      expect(validatePhoneNumber(formattedNewSafaricomKenyanPhoneNumber), true);
+
+      // Output should be +254110123456 (A new Safaricom phone number)
+      final String formattedKenyanPhoneNumberWithSpaces =
+          formatPhoneNumber(countryCode: '+254', phoneNumber: '110 123 456');
+      expect(formattedKenyanPhoneNumberWithSpaces, '+254110123456');
+
+      // validate the phone number
+      expect(validatePhoneNumber(formattedKenyanPhoneNumberWithSpaces), true);
     });
 
     test('should return background gradient', () {

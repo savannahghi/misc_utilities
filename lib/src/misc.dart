@@ -45,6 +45,25 @@ DateTime convertStringToDate(
   return DateFormat(format).parse(dateTimeString);
 }
 
+/// [formatPhoneNumber]
+String formatPhoneNumber(
+    {required String countryCode, required String phoneNumber}) {
+  final String _trimmedPhone = trimWhitespace(phoneNumber);
+
+  final String _countryCode =
+      !countryCode.startsWith('+') ? '+$countryCode' : countryCode;
+
+  if (_countryCode == '+1' || _countryCode == '+44' || _countryCode == '+32') {
+    return '$countryCode$_trimmedPhone';
+  } else {
+    final String _phoneNumber = _trimmedPhone.startsWith('0')
+        ? _trimmedPhone.substring(1)
+        : _trimmedPhone;
+
+    return '$_countryCode$_phoneNumber';
+  }
+}
+
 /// [validatePhoneNumber] checks if a number is either a [Kenyan] , [American],  [UK] or [Belgium] phone number
 bool validatePhoneNumber(String phone) {
   if (kenyanPhoneRegExp.hasMatch(phone) ||
@@ -71,22 +90,6 @@ BoxDecoration customRoundedPinBoxDecoration(
       ),
       color: pinBoxColor,
       borderRadius: const BorderRadius.all(Radius.circular(8)));
-}
-
-/// [formatPhoneNumber]
-String formatPhoneNumber(
-    {required String countryCode, required String phoneNumber}) {
-  final String _countryCode =
-      !countryCode.startsWith('+') ? '+$countryCode' : countryCode;
-
-  if (_countryCode == '+1') {
-    return '$countryCode$phoneNumber';
-  }
-
-  final String _phoneNumber =
-      phoneNumber.startsWith('0') ? phoneNumber.substring(1) : phoneNumber;
-
-  return '$_countryCode$_phoneNumber';
 }
 
 /// [getCoverValidityPeriod] gets the validity period of a cover
