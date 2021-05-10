@@ -7,18 +7,8 @@ class SILEventBus {
 
   StreamController<dynamic> get streamController => _streamController;
 
-  Stream<T> on<T>() {
-    if (T == dynamic) {
-      return streamController.stream as Stream<T>;
-    } else {
-      return streamController.stream
-          .where((dynamic event) => event is T)
-          .cast<T>();
-    }
-  }
-
   Future<void> fire(dynamic event) async {
-    streamController.add(event);
+    _streamController.add(event);
   }
 
   void destroy() {
