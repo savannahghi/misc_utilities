@@ -45,14 +45,16 @@ DateTime convertStringToDate(
   return DateFormat(format).parse(dateTimeString);
 }
 
-/// [validatePhoneNumber] checks if a number is either a [Kenyan] or [American] phone number
+/// [validatePhoneNumber] checks if a number is either a [Kenyan] , [American],  [UK] or [Belgium] phone number
 bool validatePhoneNumber(String phone) {
-  if (kenyanPhoneRegExp.hasMatch(phone)) {
+  if (kenyanPhoneRegExp.hasMatch(phone) ||
+      (americanPhoneRegExp.hasMatch(phone)) ||
+      (unitedKingdomRegExp.hasMatch(phone)) ||
+      (genericInternationalRegExp.hasMatch(phone))) {
     return true;
-  } else if (americanPhoneRegExp.hasMatch(phone)) {
-    return true;
+  } else {
+    return false;
   }
-  return false;
 }
 
 /// [customRoundedPinBoxDecoration]

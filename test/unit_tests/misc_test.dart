@@ -254,18 +254,18 @@ void main() {
     });
 
     group('validatePhoneNumber', () {
-      test('should return valid phone numbers', () {
+      test('should return validate phone numbers', () {
         const String kenyanNumber = '+254123456789';
         const String usNumber = '+12025550163';
+        const String validUKPhone = '+447975777666';
+        const String validBelgiumPhone = '+3225450130';
+        const String invalidPhone = '+322adf5013012';
 
         expect(validatePhoneNumber(kenyanNumber), true);
         expect(validatePhoneNumber(usNumber), true);
-      });
-
-      test('should return invalid phone number', () {
-        const String testPhone = '+2123456789';
-
-        expect(validatePhoneNumber(testPhone), false);
+        expect(validatePhoneNumber(validUKPhone), true);
+        expect(validatePhoneNumber(validBelgiumPhone), true);
+        expect(validatePhoneNumber(invalidPhone), false);
       });
     });
 
