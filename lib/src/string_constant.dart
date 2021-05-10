@@ -4,3 +4,5 @@ String whatsAppUrl({required String phone, required String message}) =>
 
 String selectAPhotoOfMessage(String name) =>
     'Select a photo of $name (Max size 3MB)';
+
+const String unknown = 'Unknown';

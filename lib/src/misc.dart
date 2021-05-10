@@ -21,11 +21,11 @@ import 'package:sil_themes/constants.dart';
 
 enum UserInactivityStatus { okay, requiresLogin, requiresPin }
 
-/// [extractNamesInitials] extracts name initials from a name
+/// [extractNamesInitials] => Extracts name initials from a name
 ///
 /// Usage:
 ///
-/// if you pass in a name like 'Abiud Orina', it returns 'AO'
+/// If you pass in a name like 'Abiud Orina', it returns 'AO'
 String extractNamesInitials({required String name}) {
   final List<String> parts = name.split(' ');
   if (parts.length >= 2) {
@@ -462,14 +462,14 @@ UserInactivityStatus checkInactivityTime(
   return UserInactivityStatus.requiresLogin;
 }
 
-///[trim white space]
-/// removes white spaces in between a string, at the beginning and at the end
+/// [trim white space]
+/// Removes white spaces in between a string, at the beginning and at the end
 String trimWhitespace(String param) {
   assert(param is String);
   return param.toString().trim().split(' ').join();
 }
 
-///[dismiss snackbar]
+/// [Dismiss snackbar]
 SnackBarAction dismissSnackBar(String text, Color color, BuildContext context) {
   return SnackBarAction(
     label: text,
@@ -478,4 +478,26 @@ SnackBarAction dismissSnackBar(String text, Color color, BuildContext context) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
     },
   );
+}
+
+/// [DateFormatter] Used to format date and time
+class DateFormatter {
+  DateFormatter(this.dateValue);
+
+  final String dateValue;
+
+  String parseDateValue() {
+    final DateTime? parsedDate = DateTime.tryParse(this.dateValue);
+    if (parsedDate == null) return unknown;
+    final String formattedDate = DateFormat('d MMM, yyyy').format(parsedDate);
+    return formattedDate;
+  }
+
+  String parseDateTimeValue() {
+    final DateTime? parsedDate = DateTime.tryParse(this.dateValue);
+    if (parsedDate == null) return unknown;
+    final String formattedDateTime =
+        DateFormat.jm().add_yMMMd().format(parsedDate);
+    return formattedDateTime;
+  }
 }

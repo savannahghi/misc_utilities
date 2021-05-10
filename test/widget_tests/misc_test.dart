@@ -707,6 +707,20 @@ void main() {
           tester.binding.window.clearDevicePixelRatioTestValue();
         });
       });
+
+      test('DateFormatter class works correctly', () {
+        const String dateValue = '2021-05-10 18:18:04Z';
+
+        const String expectedFormattedDateValue = '10 May, 2021';
+        const String expectedFormattedDateTimeValue = '6:18 PM May 10, 2021';
+
+        final String formattedDate = DateFormatter(dateValue).parseDateValue();
+        final String formattedDateTime =
+            DateFormatter(dateValue).parseDateTimeValue();
+
+        expect(formattedDate, expectedFormattedDateValue);
+        expect(formattedDateTime, expectedFormattedDateTimeValue);
+      });
     });
   });
 }
