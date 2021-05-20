@@ -1,13 +1,13 @@
 name: sil_misc
 description: Collection of small utility functions
-publish_to: 'none'
+publish_to: "none"
 version: 0.0.1
 author: dmwangi@savannahinformatics.com
 homepage: https://gitlab.slade360emr.com/optimalhealth/sil_dart_utils
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
-  flutter: '>=2.0.0'
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=2.0.0"
 
 dependencies:
   async_redux: ^9.0.0
@@ -15,7 +15,6 @@ dependencies:
   file_picker: ^3.0.0
   flutter:
     sdk: flutter
-  flutter_image_compress: ^1.0.0-nullsafety
   flutter_svg: ^0.21.0-nullsafety.0
   http: ^0.13.0
   intl: ^0.17.0
@@ -23,6 +22,7 @@ dependencies:
   path_provider: ^2.0.1
   rxdart: ^0.26.0
   image_picker: ^0.7.3
+
   sil_app_wrapper:
     git:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_app_wrapper.git
@@ -37,7 +37,6 @@ dependencies:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_themes.git
       ref: 0.0.8
 
-
   url_launcher: ^6.0.2
 
 dev_dependencies:
@@ -50,3 +49,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/images/

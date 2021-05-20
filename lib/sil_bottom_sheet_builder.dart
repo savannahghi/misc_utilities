@@ -1,1 +1,1 @@
-export 'src/bottom_sheet_buider.dart';
+export 'src/bottom_sheet_builder.dart';

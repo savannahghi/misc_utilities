@@ -166,7 +166,7 @@ void main() {
               return ElevatedButton(
                   key: snackbarKey,
                   onPressed: () {
-                    showErrorSnackbar(context, 'An error occured');
+                    showErrorSnackbar(context, 'An error occurred');
                   },
                   child: const SizedBox());
             }),
@@ -176,7 +176,7 @@ void main() {
       expect(find.byKey(snackbarKey), findsOneWidget);
       await tester.tap(find.byKey(snackbarKey));
       await tester.pumpAndSettle();
-      expect(find.text('An error occured'), findsOneWidget);
+      expect(find.text('An error occurred'), findsOneWidget);
     });
     testWidgets('should show error snackbar with default error message',
         (WidgetTester tester) async {
@@ -205,7 +205,7 @@ void main() {
           findsOneWidget);
     });
 
-    group('bottomsheet', () {
+    group('bottom sheet', () {
       testWidgets('should render correctly without action',
           (WidgetTester tester) async {
         const Key launchBottomSheetKey = Key('button_key');
@@ -240,9 +240,7 @@ void main() {
         };
         final Stream<dynamic> stream = eventBus.streamController.stream;
         eventBus.fire(TriggeredEvent('TEST_EVENT', eventPayload));
-        // ignore: unawaited_futures
         expectLater(stream, emits('Here is an event'));
-
         eventBus.streamController.add('Here is an event');
       });
     });
@@ -443,7 +441,8 @@ void main() {
         await _streamController.close();
       });
 
-      testWidgets('should add error to streamcontroller when there is an error',
+      testWidgets(
+          'should add error to stream controller when there is an error',
           (WidgetTester tester) async {
         final MockSILGraphQlClient mockSILGraphQlClient =
             MockSILGraphQlClient();
@@ -649,7 +648,7 @@ void main() {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: const Text('done'),
                         action: dismissSnackBar(
-                            'An error occured', Colors.amber, context)));
+                            'An error occurred', Colors.amber, context)));
                   },
                   child: const SizedBox());
             }),
@@ -661,7 +660,7 @@ void main() {
       await tester.tap(find.byKey(snackbarKey));
       await tester.pumpAndSettle();
       expect(find.text('done'), findsOneWidget);
-      expect(find.text('An error occured'), findsOneWidget);
+      expect(find.text('An error occurred'), findsOneWidget);
       expect(find.byType(SnackBarAction), findsOneWidget);
 
       await tester.tap(find.byType(SnackBarAction));

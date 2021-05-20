@@ -1,2 +1,2 @@
-// the size of file to be uploaded
-const int fileUploadSize = 3000;
+// the size of file to be uploaded in KB
+const int fileUploadSizeThresholdInKb = 3000;

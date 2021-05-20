@@ -10,6 +10,8 @@ import 'package:sil_misc/sil_misc.dart';
 import 'package:sil_misc/sil_refresh_token_manager.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:sil_misc/src/misc.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   group('SILMisc', () {
@@ -91,7 +93,7 @@ void main() {
     test('should validate email', () {
       // setup
       const String validEmail = 'a@a.com';
-      const String valiedDomainEmail = 'test@coverage.sil';
+      const String validDomainEmail = 'test@coverage.sil';
       const String invalidEmail = 'wrongemail.comn';
 
       // call the actual function with the input and verify functionality
@@ -99,7 +101,7 @@ void main() {
       expect(isValidEmail, isA<bool>());
       expect(isValidEmail, true);
 
-      isValidEmail = validateEmail(valiedDomainEmail);
+      isValidEmail = validateEmail(validDomainEmail);
       expect(isValidEmail, isA<bool>());
       expect(isValidEmail, true);
 
@@ -130,7 +132,7 @@ void main() {
       expect(formattedAuthTypes, expectedAuthTypes);
     });
 
-    test('should return the titlecase of a sentence', () {
+    test('should return the titleCase of a sentence', () {
       String sentence = 'bewell is improving healthcare';
       String expectedFormattedSentence = 'Bewell Is Improving Healthcare';
       String actualTitleCasedString = titleCase(sentence);
@@ -279,7 +281,7 @@ void main() {
           throwsException);
     });
 
-    test('should throw exeption when launching whatsapp', () {
+    test('should throw exception when launching WhatsApp', () {
       const String phone = '';
       const String message = '';
       final String whatsAppUrl =

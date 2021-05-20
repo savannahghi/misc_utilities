@@ -1,17 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_picker/image_picker.dart';
 
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:sil_misc/constants.dart';
-import 'package:sil_misc/src/misc.dart';
+import 'package:sil_misc/src/file_manager_logic.dart';
 import 'package:sil_misc/src/string_constant.dart';
+import 'package:sil_misc/src/widget_keys.dart';
 
 import 'package:sil_themes/constants.dart';
 import 'package:sil_themes/spaces.dart';
@@ -19,7 +15,7 @@ import 'package:sil_themes/text_themes.dart';
 
 typedef OnFileChanged = void Function(dynamic value);
 
-typedef GetUploadId = Future<String> Function({
+typedef UploadReturnId = Future<String> Function({
   required Map<String, dynamic> fileData,
   required BuildContext context,
 });
@@ -28,138 +24,39 @@ typedef GetUploadId = Future<String> Function({
 /// select files from storage or take photo with the camera
 /// [onChanged] is more like the [TextField] onChanged, basically is a
 /// [Function] that takes a value which in this case is an [uploadId]
-/// [name] indicates the file type you want, ie `Military ID`
+/// [fileTitle] indicates the file type you want, ie `Military ID`
 /// [allowedExtensions] is an optional list of strings containing file extensions
-/// [getUploadId] is a [Function] of type [GetUploadId] that uploads a file's
+/// [uploadFileAndReturnIdFunction] is a [Function] of type [UploadReturnId] that uploads a file's
 /// data and returns an [uploadId]
-/// [snackBarTypes] is a list of the types of snackbars available
+/// [snackBarTypes] is a list of the types of snack bars available
 
 class SILFileManager extends StatefulWidget {
   const SILFileManager({
     Key? key,
     required this.onChanged,
-    required this.name,
-    required this.getUploadId,
+    required this.fileTitle,
+    required this.uploadAndReturnIdFunction,
     required this.silLoader,
-    this.allowedExtensions = const <String>['jpg', 'png'],
-    this.invalidF = false,
+    this.invalidFile = false,
   }) : super(key: key);
 
+  final bool invalidFile;
+  final String fileTitle;
   final OnFileChanged onChanged;
-  final bool invalidF;
-  final String name;
-  final List<String> allowedExtensions;
-  final GetUploadId getUploadId;
   final Widget silLoader;
+  final UploadReturnId uploadAndReturnIdFunction;
 
   @override
   _SILFileManagerState createState() => _SILFileManagerState();
 }
 
 class _SILFileManagerState extends State<SILFileManager> {
-  File? file;
+  File? selectedFile;
   bool uploading = false;
 
   void toggleUpload() {
     setState(() {
       uploading = !uploading;
-    });
-  }
-
-  /// get the file metadata that is to be consumed by the api
-  Map<String, dynamic> getFileData(File file) {
-    return <String, dynamic>{
-      'base64data': base64Encode(file.readAsBytesSync()),
-      'contentType': file.path.split('/').last.split('.').last.toUpperCase(),
-      'filename': file.path.split('/').last,
-      'title': widget.name,
-      'language': 'en',
-    };
-  }
-
-  /// select file from storage
-  Future<void> selectFile() async {
-    PickedFile? result;
-    try {
-      /// Retrieves the file(s) from the underlying platform
-      ///
-      result = await ImagePicker()
-          .getImage(source: ImageSource.gallery, imageQuality: 50);
-    } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(snackbar(content: UserFeedBackTexts.selectFileError));
-    }
-    if (result != null) {
-      /// checks that [result.files] has one file and returns that file
-      final File selectedFile = File(result.path);
-      final int selctedFileSize =
-          (log(await selectedFile.length()) / log(1024)).floor();
-      if (selctedFileSize > fileUploadSize) {
-        // User canceled the picker
-        ScaffoldMessenger.of(context).showSnackBar(snackbar(
-            content:
-                'The size of the image is too big. Please select another image and try again.'));
-        return;
-      }
-
-      toggleUpload();
-
-      /// uploads the file and returns an [uploadID]
-      final String uploadId = await widget.getUploadId(
-          fileData: getFileData(selectedFile), context: context);
-      toggleUpload();
-      if (uploadId == 'err') {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(snackbar(content: UserFeedBackTexts.uploadFileFail));
-        return;
-      }
-      setState(() {
-        file = selectedFile;
-        widget.onChanged(uploadId);
-      });
-    } else {
-      // User canceled the picker
-      ScaffoldMessenger.of(context)
-          .showSnackBar(snackbar(content: UserFeedBackTexts.noFileSelected));
-    }
-  }
-
-  static Future<File?> compressAndGetFile(File file) async {
-    final String filePath = file.absolute.path;
-
-    // Create output file path
-    final int lastIndex = filePath.lastIndexOf(RegExp('.jp'));
-    final String splitFilePath = filePath.substring(0, lastIndex);
-    final String outPath =
-        '${splitFilePath}_out${filePath.substring(lastIndex)}';
-    final File? result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      outPath,
-      quality: 30,
-    );
-    return result;
-  }
-
-  Future<void> onFile(File fileData) async {
-    final File compressedFile = (await compressAndGetFile(fileData))!;
-    final File image = File(compressedFile.path);
-
-    final File selectedFile = image;
-    toggleUpload();
-
-    /// uploads the file and returns an [uploadID
-    final String uploadId = await widget.getUploadId(
-        fileData: getFileData(selectedFile), context: context);
-    toggleUpload();
-    if (uploadId == 'err') {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(snackbar(content: UserFeedBackTexts.uploadFileFail));
-
-      return;
-    }
-    setState(() {
-      file = selectedFile;
-      widget.onChanged(uploadId);
     });
   }
 
@@ -199,30 +96,54 @@ class _SILFileManagerState extends State<SILFileManager> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            if (file == null) ...<Widget>[
-                              /// -----select photo
-                              _buildGestureDetector(
-                                context: context,
-                                iconPath: 'assets/images/folder.svg',
-                                text: UserFeedBackTexts.controlLabels[0],
-                                onTap: selectFile,
+                            if (selectedFile == null) ...<Widget>[
+                              /// Select from gallery
+                              GestureDetector(
+                                key: galleryImageKey,
+                                onTap: () async {
+                                  await FileManagerLogic.selectFile(
+                                    context: context,
+                                    uploadAndReturnIdFunction:
+                                        widget.uploadAndReturnIdFunction,
+                                    toggleUpload: toggleUpload,
+                                    fileTitle: widget.fileTitle,
+                                    updateUIFunc: (File file, String uploadId) {
+                                      setState(() {
+                                        selectedFile = file;
+                                        widget.onChanged(uploadId);
+                                      });
+                                    },
+                                  );
+                                },
+                                child: Column(
+                                  children: <Widget>[
+                                    SvgPicture.asset(
+                                      'assets/images/folder.svg',
+                                      width: 40,
+                                      height: 40,
+                                    ),
+                                    verySmallVerticalSizedBox,
+                                    Text(UserFeedBackTexts.controlLabels[0])
+                                  ],
+                                ),
                               ),
 
                               /// -----take photo
                             ],
 
                             /// -----reset file set to none
-                            if (file != null) ...<Widget>[
+                            if (selectedFile != null) ...<Widget>[
                               SizedBox(
                                 height: 90,
-                                child: Image.file(file!),
+                                child: Image.file(selectedFile!),
                               ),
                               GestureDetector(
+                                key: closeSelectedFile,
                                 onTap: () {
                                   setState(() {
-                                    file = null;
+                                    selectedFile = null;
                                   });
-                                  widget.onChanged(file);
+                                  widget.onChanged(selectedFile);
                                 },
                                 child: Column(
                                   children: <Widget>[
@@ -241,7 +162,7 @@ class _SILFileManagerState extends State<SILFileManager> {
                         color: Colors.blueAccent.withOpacity(0.05),
                         child: Center(
                           child: Text(
-                            selectAPhotoOfMessage(widget.name),
+                            selectAPhotoOfMessage(widget.fileTitle),
                             textAlign: TextAlign.center,
                             style: TextThemes.heavySize14Text(
                               Theme.of(context).primaryColor,
@@ -253,7 +174,7 @@ class _SILFileManagerState extends State<SILFileManager> {
                   ),
           ),
         ),
-        if (widget.invalidF) ...<Widget>[
+        if (widget.invalidFile) ...<Widget>[
           smallVerticalSizedBox,
           Text(
             'This is required *',
@@ -261,29 +182,6 @@ class _SILFileManagerState extends State<SILFileManager> {
           )
         ],
       ],
-    );
-  }
-
-  /// builds a tappable widget to select file or take photo
-  Widget _buildGestureDetector({
-    BuildContext? context,
-    Function? onTap,
-    required String iconPath,
-    required String text,
-  }) {
-    return GestureDetector(
-      onTap: onTap as void Function()?,
-      child: Column(
-        children: <Widget>[
-          SvgPicture.asset(
-            iconPath,
-            width: 40,
-            height: 40,
-          ),
-          verySmallVerticalSizedBox,
-          Text(text)
-        ],
-      ),
     );
   }
 }

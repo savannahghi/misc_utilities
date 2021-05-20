@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -56,16 +57,16 @@ final Map<String, bool> settingsVariables = <String, bool>{
 
 // ignore: subtype_of_sealed_class
 class MockSILGraphQlClient extends Mock implements SILGraphQlClient {
-  String setupUserAsExperimentorVariables =
+  String setupUserAsExperimenterVariables =
       json.encode(<String, bool>{'participate': true});
-  String removeUserAsExperimentorVariables =
+  String removeUserAsExperimenterVariables =
       json.encode(<String, bool>{'participate': false});
 
   @override
   Future<http.Response> query(
       String queryString, Map<String, dynamic> variables,
       [ContentType contentType = ContentType.json]) {
-    if (json.encode(variables) == setupUserAsExperimentorVariables) {
+    if (json.encode(variables) == setupUserAsExperimenterVariables) {
       return Future<http.Response>.value(
         http.Response(
             json.encode(<String, dynamic>{
@@ -75,7 +76,7 @@ class MockSILGraphQlClient extends Mock implements SILGraphQlClient {
       );
     }
 
-    if (json.encode(variables) == removeUserAsExperimentorVariables) {
+    if (json.encode(variables) == removeUserAsExperimenterVariables) {
       return Future<http.Response>.value(
         http.Response(
             json.encode(<String, dynamic>{
@@ -100,6 +101,7 @@ class MockSILGraphQlClient extends Mock implements SILGraphQlClient {
             201),
       );
     }
+
     if (queryString.contains('Trace')) {
       /// return fake data here
       return Future<http.Response>.value(
@@ -112,6 +114,7 @@ class MockSILGraphQlClient extends Mock implements SILGraphQlClient {
             201),
       );
     }
+
     if (queryString.contains('upload')) {
       return Future<http.Response>.value(
         http.Response(
@@ -210,3 +213,12 @@ String fakeQueryTwo = r'''
   }
 }
 ''';
+
+/// to avoid side effects of https://github.com/flutter/flutter/issues/20907
+String testPath(String relativePath) {
+  final Directory current = Directory.current;
+  final String path =
+      current.path.endsWith('/test') ? current.path : '${current.path}/test';
+
+  return '$path/$relativePath';
+}

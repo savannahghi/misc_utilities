@@ -32,7 +32,7 @@ class SILRefreshTokenManger {
     return this;
   }
 
-///if user logs in after expiry return true
+  ///if user logs in after expiry return true
   bool ifTokenIsAfterExpiry(DateTime parsed) {
     final Duration _afterCurrentTime = parsed.difference(DateTime.now());
     if (_afterCurrentTime.inSeconds <= 0) {
@@ -41,7 +41,7 @@ class SILRefreshTokenManger {
     return false;
   }
 
-///if user logs in when token is <= 10minutes to expiry return true
+  ///if user logs in when token is <= 10minutes to expiry return true
   bool ifTokenIsApproachingExpiry(DateTime parsed) {
     final Duration _closeToCurrentTime = DateTime.now().difference(parsed);
     // ten minutes (600 seconds)

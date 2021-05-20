@@ -14,3 +14,7 @@ const Key reenterCodeButtonKey = Key('reenter_code_button_key');
 const Key textFormFieldKey = Key('text_form_field_key');
 const Key silSelectOptionField = Key('sil_select_option_field');
 const Key silDatePickerField = Key('sil_date_picker_field');
+
+const Key closeSelectedFile = Key('close_selected_file_icon');
+
+const Key galleryImageKey = Key('gallery_image_key');

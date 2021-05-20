@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 /// [SILBottomSheetBuilder] defines the blueprint that will be used to build
-/// our bottomsheets
+/// our bottom sheets
 ///
 /// example
 ///
@@ -26,7 +26,7 @@ import 'package:flutter/widgets.dart';
 ///
 ///```
 ///
-///After defining the bottomsheet, use the `bottomSheet` function to call it
+///After defining the bottom sheet, use the `bottomSheet` function to call it
 ///
 ///example
 ///
@@ -36,8 +36,7 @@ import 'package:flutter/widgets.dart';
 ///```
 abstract class SILBottomSheetBuilder {
   SILBottomSheetBuilder(
-      {
-      this.action,
+      {this.action,
       this.backgroundColor,
       this.textColor,
       this.primaryColor,
