@@ -601,7 +601,7 @@ void main() {
         await tester.tap(find.byKey(buttonKey));
         await tester.pump(const Duration(minutes: 15));
 
-        expect(SILRefreshTokenManger().listen.valueWrapper!.value, true);
+        expect(SILRefreshTokenManger().listen.value, true);
       });
 
       testWidgets('should not reset 16 minutes to the expiry time',
@@ -632,7 +632,7 @@ void main() {
         await tester.tap(find.byKey(buttonKey));
         await tester.pump(const Duration(minutes: 15));
 
-        expect(SILRefreshTokenManger().listen.valueWrapper!.value, true);
+        expect(SILRefreshTokenManger().listen.value, true);
       });
     });
 

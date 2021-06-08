@@ -66,40 +66,36 @@ class SILRefreshTokenManger {
   /// when fetch a new token
   void reset() {
     try {
-      if (this._expireTime.value != null) {
-        // this is the time from login or retrieved from state store as string
-        final DateTime _parsed = DateTime.parse(this._expireTime.value!);
-        // determine if the parsed time is after the expiry time
-        if (this.ifTokenIsAfterExpiry(_parsed)) {
-          return this.listen.add(true);
-        }
-
-        // determine if the parse time is 7 minutes to the expiry time
-        if (this.ifTokenIsApproachingExpiry(_parsed)) {
-          return this.listen.add(true);
-        }
-
-        // refresh 15 minutes before token expires
-        final DateTime _threshold =
-            _parsed.subtract(const Duration(minutes: 15));
-        final Duration _duration = _threshold.difference(DateTime.now());
-        if (_duration.inSeconds <= 0) {
-          final Duration _duration = _parsed.difference(DateTime.now());
-          Timer(Duration(seconds: _duration.inSeconds), () {
-            this.listen.add(true);
-          });
-        } else {
-          Timer(Duration(seconds: _duration.inSeconds), () {
-            this.listen.add(true);
-          });
-        }
-
-        return;
+      // this is the time from login or retrieved from state store as string
+      final DateTime _parsed = DateTime.parse(this._expireTime.value);
+      // determine if the parsed time is after the expiry time
+      if (this.ifTokenIsAfterExpiry(_parsed)) {
+        return this.listen.add(true);
       }
+
+      // determine if the parse time is 7 minutes to the expiry time
+      if (this.ifTokenIsApproachingExpiry(_parsed)) {
+        return this.listen.add(true);
+      }
+
+      // refresh 15 minutes before token expires
+      final DateTime _threshold = _parsed.subtract(const Duration(minutes: 15));
+      final Duration _duration = _threshold.difference(DateTime.now());
+      if (_duration.inSeconds <= 0) {
+        final Duration _duration = _parsed.difference(DateTime.now());
+        Timer(Duration(seconds: _duration.inSeconds), () {
+          this.listen.add(true);
+        });
+      } else {
+        Timer(Duration(seconds: _duration.inSeconds), () {
+          this.listen.add(true);
+        });
+      }
+
+      return;
     } catch (e) {
       return;
     }
 
-    return;
   }
 }

@@ -10,40 +10,40 @@ environment:
   flutter: ">=2.0.0"
 
 dependencies:
-  async_redux: ^9.0.0
-  dotted_border: ^2.0.0-nullsafety.0
-  file_picker: ^3.0.0
+  async_redux: ^10.0.1
+  dotted_border: ^2.0.0
+  file_picker: ^3.0.2+2
   flutter:
     sdk: flutter
-  flutter_svg: ^0.21.0-nullsafety.0
-  http: ^0.13.0
+  flutter_image_compress: ^1.0.0
+  flutter_svg: ^0.22.0
+  http: ^0.13.3
   intl: ^0.17.0
   material_design_icons_flutter: ^5.0.5955-rc.1
-  path_provider: ^2.0.1
-  rxdart: ^0.26.0
-  image_picker: ^0.7.3
-
+  path_provider: ^2.0.2
+  rxdart: ^0.27.1
+  image_picker: ^0.8.0+1
   sil_app_wrapper:
     git:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_app_wrapper.git
-      ref: 0.0.10
+      ref: 0.0.12
   sil_graphql_client:
     git:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_graphql_client.git
-      ref: 0.0.9
+      ref: 0.1.0
 
   sil_themes:
     git:
       url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_themes.git
-      ref: 0.0.8
+      ref: 0.0.9
 
-  url_launcher: ^6.0.2
+  url_launcher: ^6.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  lint: ^1.0.0
-  mockito: ^5.0.0
+  lint: ^1.5.3
+  mockito: ^5.0.10
 
 flutter:
   uses-material-design: true

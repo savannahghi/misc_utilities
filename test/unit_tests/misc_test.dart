@@ -367,7 +367,8 @@ void main() {
         const String time = '2021-02-01 10:15:21Z';
         SILRefreshTokenManger().updateExpireTime(time);
         SILRefreshTokenManger().updateExpireTime(time).reset();
-        expect(listen.valueWrapper, null);
+        expect(listen.hasValue, false);
+        expect(listen.valueOrNull, null);
       });
 
       test('should reset 6 minutes to the expiry time', () {
@@ -381,7 +382,8 @@ void main() {
         //Reset expiry time
         SILRefreshTokenManger().updateExpireTime(expiresAt).reset();
 
-        expect(listen.valueWrapper, null);
+        expect(listen.hasValue, false);
+        expect(listen.valueOrNull, null);
       });
 
       test('should reset 7 minutes to the expiry time', () {
@@ -392,13 +394,15 @@ void main() {
         SILRefreshTokenManger().checkExpireValidity(expiresAt);
 
         expect(SILRefreshTokenManger().checkExpireValidity(expiresAt), false);
-        expect(listen.valueWrapper, null);
+        expect(listen.hasValue, false);
+        expect(listen.valueOrNull, null);
         //Set expiry time
         SILRefreshTokenManger().updateExpireTime(expiresAt);
         //Reset expiry time
         SILRefreshTokenManger().updateExpireTime(expiresAt).reset();
 
-        expect(listen.valueWrapper, null);
+        expect(listen.hasValue, false);
+        expect(listen.valueOrNull, null);
       });
 
       test('should reset 15 minutes to the expiry time', () {
@@ -408,7 +412,8 @@ void main() {
         //Reset expiry time
         SILRefreshTokenManger().updateExpireTime(expiryTime).reset();
 
-        expect(listen.valueWrapper, null);
+        expect(listen.hasValue, false);
+        expect(listen.valueOrNull, null);
       });
       test('should reset minutes to the expiry time', () {
         final String expiryTime = DateTime.now()
@@ -418,15 +423,17 @@ void main() {
         SILRefreshTokenManger().checkExpireValidity(expiryTime);
 
         expect(SILRefreshTokenManger().checkExpireValidity(expiryTime), true);
-        expect(listen.valueWrapper, null);
+        expect(listen.hasValue, false);
+        expect(listen.valueOrNull, null);
 
-        expect(listen.value, null);
+        expect(listen.valueOrNull, null);
         //Set expiry time
         SILRefreshTokenManger().updateExpireTime(expiryTime);
         //Reset expiry time
         SILRefreshTokenManger().updateExpireTime(expiryTime).reset();
 
-        expect(listen.valueWrapper, null);
+        expect(listen.hasValue, false);
+        expect(listen.valueOrNull, null);
       });
     });
     group('get ID type', () {
