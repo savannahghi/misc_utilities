@@ -403,8 +403,8 @@ String getIdType({required String idType, required bool userString}) {
   return userString ? 'Military ID' : 'MILITARY';
 }
 
-///[Launch WhatsApp]
-///function that launches whatsapp
+/// [Launch WhatsApp]
+/// Function that launches WhatsApp
 Future<String?> launchWhatsApp({
   required String phone,
   required String message,

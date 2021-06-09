@@ -96,6 +96,5 @@ class SILRefreshTokenManger {
     } catch (e) {
       return;
     }
-
   }
 }

@@ -90,7 +90,7 @@ class SILResponsiveWidget extends StatelessWidget {
 
   /// [preferredPaddingOnStretchedScreens] function is used to calculate give a constant size in width of the items to be displayed on the screen
   /// First it gets the width of the device
-  /// Subtracts `420` which is a one size fit all cosntant for widgets on a stretched view/display
+  /// Subtracts `420` which is a one size fit all constant for widgets on a stretched view/display
   /// The difference is then divided by `2` to get the size that will be feed to our padding so that the widgets take up a width of `420`
   static double preferredPaddingOnStretchedScreens(
       {required BuildContext context}) {
