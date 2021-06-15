@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:sil_misc/constants.dart';
-import 'package:sil_misc/sil_file_manager.dart';
-import 'package:sil_misc/sil_string_constant.dart';
-import 'package:sil_misc/src/misc.dart';
+import 'package:misc_utilities/constants.dart';
+import 'package:misc_utilities/file_manager.dart';
+import 'package:misc_utilities/string_constant.dart';
+import 'package:misc_utilities/src/misc.dart';
 
-import 'package:sil_themes/constants.dart';
+import 'package:shared_themes/constants.dart';
 
 class FileManagerLogic {
   /// get the file metadata that is to be consumed by the api

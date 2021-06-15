@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sil_misc/sil_number_constants.dart';
-import 'package:sil_misc/sil_enums.dart';
-import 'package:sil_misc/sil_misc.dart';
-import 'package:sil_misc/sil_responsive_widget.dart';
+import 'package:misc_utilities/number_constants.dart';
+import 'package:misc_utilities/enums.dart';
+import 'package:misc_utilities/misc.dart';
+import 'package:misc_utilities/responsive_widget.dart';
 
 import '../test_utils.dart';
 

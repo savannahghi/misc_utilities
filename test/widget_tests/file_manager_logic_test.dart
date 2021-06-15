@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:sil_misc/src/file_manager_logic.dart';
-import 'package:sil_misc/src/string_constant.dart';
-import 'package:sil_themes/constants.dart';
+import 'package:misc_utilities/src/file_manager_logic.dart';
+import 'package:misc_utilities/src/string_constant.dart';
+import 'package:shared_themes/constants.dart';
 
 import '../mocks.dart';
 

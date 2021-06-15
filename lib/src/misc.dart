@@ -1,4 +1,4 @@
-library sil_misc;
+library misc_utilities;
 
 import 'dart:async';
 import 'dart:io';
@@ -12,12 +12,12 @@ import 'package:sil_app_wrapper/sil_app_wrapper.dart';
 import 'package:sil_graphql_client/graph_client.dart';
 import 'package:sil_graphql_client/graph_constants.dart';
 import 'package:sil_graphql_client/graph_event_bus.dart';
-import 'package:sil_misc/sil_bottom_sheet_builder.dart';
-import 'package:sil_misc/sil_enums.dart';
-import 'package:sil_misc/sil_exception.dart';
-import 'package:sil_misc/sil_mutations.dart';
-import 'package:sil_misc/src/string_constant.dart';
-import 'package:sil_themes/constants.dart';
+import 'package:misc_utilities/bottom_sheet_builder.dart';
+import 'package:misc_utilities/enums.dart';
+import 'package:misc_utilities/exception.dart';
+import 'package:misc_utilities/mutations.dart';
+import 'package:misc_utilities/src/string_constant.dart';
+import 'package:shared_themes/constants.dart';
 
 enum UserInactivityStatus { okay, requiresLogin, requiresPin }
 

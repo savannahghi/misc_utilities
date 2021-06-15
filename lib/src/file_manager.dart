@@ -5,13 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:sil_misc/src/file_manager_logic.dart';
-import 'package:sil_misc/src/string_constant.dart';
-import 'package:sil_misc/src/widget_keys.dart';
+import 'package:misc_utilities/src/file_manager_logic.dart';
+import 'package:misc_utilities/src/string_constant.dart';
+import 'package:misc_utilities/src/widget_keys.dart';
 
-import 'package:sil_themes/constants.dart';
-import 'package:sil_themes/spaces.dart';
-import 'package:sil_themes/text_themes.dart';
+import 'package:shared_themes/constants.dart';
+import 'package:shared_themes/spaces.dart';
+import 'package:shared_themes/text_themes.dart';
 
 typedef OnFileChanged = void Function(dynamic value);
 
