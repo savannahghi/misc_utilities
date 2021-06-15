@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sil_misc/sil_exception.dart';
-import 'package:sil_misc/sil_misc.dart';
-import 'package:sil_misc/sil_refresh_token_manager.dart';
+import 'package:misc_utilities/exception.dart';
+import 'package:misc_utilities/misc.dart';
+import 'package:misc_utilities/refresh_token_manager.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:sil_misc/src/misc.dart';
+import 'package:misc_utilities/src/misc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sil_misc/sil_string_constant.dart';
-import 'package:sil_misc/src/phone_constants.dart';
+import 'package:misc_utilities/string_constant.dart';
+import 'package:misc_utilities/src/phone_constants.dart';
 
 void main() {
 //Us phone test

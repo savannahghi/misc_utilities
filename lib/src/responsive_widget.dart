@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sil_misc/sil_enums.dart';
-import 'package:sil_misc/sil_misc.dart';
-import 'package:sil_misc/sil_number_constants.dart';
+import 'package:misc_utilities/enums.dart';
+import 'package:misc_utilities/misc.dart';
+import 'package:misc_utilities/number_constants.dart';
 
 /// Refer to https://gitlab.slade360emr.com/optimalhealth/healthcloud/-/merge_requests/355/diffs
 /// if you want to introduce medium screen in future

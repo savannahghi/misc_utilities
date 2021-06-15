@@ -7,10 +7,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:sil_app_wrapper/sil_app_wrapper.dart';
 
-import 'package:sil_misc/src/file_manager.dart';
-import 'package:sil_misc/src/file_manager_logic.dart';
-import 'package:sil_misc/src/widget_keys.dart';
-import 'package:sil_themes/constants.dart';
+import 'package:misc_utilities/src/file_manager.dart';
+import 'package:misc_utilities/src/file_manager_logic.dart';
+import 'package:misc_utilities/src/widget_keys.dart';
+import 'package:shared_themes/constants.dart';
 
 import '../mocks.dart';
 
