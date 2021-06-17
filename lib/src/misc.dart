@@ -19,6 +19,8 @@ import 'package:misc_utilities/mutations.dart';
 import 'package:misc_utilities/src/string_constant.dart';
 import 'package:shared_themes/constants.dart';
 
+import '../constants.dart';
+
 enum UserInactivityStatus { okay, requiresLogin, requiresPin }
 
 /// [extractNamesInitials] => Extracts name initials from a name
@@ -75,7 +77,23 @@ bool validatePhoneNumber(String phone) {
     return false;
   }
 }
-
+/// [validateKenyanNumber] checks if a number is either has either prefix of '+254111', '+254110', '+254100', '+2540101', '+254102' or '+2547xx'
+bool validateKenyanNumber(String phone) {
+  String prefix;
+  final String fifthChar = phone.substring(4,5);
+  if(fifthChar == '7'){
+    return true;
+  } else if(fifthChar == '1'){
+    
+    prefix = phone.substring(0,7);
+    if(validPrefixes.contains(prefix)){
+    return true;  
+    }
+    return false;
+  } else {
+    return false;
+  }
+}
 /// [customRoundedPinBoxDecoration]
 BoxDecoration customRoundedPinBoxDecoration(
   Color borderColor,
