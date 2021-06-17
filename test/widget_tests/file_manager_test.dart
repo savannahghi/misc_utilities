@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:sil_app_wrapper/sil_app_wrapper.dart';
+import 'package:app_wrapper/app_wrapper.dart';
 
 import 'package:misc_utilities/src/file_manager.dart';
 import 'package:misc_utilities/src/file_manager_logic.dart';

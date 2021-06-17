@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sil_app_wrapper/sil_app_wrapper.dart';
+import 'package:app_wrapper/app_wrapper.dart';
 import 'package:misc_utilities/bottom_sheet_builder.dart';
 import 'package:misc_utilities/enums.dart';
 import 'package:misc_utilities/event_bus.dart';

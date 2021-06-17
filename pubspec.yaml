@@ -1,22 +1,23 @@
 name: misc_utilities
 description: Collection of shared utility functions
-version: 0.1.13
+version: 0.1.13-nullsafety
 homepage: https://github.com/savannahghi/misc_utilities
 repository: https://github.com/savannahghi/misc_utilities
 issue_tracker: https://github.com/savannahghi/misc_utilities/issues
 documentation: https://github.com/savannahghi/misc_utilities/doc/readme.md
-publish_to: "none"
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
   flutter: ">=2.0.0"
 
 dependencies:
+  app_wrapper: ^0.1.1 # internal (formerly sil_app_wrapper)
   async_redux: ^10.0.1
   dotted_border: ^2.0.0
   file_picker: ^3.0.2+2
   flutter:
     sdk: flutter
+  flutter_graphql_client: ^0.1.1 # internal (formerly sil_graphql_client)
   flutter_image_compress: ^1.0.0
   flutter_svg: ^0.22.0
   http: ^0.13.3
@@ -24,17 +25,8 @@ dependencies:
   material_design_icons_flutter: ^5.0.5955-rc.1
   path_provider: ^2.0.2
   rxdart: ^0.27.1
-  shared_themes: ^0.0.9
+  shared_themes: ^0.0.9 # internal (formerly sil_themes)
   image_picker: ^0.8.0+1
-  sil_app_wrapper:
-    git:
-      url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_app_wrapper.git
-      ref: 0.0.13
-  sil_graphql_client:
-    git:
-      url: https://sil_dart_utils:xiFnpjLHssG76bpWxUb9@gitlab.slade360emr.com/optimalhealth/dart_utils/sil_graphql_client.git
-      ref: 0.1.01
-
   url_launcher: ^6.0.6
 
 dev_dependencies:
