@@ -513,5 +513,10 @@ void main() {
 
       expect(actualRemovedUnderscoreString, expectedFormattedName);
     });
+    test('should return false when phone doest match prefix', () {
+      const String phone = '+2541908765432';
+
+      expect(validateKenyanNumber(phone), false);
+  });
   });
 }
