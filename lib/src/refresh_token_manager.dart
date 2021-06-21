@@ -26,6 +26,9 @@ class SILRefreshTokenManger {
 
   final BehaviorSubject<String> _expireTime = BehaviorSubject<String>();
 
+  // this will be used to refer to the timer and close it
+  late Timer timer;
+
   SILRefreshTokenManger updateExpireTime(String expire) {
     _expireTime.add(expire);
     this.listen.add(null);
@@ -83,11 +86,11 @@ class SILRefreshTokenManger {
       final Duration _duration = _threshold.difference(DateTime.now());
       if (_duration.inSeconds <= 0) {
         final Duration _duration = _parsed.difference(DateTime.now());
-        Timer(Duration(seconds: _duration.inSeconds), () {
+        timer = Timer(Duration(seconds: _duration.inSeconds), () {
           this.listen.add(true);
         });
       } else {
-        Timer(Duration(seconds: _duration.inSeconds), () {
+        timer = Timer(Duration(seconds: _duration.inSeconds), () {
           this.listen.add(true);
         });
       }

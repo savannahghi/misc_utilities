@@ -1,4 +1,4 @@
-library misc_utilities;
+library sil_misc;
 
 import 'dart:async';
 import 'dart:io';
