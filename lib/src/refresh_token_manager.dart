@@ -21,8 +21,7 @@ class SILRefreshTokenManger {
   static final SILRefreshTokenManger _singleton =
       SILRefreshTokenManger._internal();
 
-  //ignore: close_sinks
-  BehaviorSubject<dynamic> listen = BehaviorSubject<dynamic>();
+  BehaviorSubject<bool> listen = BehaviorSubject<bool>.seeded(false);
 
   final BehaviorSubject<String> _expireTime = BehaviorSubject<String>();
 
@@ -31,7 +30,7 @@ class SILRefreshTokenManger {
 
   SILRefreshTokenManger updateExpireTime(String expire) {
     _expireTime.add(expire);
-    this.listen.add(null);
+    this.listen.add(false);
     return this;
   }
 
