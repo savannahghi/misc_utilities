@@ -1,3 +1,7 @@
+### 0.1.15-nullsafety
+
+- fix: refresh token manager
+
 ### 0.1.14-nullsafety
 
 - chore: update dependencies (shared_themes, app_wrapper, flutter_graphql_client)
