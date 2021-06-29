@@ -38,7 +38,7 @@ void main() {
             body: Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: () async {
-                  await FileManagerLogic.selectFile(
+                  await FileManagerLogic.selectFileFromGallery(
                     context: context,
                     uploadAndReturnIdFunction: (
                         {required BuildContext context,
@@ -103,7 +103,7 @@ void main() {
             body: Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: () async {
-                  await FileManagerLogic.selectFile(
+                  await FileManagerLogic.selectFileFromGallery(
                     context: context,
                     uploadAndReturnIdFunction: (
                         {required BuildContext context,
@@ -160,7 +160,7 @@ void main() {
             body: Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: () async {
-                  await FileManagerLogic.selectFile(
+                  await FileManagerLogic.selectFileFromGallery(
                     context: context,
                     uploadAndReturnIdFunction: (
                         {required BuildContext context,
@@ -202,7 +202,7 @@ void main() {
             body: Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: () async {
-                  await FileManagerLogic.selectFile(
+                  await FileManagerLogic.selectFileFromGallery(
                     context: context,
                     uploadAndReturnIdFunction: (
                         {required BuildContext context,
@@ -243,7 +243,7 @@ void main() {
             body: Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: () async {
-                  await FileManagerLogic.selectFile(
+                  await FileManagerLogic.selectFileFromGallery(
                     context: context,
                     uploadAndReturnIdFunction: (
                         {required BuildContext context,
