@@ -6,44 +6,61 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:misc_utilities/src/file_manager_logic.dart';
+import 'package:misc_utilities/src/loading_wrapper.dart';
 import 'package:misc_utilities/src/string_constant.dart';
+import 'package:misc_utilities/src/types.dart';
 import 'package:misc_utilities/src/widget_keys.dart';
 
 import 'package:shared_themes/constants.dart';
 import 'package:shared_themes/spaces.dart';
 import 'package:shared_themes/text_themes.dart';
 
-typedef OnFileChanged = void Function(dynamic value);
-
-typedef UploadReturnId = Future<String> Function({
-  required Map<String, dynamic> fileData,
-  required BuildContext context,
-});
-
-/// renders a widget that can be used to
-/// select files from storage or take photo with the camera
+/// A Widget used to select and upload files from the gallery or the camera
+///
 /// [onChanged] is more like the [TextField] onChanged, basically is a
 /// [Function] that takes a value which in this case is an [uploadId]
+///
 /// [fileTitle] indicates the file type you want, ie `Military ID`
-/// [allowedExtensions] is an optional list of strings containing file extensions
-/// [uploadFileAndReturnIdFunction] is a [Function] of type [UploadReturnId] that uploads a file's
-/// data and returns an [uploadId]
-/// [snackBarTypes] is a list of the types of snack bars available
-
+///
+/// [allowedExtensions] is an optional list of strings containing file
+///  extensions
+///
+/// [uploadFileAndReturnIdFunction] is a [Function] of type [UploadReturnId]
+/// that uploads a file's data and returns an [uploadId]
 class SILFileManager extends StatefulWidget {
   const SILFileManager({
-    Key? key,
     required this.onChanged,
     required this.fileTitle,
     required this.uploadAndReturnIdFunction,
-    required this.silLoader,
-    this.invalidFile = false,
-  }) : super(key: key);
+    required this.platformLoader,
+    this.isRequired = false,
+    this.galleryImageKey,
+    this.dismissIconKey,
+  });
 
-  final bool invalidFile;
+  /// The Key for the dismiss icon
+  final Key? dismissIconKey;
+
+  /// The title of the file to be used after upload
   final String fileTitle;
+
+  /// The key to be used for the gallery image selection
+  final Key? galleryImageKey;
+
+  /// Whether this file upload is required
+  final bool isRequired;
+
+  /// Will be called when the file has been uploaded and an upload ID is
+  /// available
   final OnFileChanged onChanged;
-  final Widget silLoader;
+
+  /// The loading indicator to be used when the upload is in progress
+  final Widget platformLoader;
+
+  /// The function to upload the file and return the upload ID
+  ///
+  /// Takes in a Map of the image data, and a [BuildContext] that is used
+  /// to notify the user once the upload is successful
   final UploadReturnId uploadAndReturnIdFunction;
 
   @override
@@ -52,11 +69,11 @@ class SILFileManager extends StatefulWidget {
 
 class _SILFileManagerState extends State<SILFileManager> {
   File? selectedFile;
-  bool uploading = false;
+  bool isUploadingFile = false;
 
-  void toggleUpload() {
+  void toggleUploadStatus() {
     setState(() {
-      uploading = !uploading;
+      isUploadingFile = !isUploadingFile;
     });
   }
 
@@ -75,19 +92,8 @@ class _SILFileManagerState extends State<SILFileManager> {
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor.withOpacity(0.05),
             ),
-            child: uploading
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        children: <Widget>[
-                          widget.silLoader,
-                          smallVerticalSizedBox,
-                          const Text(UserFeedBackTexts.savingFile)
-                        ],
-                      ),
-                    ),
-                  )
+            child: isUploadingFile
+                ? LoadingWrapper(loader: widget.platformLoader)
                 : Column(
                     children: <Widget>[
                       Padding(
@@ -99,13 +105,13 @@ class _SILFileManagerState extends State<SILFileManager> {
                             if (selectedFile == null) ...<Widget>[
                               /// Select from gallery
                               GestureDetector(
-                                key: galleryImageKey,
+                                key: widget.galleryImageKey ?? galleryImageKey,
                                 onTap: () async {
-                                  await FileManagerLogic.selectFile(
+                                  await FileManagerLogic.selectFileFromGallery(
                                     context: context,
                                     uploadAndReturnIdFunction:
                                         widget.uploadAndReturnIdFunction,
-                                    toggleUpload: toggleUpload,
+                                    toggleUpload: toggleUploadStatus,
                                     fileTitle: widget.fileTitle,
                                     updateUIFunc: (File file, String uploadId) {
                                       setState(() {
@@ -127,23 +133,22 @@ class _SILFileManagerState extends State<SILFileManager> {
                                   ],
                                 ),
                               ),
-
-                              /// -----take photo
                             ],
-
-                            /// -----reset file set to none
                             if (selectedFile != null) ...<Widget>[
+                              // The selected image
                               SizedBox(
                                 height: 90,
                                 child: Image.file(selectedFile!),
                               ),
+
+                              /// Remove the uploaded file
                               GestureDetector(
-                                key: closeSelectedFile,
+                                key: widget.dismissIconKey ?? closeSelectedFile,
                                 onTap: () {
                                   setState(() {
                                     selectedFile = null;
                                   });
-                                  widget.onChanged(selectedFile);
+                                  widget.onChanged(null);
                                 },
                                 child: Column(
                                   children: <Widget>[
@@ -174,7 +179,7 @@ class _SILFileManagerState extends State<SILFileManager> {
                   ),
           ),
         ),
-        if (widget.invalidFile) ...<Widget>[
+        if (widget.isRequired) ...<Widget>[
           smallVerticalSizedBox,
           Text(
             'This is required *',

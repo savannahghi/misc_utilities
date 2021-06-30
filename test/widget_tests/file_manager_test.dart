@@ -42,7 +42,7 @@ void main() {
             body: Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: () async {
-                  await FileManagerLogic.selectFile(
+                  await FileManagerLogic.selectFileFromGallery(
                     context: context,
                     uploadAndReturnIdFunction: (
                         {required BuildContext context,
@@ -128,8 +128,8 @@ void main() {
                     uploadedFileData = fileData;
                     return 'some-upload-id';
                   },
-                  silLoader: const CircularProgressIndicator(),
-                  invalidFile: true,
+                  platformLoader: const CircularProgressIndicator(),
+                  isRequired: true,
                 ),
               ),
             ),
@@ -201,8 +201,8 @@ void main() {
                   return Future<void>.delayed(const Duration(seconds: 1))
                       .then((_) => 'some-upload-id');
                 },
-                silLoader: const CircularProgressIndicator(),
-                invalidFile: true,
+                platformLoader: const CircularProgressIndicator(),
+                isRequired: true,
               ),
             ),
           ),
