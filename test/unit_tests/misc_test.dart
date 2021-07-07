@@ -517,6 +517,6 @@ void main() {
       const String phone = '+2541908765432';
 
       expect(validateKenyanNumber(phone), false);
-  });
+    });
   });
 }

@@ -1,3 +1,7 @@
+### 0.1.17-nullsafety
+
+- chore: update packages (flutter_graphql_client, async_redux)
+
 ### 0.1.16-nullsafety
 
 - refactor: improve file manager
