@@ -1,3 +1,8 @@
+### 0.1.18-nullsafety
+
+- chore: remove SILException
+- chore: rename `SILEventBus` to `EventBus`
+
 ### 0.1.17-nullsafety
 
 - chore: update packages (flutter_graphql_client, async_redux)

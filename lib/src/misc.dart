@@ -2,7 +2,6 @@ library sil_misc;
 
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,11 +13,10 @@ import 'package:flutter_graphql_client/graph_constants.dart';
 import 'package:flutter_graphql_client/graph_event_bus.dart';
 import 'package:misc_utilities/bottom_sheet_builder.dart';
 import 'package:misc_utilities/enums.dart';
-import 'package:misc_utilities/exception.dart';
 import 'package:misc_utilities/mutations.dart';
 import 'package:misc_utilities/src/string_constant.dart';
 import 'package:shared_themes/constants.dart';
-
+import 'package:domain_objects/failures.dart';
 import '../constants.dart';
 
 enum UserInactivityStatus { okay, requiresLogin, requiresPin }
