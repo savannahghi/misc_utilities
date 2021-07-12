@@ -1,7 +1,7 @@
 import 'dart:async';
 
-class SILEventBus {
-  SILEventBus({bool sync = false})
+class EventBus {
+  EventBus({bool sync = false})
       : _streamController = StreamController<dynamic>.broadcast(sync: sync);
   final StreamController<dynamic> _streamController;
 

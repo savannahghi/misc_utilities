@@ -234,7 +234,7 @@ void main() {
 
     group('SILEventBus', () {
       testWidgets('should test SILEventBus', (WidgetTester tester) async {
-        final SILEventBus eventBus = SILEventBus();
+        final EventBus eventBus = EventBus();
         final Map<String, dynamic> eventPayload = <String, dynamic>{
           'test': 'test'
         };
