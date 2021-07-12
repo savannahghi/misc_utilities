@@ -354,7 +354,7 @@ String? parseError(Map<String, dynamic>? body) {
   return null;
 }
 
-///[Generic Fetch Function]
+/// [Generic Fetch Function]
 /// a generic fetch function for fetching all the problems, allergies
 /// medications, tests and diagnoses for the current patient
 /// in an episode
@@ -370,6 +370,7 @@ Future<dynamic> genericFetchFunction({
   required String queryString,
   required Map<String, dynamic> variables,
   required String logTitle,
+  Function? errorCallback,
   String? logDescription,
 }) async {
   // indicate processing is ongoing
@@ -399,6 +400,9 @@ Future<dynamic> genericFetchFunction({
 
   //check first for errors
   if (error != null) {
+    if (errorCallback != null) {
+      errorCallback();
+    }
     return streamController
         .addError(<String, dynamic>{'error': _client.parseError(payLoad)});
   }

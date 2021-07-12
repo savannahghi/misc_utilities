@@ -376,6 +376,7 @@ void main() {
                     key: const Key('fetch_data'),
                     onPressed: () async {
                       await genericFetchFunction(
+                          errorCallback: () {},
                           streamController: _streamController,
                           context: context,
                           queryString: fakeQuery,
