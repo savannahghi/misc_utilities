@@ -310,8 +310,7 @@ DeviceScreensType getDeviceType(BuildContext context) {
 Future<String> getUploadId(
     {required Map<String, dynamic> fileData,
     required BuildContext context}) async {
-  final ISILGraphQlClient _client =
-      SILAppWrapperBase.of(context)!.graphQLClient;
+  final ISILGraphQlClient _client = AppWrapperBase.of(context)!.graphQLClient;
   try {
     final http.Response result = await _client
         .query(uploadMutation, <String, dynamic>{'input': fileData});
@@ -370,14 +369,12 @@ Future<dynamic> genericFetchFunction({
   required String queryString,
   required Map<String, dynamic> variables,
   required String logTitle,
-  Function? errorCallback,
   String? logDescription,
 }) async {
   // indicate processing is ongoing
   streamController.add(<String, dynamic>{'loading': true});
 
-  final ISILGraphQlClient _client =
-      SILAppWrapperBase.of(context)!.graphQLClient;
+  final ISILGraphQlClient _client = AppWrapperBase.of(context)!.graphQLClient;
 
   /// fetch the data from the api
   final http.Response response = await _client.query(
@@ -388,7 +385,7 @@ Future<dynamic> genericFetchFunction({
   final Map<String, dynamic> payLoad = _client.toMap(response);
 
   SaveTraceLog(
-    client: SILAppWrapperBase.of(context)!.graphQLClient,
+    client: AppWrapperBase.of(context)!.graphQLClient,
     query: queryString,
     data: variables,
     response: payLoad,
@@ -400,9 +397,6 @@ Future<dynamic> genericFetchFunction({
 
   //check first for errors
   if (error != null) {
-    if (errorCallback != null) {
-      errorCallback();
-    }
     return streamController
         .addError(<String, dynamic>{'error': _client.parseError(payLoad)});
   }

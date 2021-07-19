@@ -280,7 +280,7 @@ void main() {
         };
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
-            body: SILAppWrapperBase(
+            body: AppWrapperBase(
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
@@ -322,7 +322,7 @@ void main() {
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
-            body: SILAppWrapperBase(
+            body: AppWrapperBase(
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
@@ -365,7 +365,7 @@ void main() {
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
-            body: SILAppWrapperBase(
+            body: AppWrapperBase(
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
@@ -376,7 +376,6 @@ void main() {
                     key: const Key('fetch_data'),
                     onPressed: () async {
                       await genericFetchFunction(
-                          errorCallback: () {},
                           streamController: _streamController,
                           context: context,
                           queryString: fakeQuery,
@@ -409,7 +408,7 @@ void main() {
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
-            body: SILAppWrapperBase(
+            body: AppWrapperBase(
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
@@ -458,7 +457,7 @@ void main() {
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
-            body: SILAppWrapperBase(
+            body: AppWrapperBase(
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
@@ -504,7 +503,7 @@ void main() {
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
-            body: SILAppWrapperBase(
+            body: AppWrapperBase(
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
@@ -543,7 +542,7 @@ void main() {
 
         await tester.pumpWidget(MaterialApp(
           home: Scaffold(
-            body: SILAppWrapperBase(
+            body: AppWrapperBase(
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],

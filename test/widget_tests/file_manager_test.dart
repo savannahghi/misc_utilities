@@ -110,7 +110,7 @@ void main() {
         late Map<String, dynamic>? uploadedFileData;
 
         await tester.pumpWidget(
-          SILAppWrapperBase(
+          AppWrapperBase(
             appContexts: const <AppContext>[AppContext.AppTest],
             appName: 'Test app',
             graphQLClient: mockSILGraphQlClient,

@@ -1,3 +1,6 @@
+### 0.1.20-nullsafety
+
+- chore: update dependency (app_wrapper)
 ### 0.1.19-nullsafety
 
 - feat: add errorCallback param to genericFetchFunction
