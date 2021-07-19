@@ -310,8 +310,7 @@ DeviceScreensType getDeviceType(BuildContext context) {
 Future<String> getUploadId(
     {required Map<String, dynamic> fileData,
     required BuildContext context}) async {
-  final ISILGraphQlClient _client =
-      SILAppWrapperBase.of(context)!.graphQLClient;
+  final ISILGraphQlClient _client = AppWrapperBase.of(context)!.graphQLClient;
   try {
     final http.Response result = await _client
         .query(uploadMutation, <String, dynamic>{'input': fileData});
@@ -354,7 +353,7 @@ String? parseError(Map<String, dynamic>? body) {
   return null;
 }
 
-///[Generic Fetch Function]
+/// [Generic Fetch Function]
 /// a generic fetch function for fetching all the problems, allergies
 /// medications, tests and diagnoses for the current patient
 /// in an episode
@@ -375,8 +374,7 @@ Future<dynamic> genericFetchFunction({
   // indicate processing is ongoing
   streamController.add(<String, dynamic>{'loading': true});
 
-  final ISILGraphQlClient _client =
-      SILAppWrapperBase.of(context)!.graphQLClient;
+  final ISILGraphQlClient _client = AppWrapperBase.of(context)!.graphQLClient;
 
   /// fetch the data from the api
   final http.Response response = await _client.query(
@@ -387,7 +385,7 @@ Future<dynamic> genericFetchFunction({
   final Map<String, dynamic> payLoad = _client.toMap(response);
 
   SaveTraceLog(
-    client: SILAppWrapperBase.of(context)!.graphQLClient,
+    client: AppWrapperBase.of(context)!.graphQLClient,
     query: queryString,
     data: variables,
     response: payLoad,

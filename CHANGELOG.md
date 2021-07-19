@@ -1,3 +1,10 @@
+### 0.1.20-nullsafety
+
+- chore: update dependency (app_wrapper)
+### 0.1.19-nullsafety
+
+- feat: add errorCallback param to genericFetchFunction
+
 ### 0.1.18-nullsafety
 
 - chore: remove SILException
