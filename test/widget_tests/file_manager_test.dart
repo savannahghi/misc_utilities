@@ -96,8 +96,7 @@ void main() {
       (WidgetTester tester) async {
         final List<MethodCall> _methodCalls = <MethodCall>[];
 
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
+        final MockGraphQlClient mockSILGraphQlClient = MockGraphQlClient();
 
         channel.setMockMethodCallHandler((MethodCall methodCall) async {
           _methodCalls.add(methodCall);

@@ -310,7 +310,7 @@ DeviceScreensType getDeviceType(BuildContext context) {
 Future<String> getUploadId(
     {required Map<String, dynamic> fileData,
     required BuildContext context}) async {
-  final ISILGraphQlClient _client = AppWrapperBase.of(context)!.graphQLClient;
+  final IGraphQlClient _client = AppWrapperBase.of(context)!.graphQLClient;
   try {
     final http.Response result = await _client
         .query(uploadMutation, <String, dynamic>{'input': fileData});
@@ -374,7 +374,7 @@ Future<dynamic> genericFetchFunction({
   // indicate processing is ongoing
   streamController.add(<String, dynamic>{'loading': true});
 
-  final ISILGraphQlClient _client = AppWrapperBase.of(context)!.graphQLClient;
+  final IGraphQlClient _client = AppWrapperBase.of(context)!.graphQLClient;
 
   /// fetch the data from the api
   final http.Response response = await _client.query(
