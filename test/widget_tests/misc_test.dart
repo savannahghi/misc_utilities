@@ -270,8 +270,7 @@ void main() {
     group('upload ID', () {
       testWidgets('should getUploadId and return a string',
           (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
+        final MockGraphQlClient mockGraphQlClient = MockGraphQlClient();
         String uploadID = 'YHBDhbkGHGFzgh';
         final Map<String, dynamic> fileData = <String, dynamic>{
           'contentType': 'jpg',
@@ -284,7 +283,7 @@ void main() {
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
+              graphQLClient: mockGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
                   return ElevatedButton(
@@ -312,8 +311,7 @@ void main() {
 
     group('generic fetch function', () {
       testWidgets('should get data', (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
+        final MockGraphQlClient mockGraphQlClient = MockGraphQlClient();
         final StreamController<dynamic> _streamController =
             StreamController<dynamic>.broadcast();
         final Map<String, bool> variables = <String, bool>{
@@ -326,7 +324,7 @@ void main() {
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
+              graphQLClient: mockGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
                   return ElevatedButton(
@@ -357,8 +355,7 @@ void main() {
       });
 
       testWidgets('should get data with error', (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
+        final MockGraphQlClient mockGraphQlClient = MockGraphQlClient();
         final StreamController<dynamic> _streamController =
             StreamController<dynamic>.broadcast();
         final Map<String, bool> variables = <String, bool>{'fake': true};
@@ -369,7 +366,7 @@ void main() {
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
+              graphQLClient: mockGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
                   return ElevatedButton(
@@ -400,8 +397,7 @@ void main() {
 
       testWidgets('should get data with data as null',
           (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
+        final MockGraphQlClient mockGraphQlClient = MockGraphQlClient();
         final StreamController<dynamic> _streamController =
             StreamController<dynamic>.broadcast();
         final Map<String, bool> variables = <String, bool>{'fake': true};
@@ -412,7 +408,7 @@ void main() {
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
+              graphQLClient: mockGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
                   return ElevatedButton(
@@ -444,8 +440,7 @@ void main() {
       testWidgets(
           'should add error to stream controller when there is an error',
           (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
+        final MockGraphQlClient mockGraphQlClient = MockGraphQlClient();
         final StreamController<dynamic> _controller =
             StreamController<dynamic>.broadcast();
         final Map<String, bool> userProfile = <String, bool>{
@@ -461,7 +456,7 @@ void main() {
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
+              graphQLClient: mockGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
                   return ElevatedButton(
@@ -494,8 +489,7 @@ void main() {
 
     group('launch whatsapp', () {
       testWidgets('should launch whatsapp', (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
+        final MockGraphQlClient mockGraphQlClient = MockGraphQlClient();
         const String phone = '0710000000';
         const String message = 'hi';
         final String whatsAppUrl =
@@ -507,7 +501,7 @@ void main() {
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
+              graphQLClient: mockGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
                   return ElevatedButton(
@@ -533,8 +527,7 @@ void main() {
       });
 
       testWidgets('should not launch whatsapp', (WidgetTester tester) async {
-        final MockSILGraphQlClient mockSILGraphQlClient =
-            MockSILGraphQlClient();
+        final MockGraphQlClient mockGraphQlClient = MockGraphQlClient();
         const String phone = '';
         const String message = '';
         final String whatsAppUrl =
@@ -546,7 +539,7 @@ void main() {
               deviceCapabilities: MockDeviceCapabilities(),
               appName: 'testAppName',
               appContexts: const <AppContext>[AppContext.BewellCONSUMER],
-              graphQLClient: mockSILGraphQlClient,
+              graphQLClient: mockGraphQlClient,
               child: Center(
                 child: Builder(builder: (BuildContext context) {
                   return ElevatedButton(

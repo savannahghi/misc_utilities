@@ -1,3 +1,7 @@
+### 0.1.21-nullsafety
+
+- chore: update packages
+
 ### 0.1.20-nullsafety
 
 - chore: update dependency (app_wrapper)

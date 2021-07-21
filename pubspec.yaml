@@ -1,6 +1,6 @@
 name: misc_utilities
 description: Collection of shared utility functions
-version: 0.1.20-nullsafety
+version: 0.1.21-nullsafety
 homepage: https://github.com/savannahghi/misc_utilities
 repository: https://github.com/savannahghi/misc_utilities
 issue_tracker: https://github.com/savannahghi/misc_utilities/issues
@@ -11,14 +11,14 @@ environment:
   flutter: ">=2.0.0"
 
 dependencies:
-  app_wrapper: ^0.1.20 # internal (formerly sil_app_wrapper)
+  app_wrapper: ^0.1.21 # internal (formerly sil_app_wrapper)
   async_redux: ^12.0.0
   domain_objects: ^0.0.25-nullsafety # internal (formerly sil_core_domain_objects)
   dotted_border: ^2.0.0
   file_picker: ^3.0.2+2
   flutter:
     sdk: flutter
-  flutter_graphql_client: ^0.1.20 # internal (formerly sil_graphql_client)
+  flutter_graphql_client: ^0.1.22 # internal (formerly sil_graphql_client)
   flutter_image_compress: ^1.0.0
   flutter_svg: ^0.22.0
   http: ^0.13.3

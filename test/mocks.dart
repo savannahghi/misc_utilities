@@ -56,7 +56,7 @@ final Map<String, bool> settingsVariables = <String, bool>{
 };
 
 // ignore: subtype_of_sealed_class
-class MockSILGraphQlClient extends Mock implements SILGraphQlClient {
+class MockGraphQlClient extends Mock implements GraphQlClient {
   String setupUserAsExperimenterVariables =
       json.encode(<String, bool>{'participate': true});
   String removeUserAsExperimenterVariables =
