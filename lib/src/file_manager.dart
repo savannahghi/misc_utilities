@@ -27,8 +27,8 @@ import 'package:shared_themes/text_themes.dart';
 ///
 /// [uploadFileAndReturnIdFunction] is a [Function] of type [UploadReturnId]
 /// that uploads a file's data and returns an [uploadId]
-class SILFileManager extends StatefulWidget {
-  const SILFileManager({
+class FileManager extends StatefulWidget {
+  const FileManager({
     required this.onChanged,
     required this.fileTitle,
     required this.uploadAndReturnIdFunction,
@@ -64,10 +64,10 @@ class SILFileManager extends StatefulWidget {
   final UploadReturnId uploadAndReturnIdFunction;
 
   @override
-  _SILFileManagerState createState() => _SILFileManagerState();
+  _FileManagerState createState() => _FileManagerState();
 }
 
-class _SILFileManagerState extends State<SILFileManager> {
+class _FileManagerState extends State<FileManager> {
   File? selectedFile;
   bool isUploadingFile = false;
 

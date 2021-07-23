@@ -1,4 +1,4 @@
-library sil_misc;
+library misc_utilities;
 
 import 'dart:async';
 import 'dart:io';
@@ -207,7 +207,7 @@ String removeUnderscores(String sentence) {
 /// [bottomSheet]
 void bottomSheet({
   required BuildContext context,
-  required SILBottomSheetBuilder builder,
+  required BottomSheetBuilder builder,
 }) {
   showModalBottomSheet<List<dynamic>>(
     context: context,
@@ -224,13 +224,13 @@ void bottomSheet({
 }
 
 /// [snackbar]
-SnackBar snackbar(
-
-    /// [content] must be either of type [Widget] or [String]
-    {required dynamic content,
-    int durationSeconds = 10,
-    String? label,
-    Function? callback}) {
+SnackBar snackbar({
+  required dynamic
+      content, // [content] must be either of type [Widget] or [String]
+  int durationSeconds = 10,
+  String? label,
+  Function? callback,
+}) {
   return SnackBar(
     content: content.runtimeType == String
         ? Text(content as String)
@@ -371,7 +371,6 @@ Future<dynamic> genericFetchFunction({
   required String logTitle,
   String? logDescription,
 }) async {
-  // indicate processing is ongoing
   streamController.add(<String, dynamic>{'loading': true});
 
   final IGraphQlClient _client = AppWrapperBase.of(context)!.graphQLClient;
@@ -395,7 +394,6 @@ Future<dynamic> genericFetchFunction({
 
   final String? error = parseError(payLoad);
 
-  //check first for errors
   if (error != null) {
     return streamController
         .addError(<String, dynamic>{'error': _client.parseError(payLoad)});

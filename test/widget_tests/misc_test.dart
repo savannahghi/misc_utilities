@@ -18,7 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../mocks.dart';
 
-class TestComplexBottomSheet extends SILBottomSheetBuilder {
+class TestComplexBottomSheet extends BottomSheetBuilder {
   TestComplexBottomSheet()
       : super(
             primaryColor: Colors.amber,
@@ -106,7 +106,7 @@ class TestComplexBottomSheet extends SILBottomSheetBuilder {
 }
 
 void main() {
-  group('SILMisc', () {
+  group('Misc', () {
     testWidgets('should show snackbar and dismiss it',
         (WidgetTester tester) async {
       bool isSnackBarActionTapped = false;
@@ -232,8 +232,8 @@ void main() {
       });
     });
 
-    group('SILEventBus', () {
-      testWidgets('should test SILEventBus', (WidgetTester tester) async {
+    group('EventBus', () {
+      testWidgets('should test EventBus', (WidgetTester tester) async {
         final EventBus eventBus = EventBus();
         final Map<String, dynamic> eventPayload = <String, dynamic>{
           'test': 'test'
@@ -580,9 +580,7 @@ void main() {
                     key: buttonKey,
                     onPressed: () {
                       //Reset expiry time
-                      SILRefreshTokenManger()
-                          .updateExpireTime(expiryTime)
-                          .reset();
+                      RefreshTokenManger().updateExpireTime(expiryTime).reset();
                     },
                     child: const SizedBox());
               }),
@@ -594,7 +592,7 @@ void main() {
         await tester.tap(find.byKey(buttonKey));
         await tester.pump(const Duration(minutes: 15));
 
-        expect(SILRefreshTokenManger().listen.value, true);
+        expect(RefreshTokenManger().listen.value, true);
       });
 
       testWidgets('should not reset 16 minutes to the expiry time',
@@ -611,9 +609,7 @@ void main() {
                     key: buttonKey,
                     onPressed: () {
                       //Reset expiry time
-                      SILRefreshTokenManger()
-                          .updateExpireTime(expiryTime)
-                          .reset();
+                      RefreshTokenManger().updateExpireTime(expiryTime).reset();
                     },
                     child: const SizedBox());
               }),
@@ -625,7 +621,7 @@ void main() {
         await tester.tap(find.byKey(buttonKey));
         await tester.pump(const Duration(minutes: 15));
 
-        expect(SILRefreshTokenManger().listen.value, true);
+        expect(RefreshTokenManger().listen.value, true);
       });
     });
 

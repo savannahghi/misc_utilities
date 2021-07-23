@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 
-/// [SILBottomSheetBuilder] defines the blueprint that will be used to build
+/// [BottomSheetBuilder] defines the blueprint that will be used to build
 /// our bottom sheets
 ///
 /// example
 ///
 /// ```dart
-///  CoversBottomSheet extends SILBottomSheetBuilder{
+///  CoversBottomSheet extends BottomSheetBuilder{
 ///   CoversBottomSheet()
 ///      : super(
 ///          primaryColor: Colors.amber,
@@ -34,8 +34,8 @@ import 'package:flutter/widgets.dart';
 /// bottomSheet(context: context, builder: CoversBottomSheet())
 ///
 ///```
-abstract class SILBottomSheetBuilder {
-  SILBottomSheetBuilder(
+abstract class BottomSheetBuilder {
+  BottomSheetBuilder(
       {this.action,
       this.backgroundColor,
       this.textColor,

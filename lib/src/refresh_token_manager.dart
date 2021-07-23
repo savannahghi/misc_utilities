@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 
-/// [SILRefreshTokenManger] is responsible for when to fetch a brand new
+/// [RefreshTokenManger] is responsible for when to fetch a brand new
 /// id-token just before the expiry of the current one.
 /// The [updateExpireTime] is triggered in two scenarios;
 ///
@@ -11,15 +11,14 @@ import 'package:rxdart/rxdart.dart';
 ///     user or during development. The app will retrieve the appropriate expiry time,
 ///     do some time math and determine whether its the right time to call for a
 ///     a fresh id-token
-class SILRefreshTokenManger {
-  factory SILRefreshTokenManger() {
+class RefreshTokenManger {
+  factory RefreshTokenManger() {
     return _singleton;
   }
 
-  SILRefreshTokenManger._internal();
+  RefreshTokenManger._internal();
 
-  static final SILRefreshTokenManger _singleton =
-      SILRefreshTokenManger._internal();
+  static final RefreshTokenManger _singleton = RefreshTokenManger._internal();
 
   BehaviorSubject<bool> listen = BehaviorSubject<bool>.seeded(false);
 
@@ -28,7 +27,7 @@ class SILRefreshTokenManger {
   // this will be used to refer to the timer and close it
   late Timer timer;
 
-  SILRefreshTokenManger updateExpireTime(String expire) {
+  RefreshTokenManger updateExpireTime(String expire) {
     _expireTime.add(expire);
     this.listen.add(false);
     return this;

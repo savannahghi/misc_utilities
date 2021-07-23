@@ -89,14 +89,14 @@ void main() {
     );
   });
 
-  group('SILFileManager', () {
+  group('FileManager', () {
     testWidgets(
       'should upload file correctly and clear the selection'
       ' after a successful upload',
       (WidgetTester tester) async {
         final List<MethodCall> _methodCalls = <MethodCall>[];
 
-        final MockGraphQlClient mockSILGraphQlClient = MockGraphQlClient();
+        final MockGraphQlClient mockGraphQlClient = MockGraphQlClient();
 
         channel.setMockMethodCallHandler((MethodCall methodCall) async {
           _methodCalls.add(methodCall);
@@ -112,11 +112,11 @@ void main() {
           AppWrapperBase(
             appContexts: const <AppContext>[AppContext.AppTest],
             appName: 'Test app',
-            graphQLClient: mockSILGraphQlClient,
+            graphQLClient: mockGraphQlClient,
             deviceCapabilities: DeviceCapabilities(),
             child: MaterialApp(
               home: Scaffold(
-                body: SILFileManager(
+                body: FileManager(
                   onChanged: (dynamic value) {
                     uploadedID = value;
                   },
@@ -139,9 +139,9 @@ void main() {
 
         final Finder galleryIcon = find.byKey(galleryImageKey);
 
-        expect(find.byType(SILFileManager), findsOneWidget);
+        expect(find.byType(FileManager), findsOneWidget);
         expect(find.byType(DottedBorder), findsOneWidget);
-        expect(find.byType(SILFileManager), findsOneWidget);
+        expect(find.byType(FileManager), findsOneWidget);
         expect(galleryIcon, findsOneWidget);
         expect(find.byType(CircularProgressIndicator), findsNothing);
 
@@ -191,7 +191,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: SILFileManager(
+              body: FileManager(
                 onChanged: (dynamic value) {},
                 fileTitle: 'name',
                 uploadAndReturnIdFunction: (
@@ -211,9 +211,9 @@ void main() {
 
         final Finder galleryIcon = find.byKey(galleryImageKey);
 
-        expect(find.byType(SILFileManager), findsOneWidget);
+        expect(find.byType(FileManager), findsOneWidget);
         expect(find.byType(DottedBorder), findsOneWidget);
-        expect(find.byType(SILFileManager), findsOneWidget);
+        expect(find.byType(FileManager), findsOneWidget);
         expect(galleryIcon, findsOneWidget);
         expect(find.byType(CircularProgressIndicator), findsNothing);
 

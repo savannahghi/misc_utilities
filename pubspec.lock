@@ -182,7 +182,7 @@ packages:
       name: domain_objects
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.25-nullsafety"
+    version: "0.0.26-nullsafety"
   dotted_border:
     dependency: "direct main"
     description:

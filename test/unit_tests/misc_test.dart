@@ -13,8 +13,8 @@ import 'package:misc_utilities/src/misc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  group('SILMisc', () {
-    test('convertDateToString should return correctly formatted date', () {
+  group('Misc ', () {
+    test('should convertDateToString should return correctly formatted date', () {
       final DateTime date = DateTime(2020, DateTime.january, 31);
       const String expected = '31-01-2020';
       final String formattedDate =
@@ -364,8 +364,8 @@ void main() {
       final BehaviorSubject<dynamic> listen = BehaviorSubject<dynamic>();
       test('should updateExpireTime', () {
         const String time = '2021-02-01 10:15:21Z';
-        SILRefreshTokenManger().updateExpireTime(time);
-        SILRefreshTokenManger().updateExpireTime(time).reset();
+        RefreshTokenManger().updateExpireTime(time);
+        RefreshTokenManger().updateExpireTime(time).reset();
         expect(listen.hasValue, false);
         expect(listen.valueOrNull, null);
       });
@@ -374,12 +374,12 @@ void main() {
         final String expiresAt =
             DateTime.now().add(const Duration(minutes: 6)).toString();
 
-        SILRefreshTokenManger().checkExpireValidity(expiresAt);
-        expect(SILRefreshTokenManger().checkExpireValidity(expiresAt), false);
+        RefreshTokenManger().checkExpireValidity(expiresAt);
+        expect(RefreshTokenManger().checkExpireValidity(expiresAt), false);
         //Set expiry time
-        SILRefreshTokenManger().updateExpireTime(expiresAt);
+        RefreshTokenManger().updateExpireTime(expiresAt);
         //Reset expiry time
-        SILRefreshTokenManger().updateExpireTime(expiresAt).reset();
+        RefreshTokenManger().updateExpireTime(expiresAt).reset();
 
         expect(listen.hasValue, false);
         expect(listen.valueOrNull, null);
@@ -390,15 +390,15 @@ void main() {
             .subtract(const Duration(minutes: 10, seconds: 1))
             .toString();
 
-        SILRefreshTokenManger().checkExpireValidity(expiresAt);
+        RefreshTokenManger().checkExpireValidity(expiresAt);
 
-        expect(SILRefreshTokenManger().checkExpireValidity(expiresAt), false);
+        expect(RefreshTokenManger().checkExpireValidity(expiresAt), false);
         expect(listen.hasValue, false);
         expect(listen.valueOrNull, null);
         //Set expiry time
-        SILRefreshTokenManger().updateExpireTime(expiresAt);
+        RefreshTokenManger().updateExpireTime(expiresAt);
         //Reset expiry time
-        SILRefreshTokenManger().updateExpireTime(expiresAt).reset();
+        RefreshTokenManger().updateExpireTime(expiresAt).reset();
 
         expect(listen.hasValue, false);
         expect(listen.valueOrNull, null);
@@ -409,7 +409,7 @@ void main() {
             DateTime.now().add(const Duration(minutes: 15)).toString();
 
         //Reset expiry time
-        SILRefreshTokenManger().updateExpireTime(expiryTime).reset();
+        RefreshTokenManger().updateExpireTime(expiryTime).reset();
 
         expect(listen.hasValue, false);
         expect(listen.valueOrNull, null);
@@ -419,17 +419,17 @@ void main() {
             .add(const Duration(hours: 2, minutes: 50))
             .toString();
 
-        SILRefreshTokenManger().checkExpireValidity(expiryTime);
+        RefreshTokenManger().checkExpireValidity(expiryTime);
 
-        expect(SILRefreshTokenManger().checkExpireValidity(expiryTime), true);
+        expect(RefreshTokenManger().checkExpireValidity(expiryTime), true);
         expect(listen.hasValue, false);
         expect(listen.valueOrNull, null);
 
         expect(listen.valueOrNull, null);
         //Set expiry time
-        SILRefreshTokenManger().updateExpireTime(expiryTime);
+        RefreshTokenManger().updateExpireTime(expiryTime);
         //Reset expiry time
-        SILRefreshTokenManger().updateExpireTime(expiryTime).reset();
+        RefreshTokenManger().updateExpireTime(expiryTime).reset();
 
         expect(listen.hasValue, false);
         expect(listen.valueOrNull, null);

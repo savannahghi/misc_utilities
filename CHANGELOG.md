@@ -1,3 +1,7 @@
+### 0.1.22-nullsafety
+
+- doc: fix project documentation
+
 ### 0.1.21-nullsafety
 
 - chore: update packages

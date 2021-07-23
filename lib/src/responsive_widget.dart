@@ -7,8 +7,8 @@ import 'package:misc_utilities/number_constants.dart';
 /// if you want to introduce medium screen in future
 
 /// Widget that draws depending on screen size as specified by the breakpoints.
-class SILResponsiveWidget extends StatelessWidget {
-  const SILResponsiveWidget(
+class ResponsiveWidget extends StatelessWidget {
+  const ResponsiveWidget(
       {this.largeScreen, this.mediumScreen, this.smallScreen});
 
   /// Refer to https://developer.android.com/training/multiscreen/screensizes#TaskUseSWQuali
