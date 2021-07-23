@@ -3,7 +3,7 @@ import 'package:misc_utilities/event_bus.dart';
 
 void main() {
   group('EventBus', () {
-    test('should instantiate SILEventBus', () {
+    test('should instantiate EventBus', () {
       final EventBus eventBus = EventBus();
       expect(eventBus, isA<EventBus>());
 

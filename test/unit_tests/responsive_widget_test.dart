@@ -64,10 +64,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(builder: (BuildContext context) {
-            final bool isSmallScreen =
-                SILResponsiveWidget.isSmallScreen(context);
-            final bool isLargeScreen =
-                SILResponsiveWidget.isLargeScreen(context);
+            final bool isSmallScreen = ResponsiveWidget.isSmallScreen(context);
+            final bool isLargeScreen = ResponsiveWidget.isLargeScreen(context);
 
             expect(isSmallScreen, isFalse);
             expect(isLargeScreen, isTrue);
@@ -92,10 +90,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(builder: (BuildContext context) {
-            final bool isSmallScreen =
-                SILResponsiveWidget.isSmallScreen(context);
-            final bool isLargeScreen =
-                SILResponsiveWidget.isLargeScreen(context);
+            final bool isSmallScreen = ResponsiveWidget.isSmallScreen(context);
+            final bool isLargeScreen = ResponsiveWidget.isLargeScreen(context);
 
             expect(isSmallScreen, isTrue);
             expect(isLargeScreen, isFalse);
@@ -121,7 +117,7 @@ void main() {
       await tester.pumpWidget(MaterialApp(
         home: Builder(builder: (BuildContext context) {
           expect(
-              SILResponsiveWidget.preferredPaddingOnStretchedScreens(
+              ResponsiveWidget.preferredPaddingOnStretchedScreens(
                   context: context),
               number15);
 
@@ -146,7 +142,7 @@ void main() {
       await tester.pumpWidget(MaterialApp(
         home: Builder(builder: (BuildContext context) {
           expect(
-              SILResponsiveWidget.preferredPaddingOnStretchedScreens(
+              ResponsiveWidget.preferredPaddingOnStretchedScreens(
                   context: context),
               width);
 
@@ -168,8 +164,7 @@ void main() {
 
       await tester.pumpWidget(MaterialApp(
         home: Builder(builder: (BuildContext context) {
-          expect(
-              SILResponsiveWidget.isSmallScreenAndOnLandscape(context: context),
+          expect(ResponsiveWidget.isSmallScreenAndOnLandscape(context: context),
               true);
 
           return Container();
@@ -189,8 +184,7 @@ void main() {
 
       await tester.pumpWidget(MaterialApp(
         home: Builder(builder: (BuildContext context) {
-          expect(
-              SILResponsiveWidget.isSmallScreenAndOnLandscape(context: context),
+          expect(ResponsiveWidget.isSmallScreenAndOnLandscape(context: context),
               false);
 
           return Container();
@@ -214,9 +208,9 @@ void main() {
           child: MaterialApp(
             home: Builder(builder: (BuildContext context) {
               final bool isLandscape =
-                  SILResponsiveWidget.isLandscape(context: context);
+                  ResponsiveWidget.isLandscape(context: context);
               final bool isLargeScreen =
-                  SILResponsiveWidget.isLargeScreen(context);
+                  ResponsiveWidget.isLargeScreen(context);
 
               expect(isLandscape, isTrue);
               expect(isLargeScreen, isTrue);
@@ -246,7 +240,7 @@ void main() {
             home: Builder(builder: (BuildContext context) {
               final MediaQueryData mediaQuery = MediaQuery.of(context);
               final bool isLandscape =
-                  SILResponsiveWidget.isLandscape(context: context);
+                  ResponsiveWidget.isLandscape(context: context);
               final DeviceScreensType screenType = getDeviceType(context);
 
               expect(isLandscape, isTrue);
@@ -278,9 +272,9 @@ void main() {
             home: Builder(builder: (BuildContext context) {
               final MediaQueryData mediaQuery = MediaQuery.of(context);
               final bool isLandscape =
-                  SILResponsiveWidget.isLandscape(context: context);
+                  ResponsiveWidget.isLandscape(context: context);
               final DeviceScreensType screenType =
-                  SILResponsiveWidget.deviceType(context);
+                  ResponsiveWidget.deviceType(context);
 
               expect(isLandscape, isTrue);
               expect(mediaQuery.size.width, 1920);
@@ -308,7 +302,7 @@ Future<void> _buildResponsiveWidget(
 }) async {
   return tester.pumpWidget(
     MaterialApp(
-      home: SILResponsiveWidget(
+      home: ResponsiveWidget(
         smallScreen: smallScreen,
         mediumScreen: mediumScreen,
         largeScreen: largeScreen,
