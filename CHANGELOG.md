@@ -1,3 +1,7 @@
+### 0.1.24-nullsafety
+
+- chore: update lib
+
 ### 0.1.23-nullsafety
 
 - chore: purge eventBus
