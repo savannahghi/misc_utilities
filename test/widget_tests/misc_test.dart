@@ -8,7 +8,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:app_wrapper/app_wrapper.dart';
 import 'package:misc_utilities/bottom_sheet_builder.dart';
 import 'package:misc_utilities/enums.dart';
-import 'package:misc_utilities/event_bus.dart';
 import 'package:misc_utilities/misc.dart';
 import 'package:misc_utilities/mutations.dart';
 import 'package:misc_utilities/src/refresh_token_manager.dart';
@@ -229,19 +228,6 @@ void main() {
 
         final Finder bottomSheetClass = find.byType(ListView);
         expect(bottomSheetClass, findsOneWidget);
-      });
-    });
-
-    group('EventBus', () {
-      testWidgets('should test EventBus', (WidgetTester tester) async {
-        final EventBus eventBus = EventBus();
-        final Map<String, dynamic> eventPayload = <String, dynamic>{
-          'test': 'test'
-        };
-        final Stream<dynamic> stream = eventBus.streamController.stream;
-        eventBus.fire(TriggeredEvent('TEST_EVENT', eventPayload));
-        expectLater(stream, emits('Here is an event'));
-        eventBus.streamController.add('Here is an event');
       });
     });
 

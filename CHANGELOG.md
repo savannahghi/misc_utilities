@@ -1,3 +1,7 @@
+### 0.1.23-nullsafety
+
+- chore: purge eventBus
+
 ### 0.1.22-nullsafety
 
 - doc: fix project documentation
