@@ -10,7 +10,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:app_wrapper/app_wrapper.dart';
 import 'package:flutter_graphql_client/graph_client.dart';
 import 'package:flutter_graphql_client/graph_constants.dart';
-import 'package:flutter_graphql_client/graph_event_bus.dart';
 import 'package:misc_utilities/bottom_sheet_builder.dart';
 import 'package:misc_utilities/enums.dart';
 import 'package:misc_utilities/mutations.dart';
@@ -382,16 +381,6 @@ Future<dynamic> genericFetchFunction({
   );
 
   final Map<String, dynamic> payLoad = _client.toMap(response);
-
-  SaveTraceLog(
-    client: AppWrapperBase.of(context)!.graphQLClient,
-    query: queryString,
-    data: variables,
-    response: payLoad,
-    title: logTitle,
-    description: logDescription,
-  ).saveLog();
-
   final String? error = parseError(payLoad);
 
   if (error != null) {
