@@ -1,3 +1,7 @@
+### 0.1.25-nullsafety
+
+- chore: update pub
+
 ### 0.1.24-nullsafety
 
 - chore: update lib

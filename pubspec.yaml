@@ -1,6 +1,6 @@
 name: misc_utilities
 description: Collection of shared utility functions
-version: 0.1.24-nullsafety
+version: 0.1.25-nullsafety
 homepage: https://github.com/savannahghi/misc_utilities
 repository: https://github.com/savannahghi/misc_utilities
 issue_tracker: https://github.com/savannahghi/misc_utilities/issues
@@ -26,7 +26,7 @@ dependencies:
   material_design_icons_flutter: ^5.0.5955-rc.1
   path_provider: ^2.0.2
   rxdart: ^0.27.1
-  shared_themes: ^0.0.9 # internal (formerly sil_themes)
+  shared_themes: ^0.1.0 # internal (formerly sil_themes)
   image_picker: ^0.8.0+1
   url_launcher: ^6.0.6
 
