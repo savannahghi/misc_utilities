@@ -14,7 +14,8 @@ import 'package:misc_utilities/src/misc.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   group('Misc ', () {
-    test('should convertDateToString should return correctly formatted date', () {
+    test('should convertDateToString should return correctly formatted date',
+        () {
       final DateTime date = DateTime(2020, DateTime.january, 31);
       const String expected = '31-01-2020';
       final String formattedDate =
