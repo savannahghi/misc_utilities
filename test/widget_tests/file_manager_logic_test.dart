@@ -38,7 +38,7 @@ void main() {
             body: Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: () async {
-                  await FileManagerLogic.selectFileFromGallery(
+                  await FileManagerLogic.selectFileFromDevice(
                     context: context,
                     uploadAndReturnIdFunction: (
                         {required BuildContext context,
@@ -84,6 +84,9 @@ void main() {
       },
     );
 
+
+
+
     testWidgets(
       'should show a no file selected alert when the user cancels '
       'the file selection',
@@ -103,7 +106,7 @@ void main() {
             body: Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: () async {
-                  await FileManagerLogic.selectFileFromGallery(
+                  await FileManagerLogic.selectFileFromDevice(
                     context: context,
                     uploadAndReturnIdFunction: (
                         {required BuildContext context,
@@ -160,7 +163,7 @@ void main() {
             body: Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: () async {
-                  await FileManagerLogic.selectFileFromGallery(
+                  await FileManagerLogic.selectFileFromDevice(
                     context: context,
                     uploadAndReturnIdFunction: (
                         {required BuildContext context,
@@ -202,7 +205,7 @@ void main() {
             body: Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: () async {
-                  await FileManagerLogic.selectFileFromGallery(
+                  await FileManagerLogic.selectFileFromDevice(
                     context: context,
                     uploadAndReturnIdFunction: (
                         {required BuildContext context,
@@ -243,7 +246,7 @@ void main() {
             body: Builder(builder: (BuildContext context) {
               return GestureDetector(
                 onTap: () async {
-                  await FileManagerLogic.selectFileFromGallery(
+                  await FileManagerLogic.selectFileFromDevice(
                     context: context,
                     uploadAndReturnIdFunction: (
                         {required BuildContext context,

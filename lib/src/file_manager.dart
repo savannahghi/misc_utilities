@@ -2,10 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:misc_utilities/misc.dart';
+import 'package:misc_utilities/src/asset_strings.dart';
 import 'package:misc_utilities/src/file_manager_logic.dart';
+import 'package:misc_utilities/src/image_picker_bottom_sheet.dart';
 import 'package:misc_utilities/src/loading_wrapper.dart';
 import 'package:misc_utilities/src/string_constant.dart';
 import 'package:misc_utilities/src/types.dart';
@@ -107,24 +111,51 @@ class _FileManagerState extends State<FileManager> {
                               GestureDetector(
                                 key: widget.galleryImageKey ?? galleryImageKey,
                                 onTap: () async {
-                                  await FileManagerLogic.selectFileFromGallery(
+                                  bottomSheet(
                                     context: context,
-                                    uploadAndReturnIdFunction:
-                                        widget.uploadAndReturnIdFunction,
-                                    toggleUpload: toggleUploadStatus,
-                                    fileTitle: widget.fileTitle,
-                                    updateUIFunc: (File file, String uploadId) {
-                                      setState(() {
-                                        selectedFile = file;
-                                        widget.onChanged(uploadId);
-                                      });
-                                    },
+                                    builder: ImagePickerBottomSheet(
+                                      pickCamera: () async {
+                                        await FileManagerLogic
+                                            .selectFileFromDevice(
+                                          context: context,
+                                          uploadAndReturnIdFunction:
+                                              widget.uploadAndReturnIdFunction,
+                                          toggleUpload: toggleUploadStatus,
+                                          fileTitle: widget.fileTitle,
+                                          updateUIFunc:
+                                              (File file, String uploadId) {
+                                            setState(() {
+                                              selectedFile = file;
+                                              widget.onChanged(uploadId);
+                                            });
+                                          },
+                                          imageSource: ImageSource.camera,
+                                        );
+                                      },
+                                      pickGallery: () async {
+                                        await FileManagerLogic
+                                            .selectFileFromDevice(
+                                          context: context,
+                                          uploadAndReturnIdFunction:
+                                              widget.uploadAndReturnIdFunction,
+                                          toggleUpload: toggleUploadStatus,
+                                          fileTitle: widget.fileTitle,
+                                          updateUIFunc:
+                                              (File file, String uploadId) {
+                                            setState(() {
+                                              selectedFile = file;
+                                              widget.onChanged(uploadId);
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ),
                                   );
                                 },
                                 child: Column(
                                   children: <Widget>[
                                     SvgPicture.asset(
-                                      'assets/images/folder.svg',
+                                      folderSVGImagePath,
                                       width: 40,
                                       height: 40,
                                     ),

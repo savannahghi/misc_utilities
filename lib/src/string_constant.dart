@@ -9,3 +9,7 @@ const String unknown = 'Unknown';
 
 const String tooLargeImageError = 'The size of the image is too big. '
     'Please select a smaller sized image and try again.';
+
+const String cameraText = 'Take a picture';
+
+const String galleryText = 'Pick from gallery';

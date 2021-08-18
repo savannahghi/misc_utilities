@@ -37,7 +37,11 @@ class FileManagerLogic {
     return bytes ~/ 1024;
   }
 
-  /// Selects a file from the gallery
+  /// Selects a file from the either the gallery or the camera
+  ///
+  /// [imageSource] variable determines if the picker should open the camera app
+  /// or whether the picker should open the gallery for image selection.
+  /// by default, [imageSource] is set to pick an image from gallery
   ///
   /// Takes a [BuildContext] that is used to show alert messages using the
   /// ` ScaffoldMessenger.of(context).showSnackBar()` method.
@@ -48,18 +52,19 @@ class FileManagerLogic {
   ///
   /// The [updateUIFunc] returns a [File] object and the [uploadId] so that
   /// the UI can be refreshed with the updated values after uploading the file
-  static Future<void> selectFileFromGallery({
+  static Future<void> selectFileFromDevice({
     required BuildContext context,
     required UploadReturnId uploadAndReturnIdFunction,
     required Function toggleUpload,
     required String fileTitle,
     required void Function(File file, String uploadId) updateUIFunc,
+    ImageSource? imageSource = ImageSource.gallery,
   }) async {
     PickedFile? pickedFile;
-
     try {
       pickedFile = await ImagePicker().getImage(
-        source: ImageSource.gallery,
+        source:
+            imageSource!,
         imageQuality: 50,
       );
     } catch (e) {
