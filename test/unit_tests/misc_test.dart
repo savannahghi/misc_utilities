@@ -111,6 +111,12 @@ void main() {
     });
 
     test('should get cover validity period', () {
+      const String validTo = '2022-08-01';
+      final String formattedValidTo = getCoverValidityPeriod(validTo);
+      expect(formattedValidTo, isA<String>());
+    });
+
+    test('should get cover validity period for lapsed covers', () {
       const String validTo = '2021-08-01';
       final String formattedValidTo = getCoverValidityPeriod(validTo);
       expect(formattedValidTo, isA<String>());
@@ -118,7 +124,7 @@ void main() {
 
     test('should get cover validity date', () {
       const String validTo = '2021-08-01';
-      const String expectedValidity = 'Till Aug 01, 2021';
+      const String expectedValidity = ' 01 Aug, 2021';
       final String formattedValidTo = getValidityDate(validTo);
       expect(formattedValidTo, isA<String>());
       expect(formattedValidTo, expectedValidity);

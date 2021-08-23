@@ -1,3 +1,7 @@
+### 0.1.26-nullsafety
+
+- feat: update validity period for lapsed covers
+
 ### 0.1.25-nullsafety
 
 - chore: update pub
