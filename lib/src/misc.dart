@@ -119,12 +119,15 @@ String getCoverValidityPeriod(String validTo) {
       (validityDuration.inDays / 30).floor().toString();
   final String remainingDays =
       (validityDuration.inDays % 30).floor().toString();
+  if (validityDuration < const Duration(hours: 1)) {
+    return 'Your cover has lapsed. It was valid ';
+  }
   return 'Valid for the next $remainingMonths months and $remainingDays days';
 }
 
 ///  [getValidityDate]formats the validity date into a human readable format
 String getValidityDate(String validTo) {
-  return 'Till ${DateFormat('MMM dd, yyyy').format(DateTime.parse(validTo))}';
+  return ' ${DateFormat('dd MMM, yyyy').format(DateTime.parse(validTo))}';
 }
 
 /// [validateEmail] validates an email against a regex
