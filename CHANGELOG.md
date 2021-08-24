@@ -1,3 +1,7 @@
+### 0.1.27-nullsafety
+
+- chore: align covers copy
+
 ### 0.1.26-nullsafety
 
 - feat: update validity period for lapsed covers

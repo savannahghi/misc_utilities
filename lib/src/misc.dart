@@ -120,7 +120,7 @@ String getCoverValidityPeriod(String validTo) {
   final String remainingDays =
       (validityDuration.inDays % 30).floor().toString();
   if (validityDuration < const Duration(hours: 1)) {
-    return 'Your cover has lapsed. It was valid ';
+    return 'Your cover has expired. It was valid';
   }
   return 'Valid for the next $remainingMonths months and $remainingDays days';
 }
