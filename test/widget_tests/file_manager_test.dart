@@ -202,6 +202,7 @@ void main() {
                 },
                 platformLoader: const CircularProgressIndicator(),
                 isRequired: true,
+                isUsedInBuyCoverWorkFlow: true,
               ),
             ),
           ),
@@ -212,8 +213,8 @@ void main() {
         final Finder galleryIcon = find.byKey(galleryImageKey);
 
         expect(find.byType(FileManager), findsOneWidget);
-        expect(find.byType(DottedBorder), findsOneWidget);
-        expect(find.byType(FileManager), findsOneWidget);
+        // expect(find.byType(DottedBorder), findsOneWidget);
+        // expect(find.byType(FileManager), findsOneWidget);
         expect(galleryIcon, findsOneWidget);
         expect(find.byType(CircularProgressIndicator), findsNothing);
 
@@ -229,6 +230,143 @@ void main() {
 
         // this will flush out any remaining timers
         await tester.pumpAndSettle();
+      },
+    );
+    testWidgets(
+      'Image picker should show a CircularProgressIndicator when an upload is '
+      'being done for buy cover workflow',
+      (WidgetTester tester) async {
+        final List<MethodCall> _methodCalls = <MethodCall>[];
+
+        channel.setMockMethodCallHandler((MethodCall methodCall) async {
+          _methodCalls.add(methodCall);
+
+          final File file = File(testPath('test_resources/test_file.png'));
+          return file.path;
+        });
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: FileManager(
+                onChanged: (dynamic value) {},
+                fileTitle: 'name',
+                uploadAndReturnIdFunction: (
+                    {BuildContext? context,
+                    Map<String, dynamic>? fileData}) async {
+                  return Future<void>.delayed(const Duration(seconds: 1))
+                      .then((_) => 'some-upload-id');
+                },
+                platformLoader: const CircularProgressIndicator(),
+                isRequired: true,
+                isUsedInBuyCoverWorkFlow: true,
+              ),
+            ),
+          ),
+        );
+
+        await tester.pump();
+
+        final Finder galleryIcon = find.byKey(galleryImageKey);
+
+        expect(find.byType(FileManager), findsOneWidget);
+        // expect(find.byType(DottedBorder), findsOneWidget);
+        // expect(find.byType(FileManager), findsOneWidget);
+        expect(galleryIcon, findsOneWidget);
+        expect(find.byType(CircularProgressIndicator), findsNothing);
+
+        await tester.tap(galleryIcon);
+
+        // this will delay the upload long enough for us to catch the
+        // [CircularProgressIndicator] in action
+        await tester.pump(const Duration(milliseconds: 200));
+
+        // verify the select button is present
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.text(UserFeedBackTexts.savingFile), findsOneWidget);
+
+        // this will flush out any remaining timers
+        await tester.pumpAndSettle();
+      },
+    );
+    testWidgets(
+      'should upload file correctly and clear the selection'
+      ' after a successful upload for buy cover workflow',
+      (WidgetTester tester) async {
+        final List<MethodCall> _methodCalls = <MethodCall>[];
+
+        final MockGraphQlClient mockGraphQlClient = MockGraphQlClient();
+
+        channel.setMockMethodCallHandler((MethodCall methodCall) async {
+          _methodCalls.add(methodCall);
+
+          final File file = File(testPath('test_resources/test_file.png'));
+          return file.path;
+        });
+
+        late dynamic uploadedID;
+        late Map<String, dynamic>? uploadedFileData;
+
+        await tester.pumpWidget(
+          AppWrapperBase(
+            appContexts: const <AppContext>[AppContext.AppTest],
+            appName: 'Test app',
+            graphQLClient: mockGraphQlClient,
+            deviceCapabilities: DeviceCapabilities(),
+            child: MaterialApp(
+              home: Scaffold(
+                body: FileManager(
+                  onChanged: (dynamic value) {
+                    uploadedID = value;
+                  },
+                  fileTitle: 'name',
+                  uploadAndReturnIdFunction: (
+                      {BuildContext? context,
+                      Map<String, dynamic>? fileData}) async {
+                    uploadedFileData = fileData;
+                    return 'some-upload-id';
+                  },
+                  platformLoader: const CircularProgressIndicator(),
+                  isRequired: true,
+                  isUsedInBuyCoverWorkFlow: true,
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.pump();
+
+        final Finder galleryIcon = find.byKey(galleryImageKey);
+
+        expect(find.byType(FileManager), findsOneWidget);
+        expect(galleryIcon, findsOneWidget);
+        expect(find.byType(CircularProgressIndicator), findsNothing);
+
+        await tester.tap(galleryIcon);
+        await tester.pumpAndSettle();
+
+        // verify that the upload was done
+        expect(uploadedID, 'some-upload-id');
+        expect(uploadedFileData, isNotNull);
+        expect(uploadedFileData, isA<Map<String, dynamic>>());
+        expect(uploadedFileData!.containsKey('base64data'), true);
+        expect(uploadedFileData!['filename'], 'test_file.png');
+
+        // verify the close GestureDetector is present
+        expect(find.byIcon(MdiIcons.closeCircle), findsOneWidget);
+        expect(find.byKey(closeSelectedFile), findsOneWidget);
+
+        // tap the close icon which will reset the file to none
+        await tester.tap(find.byKey(closeSelectedFile));
+        await tester.pump();
+
+        // verify the file selection was cleared
+        expect(find.byIcon(MdiIcons.closeCircle), findsNothing);
+        expect(find.byKey(closeSelectedFile), findsNothing);
+
+        // verify the select button is present
+        expect(galleryIcon, findsOneWidget);
       },
     );
   });

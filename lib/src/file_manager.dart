@@ -36,6 +36,7 @@ class FileManager extends StatefulWidget {
     this.isRequired = false,
     this.galleryImageKey,
     this.dismissIconKey,
+    this.isUsedInBuyCoverWorkFlow = false,
   });
 
   /// The Key for the dismiss icon
@@ -62,6 +63,7 @@ class FileManager extends StatefulWidget {
   /// Takes in a Map of the image data, and a [BuildContext] that is used
   /// to notify the user once the upload is successful
   final UploadReturnId uploadAndReturnIdFunction;
+  final bool isUsedInBuyCoverWorkFlow;
 
   @override
   _FileManagerState createState() => _FileManagerState();
@@ -79,6 +81,89 @@ class _FileManagerState extends State<FileManager> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isUsedInBuyCoverWorkFlow) {
+      return isUploadingFile
+          ? LoadingWrapper(loader: widget.platformLoader)
+          : Column(
+            children: <Widget>[
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    if (selectedFile == null) ...<Widget>[
+                      /// Select from gallery
+                      GestureDetector(
+                        key: widget.galleryImageKey ?? galleryImageKey,
+                        onTap: () async {
+                          await FileManagerLogic.selectFileFromGallery(
+                            context: context,
+                            uploadAndReturnIdFunction:
+                                widget.uploadAndReturnIdFunction,
+                            toggleUpload: toggleUploadStatus,
+                            fileTitle: widget.fileTitle,
+                            updateUIFunc: (File file, String uploadId) {
+                              setState(() {
+                                selectedFile = file;
+                                widget.onChanged(uploadId);
+                              });
+                            },
+                          );
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            SvgPicture.asset(
+                              'assets/images/folder_icon.svg',
+                              width: 40,
+                              height: 40,
+                            ),
+                            verySmallVerticalSizedBox,
+                            const Text('Gallery')
+                          ],
+                        ),
+                      ),
+                    ],
+                    if (selectedFile != null) ...<Widget>[
+                      // The selected image
+                      SizedBox(
+                        height: 90,
+                        child: Image.file(selectedFile!),
+                      ),
+
+                      /// Remove the uploaded file
+                      GestureDetector(
+                        key: widget.dismissIconKey ?? closeSelectedFile,
+                        onTap: () {
+                          setState(() {
+                            selectedFile = null;
+                          });
+                          widget.onChanged(null);
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            const Icon(MdiIcons.closeCircle),
+                            Text(UserFeedBackTexts.controlLabels[2]),
+                          ],
+                        ),
+                      )
+                    ]
+                  ],
+                ),
+                Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(10),
+                        color: Colors.blueAccent.withOpacity(0.05),
+                        child: Center(
+                          child: Text(
+                            selectAPhotoOfMessage(widget.fileTitle),
+                            textAlign: TextAlign.center,
+                            style: TextThemes.heavySize14Text(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+            ],
+          );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
