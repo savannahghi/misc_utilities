@@ -1,3 +1,11 @@
+### misc_utilities: ^0.1.29-nullsafety
+
+- chore: publish package
+
+### misc_utilities: ^0.1.28-nullsafety
+
+- chore: export file_manager logic
+
 ### 0.1.27-nullsafety
 
 - chore: align covers copy
@@ -29,6 +37,7 @@
 ### 0.1.20-nullsafety
 
 - chore: update dependency (app_wrapper)
+
 ### 0.1.19-nullsafety
 
 - feat: add errorCallback param to genericFetchFunction
