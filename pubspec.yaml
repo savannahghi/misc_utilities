@@ -1,6 +1,6 @@
 name: misc_utilities
 description: Collection of shared utility functions
-version: 0.1.28-nullsafety
+version: 0.1.30-nullsafety
 homepage: https://github.com/savannahghi/misc_utilities
 repository: https://github.com/savannahghi/misc_utilities
 issue_tracker: https://github.com/savannahghi/misc_utilities/issues
