@@ -1,3 +1,6 @@
+### 0.1.28-nullsafety
+
+- fix: refresh token manager
 ### 0.1.27-nullsafety
 
 - chore: align covers copy

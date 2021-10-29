@@ -373,8 +373,8 @@ void main() {
         const String time = '2021-02-01 10:15:21Z';
         RefreshTokenManger().updateExpireTime(time);
         RefreshTokenManger().updateExpireTime(time).reset();
-        expect(listen.hasValue, false);
-        expect(listen.valueOrNull, null);
+        expect(RefreshTokenManger().listen.hasValue, true);
+        expect(RefreshTokenManger().listen.value, true);
       });
 
       test('should reset 6 minutes to the expiry time', () {
@@ -388,8 +388,8 @@ void main() {
         //Reset expiry time
         RefreshTokenManger().updateExpireTime(expiresAt).reset();
 
-        expect(listen.hasValue, false);
-        expect(listen.valueOrNull, null);
+        expect(RefreshTokenManger().listen.hasValue, true);
+        expect(RefreshTokenManger().listen.value, true);
       });
 
       test('should reset 7 minutes to the expiry time', () {
@@ -399,7 +399,7 @@ void main() {
 
         RefreshTokenManger().checkExpireValidity(expiresAt);
 
-        expect(RefreshTokenManger().checkExpireValidity(expiresAt), false);
+        expect(RefreshTokenManger().checkExpireValidity(expiresAt), true);
         expect(listen.hasValue, false);
         expect(listen.valueOrNull, null);
         //Set expiry time
@@ -407,8 +407,8 @@ void main() {
         //Reset expiry time
         RefreshTokenManger().updateExpireTime(expiresAt).reset();
 
-        expect(listen.hasValue, false);
-        expect(listen.valueOrNull, null);
+        expect(RefreshTokenManger().listen.hasValue, true);
+        expect(RefreshTokenManger().listen.value, true);
       });
 
       test('should reset 15 minutes to the expiry time', () {
@@ -428,7 +428,7 @@ void main() {
 
         RefreshTokenManger().checkExpireValidity(expiryTime);
 
-        expect(RefreshTokenManger().checkExpireValidity(expiryTime), true);
+        expect(RefreshTokenManger().checkExpireValidity(expiryTime), false);
         expect(listen.hasValue, false);
         expect(listen.valueOrNull, null);
 
