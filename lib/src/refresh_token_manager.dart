@@ -33,11 +33,20 @@ class RefreshTokenManger {
     return this;
   }
 
+  ///if user logs in after expiry return true
+  bool ifTokenIsAfterExpiry(DateTime parsed) {
+    final Duration _afterCurrentTime = parsed.difference(DateTime.now());
+    if (_afterCurrentTime.inSeconds <= 0) {
+      return true;
+    }
+    return false;
+  }
+
   ///if user logs in when token is <= 10minutes to expiry return true
   bool ifTokenIsApproachingExpiry(DateTime parsed) {
-    final Duration _remainingTime = DateTime.now().difference(parsed);
+    final Duration _closeToCurrentTime = DateTime.now().difference(parsed);
     // ten minutes (600 seconds)
-    if (_remainingTime.inSeconds < 600) {
+    if (_closeToCurrentTime.inSeconds >= -600) {
       return true;
     }
     return false;
@@ -46,8 +55,9 @@ class RefreshTokenManger {
   /// [checkExpireValidity] for checking whether the expire time is valid.
   /// Recommended to be called just before the app draws its first widget in main.dart
   bool checkExpireValidity(String? expireAt) {
-    final DateTime _expireTime = DateTime.parse(expireAt!);
-    if (this.ifTokenIsApproachingExpiry(_expireTime)) {
+    final DateTime _parsed = DateTime.parse(expireAt!);
+    if (this.ifTokenIsAfterExpiry(_parsed) == true ||
+        this.ifTokenIsApproachingExpiry(_parsed) == true) {
       return false;
     }
     return true;
@@ -63,15 +73,6 @@ class RefreshTokenManger {
       if (this.ifTokenIsApproachingExpiry(_expireTime)) {
         return this.listen.add(true);
       }
-
-      // refresh 5 minutes before token expires
-      final DateTime _threshold =
-          _expireTime.subtract(const Duration(minutes: 5));
-      final Duration _duration = _threshold.difference(DateTime.now());
-      if (_duration.inSeconds <= 0) {
-        this.listen.add(true);
-      }
-
       return;
     } catch (e) {
       return;
