@@ -399,7 +399,7 @@ void main() {
 
         RefreshTokenManger().checkExpireValidity(expiresAt);
 
-        expect(RefreshTokenManger().checkExpireValidity(expiresAt), true);
+        expect(RefreshTokenManger().checkExpireValidity(expiresAt), false);
         expect(listen.hasValue, false);
         expect(listen.valueOrNull, null);
         //Set expiry time
@@ -428,7 +428,7 @@ void main() {
 
         RefreshTokenManger().checkExpireValidity(expiryTime);
 
-        expect(RefreshTokenManger().checkExpireValidity(expiryTime), false);
+        expect(RefreshTokenManger().checkExpireValidity(expiryTime), true);
         expect(listen.hasValue, false);
         expect(listen.valueOrNull, null);
 

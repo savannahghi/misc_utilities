@@ -552,10 +552,10 @@ void main() {
     });
 
     group('Refresh Token Manager', () {
-      testWidgets('should reset 15 minutes to the expiry time',
+      testWidgets('should reset 5 minutes to the expiry time',
           (WidgetTester tester) async {
         final String expiryTime =
-            DateTime.now().add(const Duration(minutes: 15)).toString();
+            DateTime.now().add(const Duration(minutes: 5)).toString();
         const Key buttonKey = Key('button_key');
 
         await tester.pumpWidget(MaterialApp(
@@ -576,7 +576,7 @@ void main() {
 
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(buttonKey));
-        await tester.pump(const Duration(minutes: 15));
+        await tester.pump(const Duration(minutes: 5));
 
         expect(RefreshTokenManger().listen.value, true);
       });
@@ -607,7 +607,7 @@ void main() {
         await tester.tap(find.byKey(buttonKey));
         await tester.pump(const Duration(minutes: 15));
 
-        expect(RefreshTokenManger().listen.value, true);
+        expect(RefreshTokenManger().listen.value, false);
       });
     });
 

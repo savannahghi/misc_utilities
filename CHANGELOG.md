@@ -1,3 +1,6 @@
+### 0.1.31-nullsafety
+
+- fix: refresh token manager function
 ### 0.1.30-nullsafety
 
 - fix: refresh token manager
