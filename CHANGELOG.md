@@ -1,3 +1,7 @@
+### 0.1.32-nullsafety
+
+- chore: upgrade package
+
 ### 0.1.31-nullsafety
 
 - fix: refresh token manager function
