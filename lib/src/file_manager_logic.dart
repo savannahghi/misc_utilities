@@ -3,12 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:misc_utilities/constants.dart';
+import 'package:misc_utilities/src/misc.dart';
 import 'package:misc_utilities/src/types.dart';
 import 'package:misc_utilities/string_constant.dart';
-import 'package:misc_utilities/src/misc.dart';
-
 import 'package:shared_themes/constants.dart';
 
 class FileManagerLogic {
