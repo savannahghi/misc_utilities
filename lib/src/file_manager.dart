@@ -1,16 +1,14 @@
 import 'dart:io';
 
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:misc_utilities/src/file_manager_logic.dart';
 import 'package:misc_utilities/src/loading_wrapper.dart';
 import 'package:misc_utilities/src/string_constant.dart';
 import 'package:misc_utilities/src/types.dart';
 import 'package:misc_utilities/src/widget_keys.dart';
-
 import 'package:shared_themes/constants.dart';
 import 'package:shared_themes/spaces.dart';
 import 'package:shared_themes/text_themes.dart';

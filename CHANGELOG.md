@@ -1,3 +1,7 @@
+### 0.1.33-nullsafety
+
+- chore: update package
+
 ### 0.1.32-nullsafety
 
 - chore: upgrade package

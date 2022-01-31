@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/badge/PreRelease-^0.1.32-success.svg?style=for-the-badge)](https://shields.io/)
+[![Release](https://img.shields.io/badge/PreRelease-^0.1.33-success.svg?style=for-the-badge)](https://shields.io/)
 [![Maintained](https://img.shields.io/badge/Maintained-Actively-informational.svg?style=for-the-badge)](https://shields.io/)
 
 # misc_utilities
@@ -23,7 +23,7 @@ This will add a line like this to your package's pubspec.yaml (and run an implic
 
 ```dart
 dependencies:
-  misc_utilities: ^0.1.32-nullsafety
+  misc_utilities: ^0.1.33-nullsafety
 ```
 
 Alternatively, your editor might support flutter pub get. Check the docs for your editor to learn more.
@@ -43,7 +43,7 @@ Check the [example](https://github.com/savannahghi/misc_utilities/blob/main/exam
 
 ## Dart & Flutter Version
 
-- Dart 2: >= 2.12
+- Dart 2: >= 2.14
 - Flutter: >=2.0.0
 
 ## Developing & Contributing

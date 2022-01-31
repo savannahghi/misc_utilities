@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:mockito/mockito.dart';
 import 'package:app_wrapper/app_wrapper.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_graphql_client/graph_client.dart';
+import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import 'package:mockito/mockito.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
@@ -161,6 +161,7 @@ class MockGraphQlClient extends Mock implements GraphQlClient {
       );
     }
 
+    // ignore: null_argument_to_non_null_type
     return Future<http.Response>.value();
   }
 
