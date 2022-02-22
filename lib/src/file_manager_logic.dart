@@ -56,6 +56,7 @@ class FileManagerLogic {
     PickedFile? pickedFile;
 
     try {
+      // ignore: deprecated_member_use
       pickedFile = await ImagePicker().getImage(
         source: ImageSource.gallery,
         imageQuality: 50,
