@@ -1,3 +1,7 @@
+### 0.1.35-nullsafety
+
+- fix: phone number validation
+
 ### 0.1.34-nullsafety
 
 - chore: update packages
