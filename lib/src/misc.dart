@@ -18,8 +18,6 @@ import 'package:misc_utilities/src/string_constant.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_themes/constants.dart';
 
-import '../constants.dart';
-
 enum UserInactivityStatus { okay, requiresLogin, requiresPin }
 
 /// [extractNamesInitials] => Extracts name initials from a name
@@ -79,16 +77,9 @@ bool validatePhoneNumber(String phone) {
 
 /// [validateKenyanNumber] checks if a number is either has either prefix of '+254111', '+254110', '+254100', '+2540101', '+254102' or '+2547xx'
 bool validateKenyanNumber(String phone) {
-  String prefix;
   final String fifthChar = phone.substring(4, 5);
-  if (fifthChar == '7') {
+  if (fifthChar == '7' || fifthChar == '1') {
     return true;
-  } else if (fifthChar == '1') {
-    prefix = phone.substring(0, 7);
-    if (validPrefixes.contains(prefix)) {
-      return true;
-    }
-    return false;
   } else {
     return false;
   }
@@ -425,6 +416,7 @@ Future<String?> launchWhatsApp({
         message:
             'Could not launch ${whatsAppUrl(phone: phone, message: message)}');
   }
+  return null;
 }
 
 ///[check inactivity time]
@@ -477,7 +469,6 @@ UserInactivityStatus checkInactivityTime(
 /// [trim white space]
 /// Removes white spaces in between a string, at the beginning and at the end
 String trimWhitespace(String param) {
-  assert(param is String);
   return param.toString().trim().split(' ').join();
 }
 

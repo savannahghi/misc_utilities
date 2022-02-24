@@ -519,10 +519,11 @@ void main() {
 
       expect(actualRemovedUnderscoreString, expectedFormattedName);
     });
-    test('should return false when phone doest match prefix', () {
-      const String phone = '+2541908765432';
 
-      expect(validateKenyanNumber(phone), false);
+    test('should return true when prefix is 1', () {
+      const String phone = '+254119087653';
+
+      expect(validateKenyanNumber(phone), true);
     });
   });
 }
