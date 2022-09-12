@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:domain_objects/failures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:misc_utilities/misc.dart';
 import 'package:misc_utilities/refresh_token_manager.dart';
@@ -111,7 +109,7 @@ void main() {
     });
 
     test('should get cover validity period', () {
-      const String validTo = '2022-08-01';
+      const String validTo = '2023-08-01';
       final String formattedValidTo = getCoverValidityPeriod(validTo);
       expect(formattedValidTo, isA<String>());
     });
@@ -292,12 +290,10 @@ void main() {
       const String message = '';
       final String whatsAppUrl =
           'https//wa.me/$phone/?text=${Uri.parse(message)}';
+      final Uri _url = Uri.parse(whatsAppUrl);
       expect(
           () async => launchWhatsApp(
-              phone: phone,
-              message: message,
-              launch:
-                  launch(whatsAppUrl, statusBarBrightness: Brightness.dark)),
+              phone: phone, message: message, launch: launchUrl(_url)),
           throwsException);
     });
 

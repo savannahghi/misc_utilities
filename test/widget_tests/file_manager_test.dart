@@ -76,6 +76,7 @@ void main() {
               'maxHeight': null,
               'imageQuality': 50,
               'cameraDevice': 0,
+              'requestFullMetadata': true
             },
           ),
         );
