@@ -1,11 +1,11 @@
-[![Release](https://img.shields.io/badge/PreRelease-^0.1.35-success.svg?style=for-the-badge)](https://shields.io/)
+[![Release](https://img.shields.io/badge/PreRelease-^0.1.36-success.svg?style=for-the-badge)](https://shields.io/)
 [![Maintained](https://img.shields.io/badge/Maintained-Actively-informational.svg?style=for-the-badge)](https://shields.io/)
 
 # misc_utilities
 
 `misc_utilities` is an open source project &mdash; it's one among many other shared libraries that make up the wider ecosystem of software made and open sourced by `Savannah Informatics Limited`.
 
-Shared library for `BeWell-Consumer` and `BeWell-Professional` that is a wrapper for various shared helper methods and functions
+Shared library for `BeWell-Consumer` and `SladeAdvantage` that is a wrapper for various shared helper methods and functions
 
 ## Installation Instructions
 
@@ -23,7 +23,7 @@ This will add a line like this to your package's pubspec.yaml (and run an implic
 
 ```dart
 dependencies:
-  misc_utilities: ^0.1.35-nullsafety
+  misc_utilities: ^0.1.36-nullsafety
 ```
 
 Alternatively, your editor might support flutter pub get. Check the docs for your editor to learn more.
