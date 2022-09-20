@@ -1,3 +1,7 @@
+### 0.2.1-nullsafety
+
+- chore: upgrade packages to flutter 3.0.5
+
 ### 0.1.36-nullsafety
 
 - chore: upgrade to flutter 3.0.5
