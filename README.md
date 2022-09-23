@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/badge/PreRelease-^0.2.0-success.svg?style=for-the-badge)](https://shields.io/)
+[![Release](https://img.shields.io/badge/PreRelease-^0.2.1-success.svg?style=for-the-badge)](https://shields.io/)
 [![Maintained](https://img.shields.io/badge/Maintained-Actively-informational.svg?style=for-the-badge)](https://shields.io/)
 
 # misc_utilities
@@ -23,7 +23,7 @@ This will add a line like this to your package's pubspec.yaml (and run an implic
 
 ```dart
 dependencies:
-  misc_utilities: ^0.2.0-nullsafety
+  misc_utilities: ^0.2.1-nullsafety
 ```
 
 Alternatively, your editor might support flutter pub get. Check the docs for your editor to learn more.
@@ -35,7 +35,6 @@ Import it like so:
 ```dart
 import 'package:misc_utilities/constants.dart';
 ```
-
 
 ## Usage
 

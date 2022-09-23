@@ -1,3 +1,7 @@
+### 0.2.1-nullsafety
+
+- chore: setup automated deployment to pub.dev
+
 ### 0.2.0-nullsafety
 
 - chore: upgrade packages to flutter 3.0.5
@@ -25,9 +29,11 @@
 ### 0.1.31-nullsafety
 
 - fix: refresh token manager function
+
 ### 0.1.30-nullsafety
 
 - fix: refresh token manager
+
 ### 0.1.27-nullsafety
 
 - chore: align covers copy
@@ -59,6 +65,7 @@
 ### 0.1.20-nullsafety
 
 - chore: update dependency (app_wrapper)
+
 ### 0.1.19-nullsafety
 
 - feat: add errorCallback param to genericFetchFunction
