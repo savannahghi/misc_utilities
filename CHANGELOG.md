@@ -1,3 +1,7 @@
+### 0.2.2
+
+- chore: update package version tag
+
 ### 0.2.1-nullsafety
 
 - chore: setup automated deployment to pub.dev
