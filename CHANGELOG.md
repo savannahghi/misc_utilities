@@ -1,3 +1,7 @@
+### 0.2.3
+
+- chore: upgrade packages
+
 ### 0.2.2
 
 - chore: update package version tag
