@@ -23,7 +23,7 @@ This will add a line like this to your package's pubspec.yaml (and run an implic
 
 ```dart
 dependencies:
-  misc_utilities: ^0.2.2
+  misc_utilities: ^0.2.3
 ```
 
 Alternatively, your editor might support flutter pub get. Check the docs for your editor to learn more.
